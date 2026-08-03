@@ -6,7 +6,9 @@ Components live in `src/components/` and are organised into three categories:
 
 - **`ui/`** — generic reusable elements (Button, Input, Modal)
 - **`layout/`** — structural components (Header, Footer, Sidebar)
-- **`features/`** — feature-specific composed components (UserCard, ProductList)
+- **`features/`** — page/feature sections (e.g. `shader-test`). Always plural `features/` — never a singular `feature/` root.
+
+WebGL meshes and GLSL live under `src/canvas/`, not here.
 
 ## File Structure Per Component
 

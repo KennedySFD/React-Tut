@@ -6,38 +6,28 @@
 src/
 ├── animations/              Shared animation configs and GSAP presets
 ├── app/                     Next.js App Router (routes, layouts, pages)
-│   ├── favicon.ico
 │   ├── layout.js            Root layout — wraps all pages
 │   ├── page.js              Home page (/)
-│   ├── test/                Test route for buttons
-│   │   └── page.js
-│   ├── test-hooks/          Test route for useCounter hook
-│   │   └── page.js
-│   ├── test-input/          Test route for Input component
-│   │   └── page.js
-│   └── test-toggle/         Test route for useToggle hook
-│       └── page.js
+│   ├── shader-test/         WebGL lab (cylinder + media-planes)
+│   └── test-*/              Learning / playground routes
 ├── assets/                  SVGs, images, and models imported in code
 ├── canvas/                  React Three Fiber / WebGL / Three.js
-│   ├── components/          Individual 3D objects (models, lights, cameras)
-│   ├── helpers/             Camera rigs, post-processing, loaders
-│   ├── scenes/              Full scene compositions
-│   └── shaders/             Custom GLSL vertex/fragment shaders
-├── components/              All React components
-│   ├── features/            Feature-specific components (e.g. UserCard, ProductList)
+│   ├── components/          Meshes that track DOM / scroll (not DOM UI)
+│   ├── helpers/             Texture limits, shared WebGL utilities
+│   ├── scenes/              Full scene shells (Canvas, Lenis, Leva, mode)
+│   └── shaders/             One folder per effect (GLSL + material wrapper)
+├── components/              All React (DOM) components
+│   ├── features/            Page / feature sections (use plural — not `feature/`)
+│   │   ├── index.js         Barrel — re-exports feature modules
+│   │   └── shader-test/     Lab page content (images, copy) for /shader-test
 │   ├── layout/              Structural components
 │   │   ├── footer/
 │   │   └── header/
 │   └── ui/                  Generic reusable elements
 │       ├── index.js         Barrel file — re-exports all UI components
 │       ├── button/
-│       │   ├── Button.jsx
-│       │   ├── Button.style.js
-│       │   └── index.js
-│       └── input/
-│           ├── Input.jsx
-│           ├── Input.style.js
-│           └── index.js
+│       ├── input/
+│       └── tag/
 ├── context/                 React context providers
 ├── hooks/                   Custom React hooks
 │   ├── useCounter.js
@@ -60,10 +50,12 @@ src/
 Next.js App Router directory. Every subfolder with a `page.js` becomes a route. `layout.js` wraps all pages and is where the ThemeProvider is mounted.
 
 ### `src/components/`
-All React components, organised into three categories:
+All **DOM** React components, organised into three categories:
 - **`ui/`** — generic, reusable elements (Button, Input, Modal, Badge) used across the entire app
 - **`layout/`** — structural components (Header, Footer, Sidebar, Nav) that define page chrome
-- **`features/`** — feature-specific composed components (UserCard, ProductList) built from ui/ elements
+- **`features/`** — page/feature sections (e.g. `shader-test` article + media hero). Always use the plural folder name `features/` — do not add a singular `feature/` root.
+
+WebGL meshes do **not** live here; they live under `src/canvas/components/`.
 
 ### `src/theme/`
 The complete theming system. Contains design tokens at three levels (global → semantic → component), a GlobalStyle for CSS resets, and a ThemeProvider that wraps the entire app. See THEMING.md for full details.
@@ -88,10 +80,12 @@ Shared animation configurations and GSAP presets. Reusable transition objects (f
 
 ### `src/canvas/`
 Everything related to React Three Fiber, Three.js, and WebGL:
-- **`scenes/`** — full scene compositions (Canvas + lights + camera + models)
-- **`components/`** — individual 3D objects
-- **`shaders/`** — custom GLSL vertex and fragment shaders with their ShaderMaterial wrappers
-- **`helpers/`** — camera rigs, post-processing effects, asset loaders
+- **`scenes/`** — full scene shells (Canvas, scroll, Leva, which content/mode to show)
+- **`components/`** — 3D meshes that sync to DOM or scroll (e.g. `MediaPlane`, `ScrollPlane`)
+- **`shaders/`** — one effect per folder: `vertex.glsl`, `fragment.glsl`, material wrapper
+- **`helpers/`** — shared utilities (texture size limits, etc.)
+
+Page copy and `<img>` URLs stay in `components/features/`; shaders only receive textures/uniforms.
 
 ### `src/middleware/`
 Route-level middleware for auth checks, redirects, and request interception.
