@@ -14,7 +14,8 @@ const PaperBurnMaterial = shaderMaterial(
     uNoiseScale: 4.5,
     uNoiseStrength: 0.55,
     uEdgeWidth: 0.06,
-    uEmber: 1.1,
+    uEdgeSharpness: 4,
+    uEmber: 0,
   },
   vertexShader,
   fragmentShader

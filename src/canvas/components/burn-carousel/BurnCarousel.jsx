@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useFrame, extend } from '@react-three/fiber';
 import * as THREE from 'three';
 import PaperBurnMaterial from '@/canvas/shaders/paper-burn';
-import BurnEmbers from './BurnEmbers';
+import { evaluateBezier } from './bezierEase';
 
 extend({ PaperBurnMaterial });
 
@@ -34,7 +34,7 @@ function loadTexture(url) {
 }
 
 /**
- * Full-viewport paper-burn carousel + optional ember particles.
+ * Full-viewport paper-burn carousel.
  * Listens on `document` for `[data-carousel]` / `[data-carousel-to]`.
  */
 export default function BurnCarousel({
@@ -42,20 +42,27 @@ export default function BurnCarousel({
   noiseScale = 4.5,
   noiseStrength = 0.55,
   edgeWidth = 0.06,
+  edgeSharpness = 4,
   ember = 0,
-  embersEnabled = true,
-  emberSpawnRate = 140,
-  emberSize = 2.2,
-  emberLift = 1.2,
+  easeCurve = null,
 }) {
   const meshRef = useRef();
-  const stateRef = useRef({
-    active: false,
-    progress: 1,
-    elapsed: 0,
-    width: 1,
-    height: 1,
-  });
+  // Refs so useFrame always sees the latest Leva values (no stale closures).
+  const burnSpeedRef = useRef(burnSpeed);
+  const easeCurveRef = useRef(easeCurve);
+  const noiseScaleRef = useRef(noiseScale);
+  const noiseStrengthRef = useRef(noiseStrength);
+  const edgeWidthRef = useRef(edgeWidth);
+  const edgeSharpnessRef = useRef(edgeSharpness);
+  const emberRef = useRef(ember);
+
+  burnSpeedRef.current = burnSpeed;
+  easeCurveRef.current = easeCurve;
+  noiseScaleRef.current = noiseScale;
+  noiseStrengthRef.current = noiseStrength;
+  edgeWidthRef.current = edgeWidth;
+  edgeSharpnessRef.current = edgeSharpness;
+  emberRef.current = ember;
 
   const [textures, setTextures] = useState(null);
   const [size, setSize] = useState({
@@ -106,11 +113,6 @@ export default function BurnCarousel({
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
   }, []);
-
-  useEffect(() => {
-    stateRef.current.width = size.width;
-    stateRef.current.height = size.height;
-  }, [size]);
 
   useEffect(() => {
     if (!textures) return undefined;
@@ -164,10 +166,8 @@ export default function BurnCarousel({
     elapsedRef.current += delta;
 
     if (activeRef.current) {
-      progressRef.current = Math.min(
-        1,
-        progressRef.current + delta * Math.max(burnSpeed, 0.05) * 0.55
-      );
+      const speed = Math.max(Number(burnSpeedRef.current) || 1, 0.05);
+      progressRef.current = Math.min(1, progressRef.current + delta * speed * 0.55);
 
       if (progressRef.current >= 1) {
         indexRef.current = toRef.current;
@@ -191,13 +191,7 @@ export default function BurnCarousel({
       }
     }
 
-    // Shared with ember system (must stay in sync every frame).
-    stateRef.current.active = activeRef.current;
-    stateRef.current.progress = progressRef.current;
-    stateRef.current.elapsed = elapsedRef.current;
-    stateRef.current.width = size.width;
-    stateRef.current.height = size.height;
-
+    // Shared transition state for uniforms.
     const mesh = meshRef.current;
     if (!mesh || !textures) return;
 
@@ -210,45 +204,41 @@ export default function BurnCarousel({
     if (u.uTextureA) u.uTextureA.value = from;
     if (u.uTextureB) u.uTextureB.value = to;
     if (u.uProgress) {
-      u.uProgress.value = activeRef.current ? progressRef.current : 1;
+      if (!activeRef.current) {
+        u.uProgress.value = 1;
+      } else {
+        u.uProgress.value = evaluateBezier(
+          easeCurveRef.current,
+          progressRef.current
+        );
+      }
     }
     if (u.uTime) u.uTime.value = elapsedRef.current;
-    if (u.uNoiseScale) u.uNoiseScale.value = noiseScale;
-    if (u.uNoiseStrength) u.uNoiseStrength.value = noiseStrength;
-    if (u.uEdgeWidth) u.uEdgeWidth.value = edgeWidth;
-    if (u.uEmber) u.uEmber.value = ember;
+    if (u.uNoiseScale) u.uNoiseScale.value = noiseScaleRef.current;
+    if (u.uNoiseStrength) u.uNoiseStrength.value = noiseStrengthRef.current;
+    if (u.uEdgeWidth) u.uEdgeWidth.value = edgeWidthRef.current;
+    if (u.uEdgeSharpness) u.uEdgeSharpness.value = edgeSharpnessRef.current;
+    if (u.uEmber) u.uEmber.value = emberRef.current;
   });
 
   if (!textures) return null;
 
   return (
-    <group>
-      <mesh ref={meshRef} position={[0, 0, 0]}>
-        <planeGeometry args={[size.width, size.height, 1, 1]} />
-        <paperBurnMaterial
-          uTextureA={textures[0]}
-          uTextureB={textures[0]}
-          uProgress={1}
-          uTime={0}
-          uNoiseScale={noiseScale}
-          uNoiseStrength={noiseStrength}
-          uEdgeWidth={edgeWidth}
-          uEmber={ember}
-          depthWrite={false}
-          toneMapped={false}
-        />
-      </mesh>
-
-      <BurnEmbers
-        stateRef={stateRef}
-        enabled={embersEnabled}
-        spawnRate={emberSpawnRate}
-        emberSize={emberSize}
-        emberLift={emberLift}
-        noiseScale={noiseScale}
-        noiseStrength={noiseStrength}
-        edgeWidth={edgeWidth}
+    <mesh ref={meshRef} position={[0, 0, 0]}>
+      <planeGeometry args={[size.width, size.height, 1, 1]} />
+      <paperBurnMaterial
+        uTextureA={textures[0]}
+        uTextureB={textures[0]}
+        uProgress={1}
+        uTime={0}
+        uNoiseScale={noiseScale}
+        uNoiseStrength={noiseStrength}
+        uEdgeWidth={edgeWidth}
+        uEdgeSharpness={edgeSharpness}
+        uEmber={ember}
+        depthWrite={false}
+        toneMapped={false}
       />
-    </group>
+    </mesh>
   );
 }

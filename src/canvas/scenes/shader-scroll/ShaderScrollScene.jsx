@@ -4,6 +4,7 @@ import { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { folder, useControls, Leva } from 'leva';
+import { bezier } from '@leva-ui/plugin-bezier';
 import Lenis from 'lenis';
 import styled from 'styled-components';
 import ScrollPlane from '@/canvas/components/scroll-plane';
@@ -116,11 +117,9 @@ export default function ShaderScrollScene({
     burnNoiseScale,
     burnNoiseStrength,
     burnEdgeWidth,
+    burnEdgeSharpness,
     burnEmber,
-    embersEnabled,
-    emberSpawnRate,
-    emberSize,
-    emberLift,
+    burnEase,
     cubeLight,
     cubeAmbient,
     cubeRotate,
@@ -261,11 +260,18 @@ export default function ShaderScrollScene({
           label: 'noiseStrength',
         },
         burnEdgeWidth: {
-          value: 0.06,
-          min: 0.02,
+          value: 0.03,
+          min: 0.005,
           max: 0.18,
           step: 0.005,
           label: 'edgeWidth',
+        },
+        burnEdgeSharpness: {
+          value: 5,
+          min: 1,
+          max: 12,
+          step: 0.25,
+          label: 'edgeSharpness',
         },
         burnEmber: {
           value: 0,
@@ -274,31 +280,17 @@ export default function ShaderScrollScene({
           step: 0.05,
           label: 'shaderEmber (optional)',
         },
-        embersEnabled: {
-          value: true,
-          label: 'particleEdge',
-        },
-        emberSpawnRate: {
-          value: 140,
-          min: 0,
-          max: 500,
-          step: 5,
-          label: 'risingSparks',
-        },
-        emberSize: {
-          value: 2.2,
-          min: 0.3,
-          max: 5,
-          step: 0.05,
-          label: 'particleSize',
-        },
-        emberLift: {
-          value: 1.2,
-          min: 0.2,
-          max: 3,
-          step: 0.05,
-          label: 'sparkLift',
-        },
+      },
+      { render: (get) => get('architecture') === 'burn-carousel' }
+    ),
+    // Sibling folder (not nested): nested bezier was losing `.evaluate` / not
+    // updating reliably, so easing looked like a no-op.
+    'Burn Easing': folder(
+      {
+        burnEase: bezier({
+          handles: 'in-out-cubic',
+          graph: true,
+        }),
       },
       { render: (get) => get('architecture') === 'burn-carousel' }
     ),
@@ -723,11 +715,9 @@ export default function ShaderScrollScene({
               noiseScale={burnNoiseScale}
               noiseStrength={burnNoiseStrength}
               edgeWidth={burnEdgeWidth}
+              edgeSharpness={burnEdgeSharpness}
               ember={burnEmber}
-              embersEnabled={embersEnabled}
-              emberSpawnRate={emberSpawnRate}
-              emberSize={emberSize}
-              emberLift={emberLift}
+              easeCurve={burnEase ?? [0.65, 0.05, 0.36, 1]}
             />
           )}
           {isCylinderImages && (
