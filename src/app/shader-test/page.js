@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import ShaderTest, {
   ShaderTestMediaPlanes,
   ShaderTestCylinderImages,
+  ShaderTestCylinderHorizontal,
   ShaderTestMosaic,
   ShaderTestBurnCarousel,
   ShaderTestCube,
@@ -18,6 +19,7 @@ const ShaderScrollScene = dynamic(
  * Shader lab — Leva → architecture:
  * - Cylinder scroll (full page)
  * - Cylinder on images
+ * - Cylinder horizontal (images)
  * - Media planes (hover)
  * - Mosaic bulge (hover)
  * - Burn carousel
@@ -32,6 +34,7 @@ export default function ShaderTestPage() {
       qualityControls
       cylinderContent={<ShaderTest />}
       cylinderImagesContent={<ShaderTestCylinderImages />}
+      cylinderHorizontalContent={<ShaderTestCylinderHorizontal />}
       mediaPlanesContent={<ShaderTestMediaPlanes />}
       mosaicContent={<ShaderTestMosaic />}
       burnCarouselContent={<ShaderTestBurnCarousel />}

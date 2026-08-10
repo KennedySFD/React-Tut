@@ -9,6 +9,7 @@ export default function CylinderImagesLab({
   curvature = 55,
   curveStart = 0.15,
   shading = 0.55,
+  horizontal = false,
 }) {
   const [elements, setElements] = useState([]);
 
@@ -37,6 +38,7 @@ export default function CylinderImagesLab({
           curvature={curvature}
           curveStart={curveStart}
           shading={shading}
+          horizontal={horizontal}
         />
       ))}
     </>

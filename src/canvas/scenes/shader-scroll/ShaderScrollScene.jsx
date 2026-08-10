@@ -63,6 +63,7 @@ const Spacer = styled.div`
  *
  * - `cylinder` — Architecture B: html2canvas full-page drum.
  * - `cylinder-images` — Architecture A + drum bend on `[data-canvas]` images only.
+ * - `cylinder-horizontal` — Architecture A horizontal drum on a 20-image strip.
  * - `media-planes` — Architecture A: hover bulge / dispersion on images.
  * - `mosaic` — Architecture A: hover bulge + pixel mosaic cubes (no dispersion).
  * - `burn-carousel` — full-bleed slides with paper-burn wipe.
@@ -72,6 +73,7 @@ export default function ShaderScrollScene({
   children,
   cylinderContent,
   cylinderImagesContent,
+  cylinderHorizontalContent,
   mediaPlanesContent,
   mosaicContent,
   burnCarouselContent,
@@ -103,6 +105,9 @@ export default function ShaderScrollScene({
     imageCurvature,
     imageCurveStart,
     imageShading,
+    hCurvature,
+    hCurveStart,
+    hShading,
     warpStrength,
     hoverBrighten,
     dispersion,
@@ -133,6 +138,7 @@ export default function ShaderScrollScene({
       options: {
         'Cylinder scroll (full page)': 'cylinder',
         'Cylinder on images': 'cylinder-images',
+        'Cylinder horizontal (images)': 'cylinder-horizontal',
         'Media planes (hover)': 'media-planes',
         'Mosaic bulge (hover)': 'mosaic',
         'Burn carousel': 'burn-carousel',
@@ -173,6 +179,32 @@ export default function ShaderScrollScene({
         },
       },
       { render: (get) => get('architecture') === 'cylinder-images' }
+    ),
+    'Cylinder horizontal': folder(
+      {
+        hCurvature: {
+          value: 70,
+          min: 0,
+          max: 200,
+          step: 1,
+          label: 'curvature',
+        },
+        hCurveStart: {
+          value: 0.15,
+          min: 0,
+          max: 0.9,
+          step: 0.01,
+          label: 'curveStart',
+        },
+        hShading: {
+          value: 0.55,
+          min: 0,
+          max: 1,
+          step: 0.05,
+          label: 'shading',
+        },
+      },
+      { render: (get) => get('architecture') === 'cylinder-horizontal' }
     ),
     'Media Planes': folder(
       {
@@ -349,12 +381,14 @@ export default function ShaderScrollScene({
 
   const isFullPageCylinder = architecture === 'cylinder';
   const isCylinderImages = architecture === 'cylinder-images';
+  const isCylinderHorizontal = architecture === 'cylinder-horizontal';
   const isMediaPlanes = architecture === 'media-planes';
   const isMosaic = architecture === 'mosaic';
   const isBurnCarousel = architecture === 'burn-carousel';
   const isCubeLab = architecture === 'cube';
   const isDomOverlay =
     isCylinderImages ||
+    isCylinderHorizontal ||
     isMediaPlanes ||
     isMosaic ||
     isBurnCarousel ||
@@ -368,6 +402,7 @@ export default function ShaderScrollScene({
 
   const cylinderNode = cylinderContent ?? children;
   const cylinderImagesNode = cylinderImagesContent ?? children;
+  const cylinderHorizontalNode = cylinderHorizontalContent ?? children;
   const mediaNode = mediaPlanesContent ?? children;
   const mosaicNode = mosaicContent ?? mediaPlanesContent ?? children;
   const burnNode = burnCarouselContent ?? children;
@@ -381,9 +416,11 @@ export default function ShaderScrollScene({
         ? mosaicNode
         : isMediaPlanes
           ? mediaNode
-          : isCylinderImages
-            ? cylinderImagesNode
-            : cylinderNode;
+          : isCylinderHorizontal
+            ? cylinderHorizontalNode
+            : isCylinderImages
+              ? cylinderImagesNode
+              : cylinderNode;
 
   const [initialCaptureScale] = useState(() =>
     captureScale === 'device'
@@ -436,20 +473,53 @@ export default function ShaderScrollScene({
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted) return undefined;
 
-    const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+    // Horizontal mode needs the gallery DOM; wait until contentEl exists.
+    if (isCylinderHorizontal && !contentEl) return undefined;
+
+    let wrapper;
+    let content;
+    if (isCylinderHorizontal) {
+      wrapper = contentEl.querySelector('[data-horizontal-scroll]');
+      content = contentEl.querySelector('[data-horizontal-scroll-content]');
+      if (!wrapper || !content) return undefined;
+    }
+
+    const lenis = new Lenis({
+      lerp: 0.1,
+      smoothWheel: true,
+      ...(isCylinderHorizontal
+        ? {
+            wrapper,
+            content,
+            orientation: 'horizontal',
+            // Vertical wheel / trackpad still drives the sideways strip.
+            gestureOrientation: 'vertical',
+            // Listen on window so wheel works through the fixed WebGL layer
+            // (canvas uses pointer-events: none).
+            eventsTarget: typeof window !== 'undefined' ? window : wrapper,
+          }
+        : {
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+          }),
+    });
     lenisRef.current = lenis;
 
     const onScroll = () => {
       scrollVelocityRef.current = lenis.velocity;
 
-      // Cube lab: only the orbit spacer scrubs the camera (0→1 = full turn).
-      // Past that zone, progress stays at 1 and the page scrolls normally.
       if (architectureRef.current === 'cube') {
         const orbitPx = window.innerHeight * cubeScrollLengthRef.current;
         scrollRef.current =
           orbitPx > 0 ? Math.min(1, window.scrollY / orbitPx) : 1;
+        return;
+      }
+
+      if (architectureRef.current === 'cylinder-horizontal' && wrapper) {
+        const max = wrapper.scrollWidth - wrapper.clientWidth;
+        if (max > 0) scrollRef.current = wrapper.scrollLeft / max;
         return;
       }
 
@@ -466,12 +536,49 @@ export default function ShaderScrollScene({
     };
     rafId = requestAnimationFrame(raf);
 
+    // Recalc after layout / late image decode.
+    const resizeTwice = () => {
+      lenis.resize();
+      onScroll();
+    };
+    const rafResize = requestAnimationFrame(resizeTwice);
+    const timeoutResize = window.setTimeout(resizeTwice, 400);
+
     return () => {
       cancelAnimationFrame(rafId);
+      cancelAnimationFrame(rafResize);
+      window.clearTimeout(timeoutResize);
       lenisRef.current = null;
       lenis.destroy();
     };
-  }, [mounted]);
+  }, [mounted, isCylinderHorizontal, contentEl]);
+
+  // Keep the document itself from fighting the inner horizontal scroller.
+  useEffect(() => {
+    if (!isCylinderHorizontal) return undefined;
+
+    const html = document.documentElement;
+    const body = document.body;
+    const prev = {
+      htmlOverflowX: html.style.overflowX,
+      htmlOverflowY: html.style.overflowY,
+      bodyOverflowX: body.style.overflowX,
+      bodyOverflowY: body.style.overflowY,
+    };
+
+    html.style.overflowX = 'hidden';
+    html.style.overflowY = 'hidden';
+    body.style.overflowX = 'hidden';
+    body.style.overflowY = 'hidden';
+    window.scrollTo(0, 0);
+
+    return () => {
+      html.style.overflowX = prev.htmlOverflowX;
+      html.style.overflowY = prev.htmlOverflowY;
+      body.style.overflowX = prev.bodyOverflowX;
+      body.style.overflowY = prev.bodyOverflowY;
+    };
+  }, [isCylinderHorizontal]);
 
   // Lenis caches document height. When we swap architectures or images finish
   // loading, the page grows but scroll would stop short unless we resize.
@@ -615,8 +722,13 @@ export default function ShaderScrollScene({
                 position: 'relative',
                 zIndex: 1,
                 width: '100%',
+                minHeight: isCylinderHorizontal ? '100vh' : undefined,
                 background:
-                  isMediaPlanes || isMosaic || isBurnCarousel || isCubeLab
+                  isMediaPlanes ||
+                  isMosaic ||
+                  isBurnCarousel ||
+                  isCubeLab ||
+                  isCylinderHorizontal
                     ? 'transparent'
                     : '#ffffff',
               }
@@ -726,6 +838,15 @@ export default function ShaderScrollScene({
               curvature={imageCurvature}
               curveStart={imageCurveStart}
               shading={imageShading}
+            />
+          )}
+          {isCylinderHorizontal && (
+            <CylinderImagesLab
+              root={contentEl}
+              curvature={hCurvature}
+              curveStart={hCurveStart}
+              shading={hShading}
+              horizontal
             />
           )}
           {isFullPageCylinder && texture && (

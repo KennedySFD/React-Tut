@@ -11,6 +11,7 @@ const CylinderImageMaterial = shaderMaterial(
     uCurvature: 55,
     uCurveStart: 0.15,
     uShading: 0.55,
+    uHorizontal: 0,
   },
   vertexShader,
   fragmentShader

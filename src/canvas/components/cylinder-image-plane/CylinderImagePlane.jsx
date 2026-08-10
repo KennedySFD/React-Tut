@@ -8,16 +8,15 @@ import CylinderImageMaterial from '@/canvas/shaders/cylinder-image';
 extend({ CylinderImageMaterial });
 
 /**
- * Tracks a DOM `[data-canvas]` image and bends only that photo (Architecture A
- * + cylinder vertex). Text around the image stays real HTML.
- *
- * Unit plane + XY scale: uCurvature is in world/pixel units (z is not scaled).
+ * Tracks a DOM `[data-canvas]` image and bends only that photo.
+ * `horizontal` switches the drum axis (and mesh subdivisions) for sideways scroll.
  */
 export default function CylinderImagePlane({
   element,
   curvature = 55,
   curveStart = 0.15,
   shading = 0.55,
+  horizontal = false,
 }) {
   const meshRef = useRef();
   const [texture, setTexture] = useState(null);
@@ -99,19 +98,25 @@ export default function CylinderImagePlane({
     set('uCurvature', curvature);
     set('uCurveStart', curveStart);
     set('uShading', shading);
+    set('uHorizontal', horizontal ? 1 : 0);
     if (u.uTexture && texture) u.uTexture.value = texture;
   });
 
   if (!texture) return null;
 
+  // Dense segments on the bend axis so the drum stays smooth.
+  const segmentsX = horizontal ? 48 : 1;
+  const segmentsY = horizontal ? 1 : 48;
+
   return (
     <mesh ref={meshRef}>
-      <planeGeometry args={[1, 1, 1, 48]} />
+      <planeGeometry args={[1, 1, segmentsX, segmentsY]} />
       <cylinderImageMaterial
         uTexture={texture}
         uCurvature={curvature}
         uCurveStart={curveStart}
         uShading={shading}
+        uHorizontal={horizontal ? 1 : 0}
         transparent
         depthWrite={false}
       />
