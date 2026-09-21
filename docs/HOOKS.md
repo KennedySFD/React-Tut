@@ -4,6 +4,29 @@
 
 Hooks are reusable functions that encapsulate stateful logic. They always start with the `use` prefix and live in `src/hooks/`.
 
+## The motion hooks
+
+Four hooks carry the library's animation system. They are documented in full in **MOTION.md**; in short:
+
+| Hook | Purpose |
+|------|---------|
+| `useInteractiveMotion` | Hover lift, dispersion keyline, sheen, press and release |
+| `useRevealMotion` | The shared entrance for menus, modals and tooltips |
+| `useFieldMotion` | The focus keyline on form controls |
+| `useStateMotion` | Two-state pop for check marks and radio dots |
+
+They all return a `ref` to attach, and `useInteractiveMotion` also returns a
+`handlers` object to spread:
+
+```javascript
+const { ref, handlers } = useInteractiveMotion({ preset: 'control', disabled });
+
+return <StyledButton ref={ref} {...handlers}>Save</StyledButton>;
+```
+
+Every one of them checks `prefers-reduced-motion` and sets the end state
+directly when it is on.
+
 Built-in React hooks used in this project:
 - `useState` — stores a value that triggers re-renders when changed
 - `useEffect` — runs code after render (fetch data, set up listeners)
