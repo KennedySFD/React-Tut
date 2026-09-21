@@ -17,6 +17,7 @@ export const categories = [
   'Data display',
   'Feedback',
   'Navigation',
+  'Layout',
 ];
 
 export const registry = [
@@ -96,10 +97,22 @@ export const registry = [
   },
 
   {
+    slug: 'avatar',
+    name: 'Avatar',
+    category: 'Data display',
+    summary: 'User or entity image with an initials fallback and status dot.',
+  },
+  {
+    slug: 'badge',
+    name: 'Badge',
+    category: 'Data display',
+    summary: 'Small count or status indicator overlaid on another element.',
+  },
+  {
     slug: 'card',
     name: 'Card',
     category: 'Data display',
-    summary: 'Surfaces for grouping content, including a frosted glass variant.',
+    summary: 'Surfaces for grouping content, with image, glass and interactive variants.',
   },
   {
     slug: 'tag',
@@ -112,6 +125,18 @@ export const registry = [
     name: 'Accordion',
     category: 'Data display',
     summary: 'Collapsible sections that expand to their content height.',
+  },
+  {
+    slug: 'divider',
+    name: 'Divider',
+    category: 'Data display',
+    summary: 'Horizontal or vertical separator with optional label.',
+  },
+  {
+    slug: 'skeleton',
+    name: 'Skeleton',
+    category: 'Data display',
+    summary: 'Pulsing placeholder shapes for content that is still loading.',
   },
 
   {
@@ -134,10 +159,29 @@ export const registry = [
   },
 
   {
+    slug: 'breadcrumb',
+    name: 'Breadcrumb',
+    category: 'Navigation',
+    summary: 'A trail of links showing the current page hierarchy.',
+  },
+  {
     slug: 'tabs',
     name: 'Tabs',
     category: 'Navigation',
     summary: 'Two variants with a single indicator that travels between tabs.',
+  },
+
+  {
+    slug: 'header',
+    name: 'Header',
+    category: 'Layout',
+    summary: 'Sticky top bar with brand, navigation links and an actions slot.',
+  },
+  {
+    slug: 'footer',
+    name: 'Footer',
+    category: 'Layout',
+    summary: 'Site-wide footer with link columns, social icons and copyright.',
   },
 ];
 

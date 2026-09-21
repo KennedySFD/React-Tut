@@ -42,18 +42,16 @@ export const dispersionRing = css`
     inset: 0;
     z-index: -1;
     border-radius: inherit;
-    padding: ${({ theme }) => theme.global.borderWidths.thin};
+    padding: 1.5px;
     pointer-events: none;
     opacity: var(--ring-opacity, 0);
     background: conic-gradient(
       from calc(var(--ring-angle, 0) * 1deg),
-      transparent 0deg,
-      ${({ theme }) => theme.semantic.colors.dispersion.cyan} 55deg,
-      ${({ theme }) => theme.semantic.colors.dispersion.violet} 120deg,
-      transparent 185deg,
-      ${({ theme }) => theme.semantic.colors.dispersion.rose} 245deg,
-      ${({ theme }) => theme.semantic.colors.dispersion.amber} 305deg,
-      transparent 360deg
+      ${({ theme }) => theme.semantic.colors.dispersion.cyan} 0deg,
+      ${({ theme }) => theme.semantic.colors.dispersion.violet} 90deg,
+      ${({ theme }) => theme.semantic.colors.dispersion.rose} 180deg,
+      ${({ theme }) => theme.semantic.colors.dispersion.amber} 270deg,
+      ${({ theme }) => theme.semantic.colors.dispersion.cyan} 360deg
     );
     /* Punch out the middle, leaving only the 1px padding band. */
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);

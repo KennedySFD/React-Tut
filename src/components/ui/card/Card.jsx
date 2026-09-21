@@ -1,7 +1,7 @@
 'use client';
 
 import { useInteractiveMotion } from '@/hooks/useInteractiveMotion';
-import { CardDescription, CardFooter, CardTitle, StyledCard } from './Card.style';
+import { CardDescription, CardFooter, CardImage, CardTitle, StyledCard } from './Card.style';
 
 /**
  * Card — a surface for grouping related content.
@@ -10,6 +10,8 @@ import { CardDescription, CardFooter, CardTitle, StyledCard } from './Card.style
  * @param {'sm'|'md'|'lg'} padding
  * @param {boolean} interactive - adds hover lift, active press and focus ring;
  *                                renders as a <button> unless `as` says otherwise
+ * @param {string} image     - hero image URL, rendered above the body
+ * @param {string} imageAlt  - alt text for the hero image
  * @param {string} title
  * @param {string} description
  * @param {React.ReactNode} footer
@@ -23,6 +25,8 @@ export default function Card({
   variant = 'elevated',
   padding = 'md',
   interactive = false,
+  image,
+  imageAlt = '',
   title,
   description,
   footer,
@@ -47,6 +51,7 @@ export default function Card({
       {...(interactive ? handlers : {})}
       {...props}
     >
+      {image && <CardImage src={image} alt={imageAlt} loading="lazy" />}
       {title && <CardTitle>{title}</CardTitle>}
       {description && <CardDescription>{description}</CardDescription>}
       {children}

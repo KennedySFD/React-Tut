@@ -81,6 +81,9 @@ export const HeroName = styled.span`
 /**
  * Takes the remaining height so the component stays centred in the space
  * above the controls panel, rather than the whole group being centred.
+ *
+ * Pass $wide to remove the max-width for layout components (Header, Footer)
+ * that need to fill the available width.
  */
 export const HeroSubject = styled.div`
   flex: 1;
@@ -88,7 +91,7 @@ export const HeroSubject = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 32rem;
+  max-width: ${({ $wide }) => ($wide ? 'none' : '32rem')};
 `;
 
 /**
