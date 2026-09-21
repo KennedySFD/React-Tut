@@ -53,7 +53,7 @@ export {
  * @param {React.ComponentType} component - the module's Hero component
  * @param {'default'|'glass'} surface
  */
-export function Hero({ name, controls, component: Subject, surface = 'default' }) {
+export function Hero({ name, controls, component: Subject, surface = 'default', wide = false }) {
   const [values, setValues] = useState(() => heroControlDefaults(controls));
 
   const handleChange = useCallback((key, value) => {
@@ -66,7 +66,7 @@ export function Hero({ name, controls, component: Subject, surface = 'default' }
     <Stage aria-label={`${name} in isolation`}>
       <HeroName>{name}</HeroName>
 
-      <HeroSubject>{Subject ? <Subject {...values} /> : null}</HeroSubject>
+      <HeroSubject $wide={wide}>{Subject ? <Subject {...values} /> : null}</HeroSubject>
 
       <HeroControls schema={controls} values={values} onChange={handleChange} />
 

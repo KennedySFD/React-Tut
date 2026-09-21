@@ -58,6 +58,12 @@ export const Box = styled.span`
     border-color ${({ theme }) => theme.semantic.motion.fast},
     box-shadow ${({ theme }) => theme.semantic.motion.fast};
 
+  /* Push the dispersion ring outward so it overlays the border instead of
+     nesting inside it — prevents the "box in a box" double-border. */
+  &::before {
+    inset: calc(-1 * ${({ theme }) => theme.components.choice.borderWidth});
+  }
+
   svg {
     width: 80%;
     height: 80%;

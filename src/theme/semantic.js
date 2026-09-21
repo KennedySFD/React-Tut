@@ -211,15 +211,15 @@ const light = {
 
     /**
      * DISPERSION — the chromatic fringe of light split through a glass edge.
-     * Used as a keyline gradient, never as a fill. Kept low-saturation so it
-     * reads as refraction rather than as a rainbow.
+     * Used as a keyline gradient, never as a fill. Vivid enough to read as
+     * a deliberate prismatic accent, not a washed-out tint.
      */
     dispersion: {
-      cyan: 'rgba(56, 189, 248, 0.62)',
-      violet: 'rgba(167, 139, 250, 0.62)',
-      amber: 'rgba(251, 191, 36, 0.45)',
-      rose: 'rgba(244, 114, 182, 0.48)',
-      sheen: 'rgba(255, 255, 255, 0.85)',
+      cyan: 'rgba(34, 211, 238, 0.88)',
+      violet: 'rgba(139, 92, 246, 0.85)',
+      amber: 'rgba(245, 158, 11, 0.78)',
+      rose: 'rgba(236, 72, 153, 0.80)',
+      sheen: 'rgba(255, 255, 255, 0.90)',
     },
   },
 
@@ -335,14 +335,14 @@ const dark = {
       shade: 'rgba(0, 0, 0, 0.35)',
     },
 
-    /* Brighter and less opaque on dark, where the fringe has to survive a
-       low-luminance backdrop. */
+    /* Brighter on dark, where the fringe has to survive a low-luminance
+       backdrop. Pushed to full vivid so the prismatic ring pops. */
     dispersion: {
-      cyan: 'rgba(103, 232, 249, 0.58)',
-      violet: 'rgba(196, 181, 253, 0.58)',
-      amber: 'rgba(253, 224, 71, 0.42)',
-      rose: 'rgba(249, 168, 212, 0.42)',
-      sheen: 'rgba(255, 255, 255, 0.30)',
+      cyan: 'rgba(34, 211, 238, 0.90)',
+      violet: 'rgba(167, 139, 250, 0.88)',
+      amber: 'rgba(250, 204, 21, 0.78)',
+      rose: 'rgba(244, 114, 182, 0.82)',
+      sheen: 'rgba(255, 255, 255, 0.40)',
     },
   },
 

@@ -56,6 +56,16 @@ export const StyledCard = styled.div`
     `};
 `;
 
+export const CardImage = styled.img`
+  width: calc(100% + ${({ theme }) => theme.components.card.paddings.md} * 2);
+  margin: calc(-1 * ${({ theme }) => theme.components.card.paddings.md});
+  margin-bottom: 0;
+  height: 12rem;
+  object-fit: cover;
+  border-radius: ${({ theme }) => theme.components.card.radius}
+    ${({ theme }) => theme.components.card.radius} 0 0;
+`;
+
 export const CardTitle = styled.h3`
   ${typography('subheading')};
   color: ${({ theme }) => theme.semantic.colors.text.primary};

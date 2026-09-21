@@ -75,15 +75,15 @@ export const gesture = {
  */
 export const amplitude = {
   /** Buttons, select triggers — the standard interactive control. */
-  control: { lift: -1.5, press: 0.975, sheen: 0.5, ring: 1, label: -1 },
+  control: { lift: -1.5, press: 0.975, sheen: 0.6, ring: 1, label: -1 },
   /** Cards, panels — larger surfaces lift further and press less. */
-  surface: { lift: -4, press: 0.995, sheen: 0.35, ring: 0.8, label: 0 },
+  surface: { lift: -4, press: 0.995, sheen: 0.45, ring: 1, label: 0 },
   /** Tags and other small chips — little lift, noticeable press. */
-  chip: { lift: -1, press: 0.94, sheen: 0, ring: 0.55, label: 0 },
+  chip: { lift: -1, press: 0.94, sheen: 0, ring: 0.85, label: 0 },
   /** Tabs, menu options, accordion triggers — flat, but responsive. */
-  subtle: { lift: 0, press: 0.985, sheen: 0, ring: 0.45, label: -1 },
+  subtle: { lift: 0, press: 0.985, sheen: 0, ring: 0.75, label: -1 },
   /** Checkbox / radio / switch — the control is small, so the press is proportional. */
-  choice: { lift: 0, press: 0.9, sheen: 0, ring: 0.7, label: 0 },
+  choice: { lift: 0, press: 0.9, sheen: 0, ring: 1, label: 0 },
 };
 
 /** Distance overlays travel as they reveal. */

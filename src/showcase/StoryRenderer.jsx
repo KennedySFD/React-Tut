@@ -4,16 +4,23 @@ import { DocColumn, Eyebrow, Hero, PageHead, PageSummary, PageTitle, StoryList }
 
 import * as accordion from './stories/AccordionStories';
 import * as alert from './stories/AlertStories';
+import * as avatar from './stories/AvatarStories';
+import * as badge from './stories/BadgeStories';
+import * as breadcrumb from './stories/BreadcrumbStories';
 import * as button from './stories/ButtonStories';
 import * as card from './stories/CardStories';
 import * as checkbox from './stories/CheckboxStories';
+import * as divider from './stories/DividerStories';
 import * as field from './stories/FieldStories';
+import * as footer from './stories/FooterStories';
+import * as header from './stories/HeaderStories';
 import * as input from './stories/InputStories';
 import * as modal from './stories/ModalStories';
 import * as motion from './stories/MotionStories';
 import * as radio from './stories/RadioStories';
 import * as searchbar from './stories/SearchBarStories';
 import * as select from './stories/SelectStories';
+import * as skeleton from './stories/SkeletonStories';
 import * as spinner from './stories/SpinnerStories';
 import * as switchControl from './stories/SwitchStories';
 import * as tabs from './stories/TabsStories';
@@ -50,15 +57,23 @@ const modulesBySlug = {
   radio,
   switch: switchControl,
 
+  avatar,
+  badge,
   card,
   tag,
   accordion,
+  divider,
+  skeleton,
 
   alert,
   modal,
   tooltip,
 
+  breadcrumb,
   tabs,
+
+  header,
+  footer,
 };
 
 export default function StoryRenderer({ slug, entry }) {
@@ -76,6 +91,7 @@ export default function StoryRenderer({ slug, entry }) {
           component={HeroSubject}
           controls={storyModule.heroControls}
           surface={storyModule.heroSurface ?? 'default'}
+          wide={storyModule.heroWide ?? false}
         />
       )}
 
