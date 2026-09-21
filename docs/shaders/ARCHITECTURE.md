@@ -88,14 +88,17 @@ Improving B (DPR capture, mipmaps, anisotropy) helps but **cannot match** native
 
 ## Folder conventions in this repo
 
-Already aligned with project scaffolding:
+DOM UI stays in `src/components/` (`ui/`, `layout/`, `features/`). WebGL stays under `src/canvas/`. Use the plural `features/` folder — never a singular `feature/` root. Lab copy and image URLs for `/shader-test` live in `src/components/features/shader-test/`; shaders only receive textures and uniforms.
 
 ```
 src/canvas/
-  components/     # meshes (e.g. scroll-plane)
+  components/     # meshes (e.g. scroll-plane, media-plane)
   scenes/         # page-level R3F scenes
   shaders/        # GLSL + material wrappers per effect
   helpers/        # texture limits, FOV utils, etc.
+
+src/app/shader-test/   # route for the WebGL lab
+docs/shaders/          # this knowledge base
 ```
 
 One effect = one folder (`cylinder-scroll/`) with `vertex.glsl`, `fragment.glsl`, material component, barrel export.
