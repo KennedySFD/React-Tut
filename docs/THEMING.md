@@ -2,264 +2,220 @@
 
 ## Overview
 
-The project uses **styled-components** for all styling, with a three-layer token system that mirrors a Figma design system hierarchy: **global → semantic → component**.
+All styling uses **styled-components**, driven by a three-layer token system that mirrors a Figma variable hierarchy: **global → semantic → component**.
 
-Tokens are consumed via styled-components' `ThemeProvider`, which makes the theme object available to every styled component in the app via `props.theme`.
+The guiding rule of this library:
+
+> **A component never hardcodes a value, and never reaches past its layer.**
+> Re-branding the entire library is an edit to `semantic.js`. Changing density or shape is an edit to `components.js`. Neither requires touching a single `.style.js` file.
 
 ## Architecture
 
 ```
-Figma Design Tokens
+Figma variable collections
        ↓
-src/theme/global.js          Raw primitive values
+src/theme/global.js          Layer 1 — raw primitives
        ↓
-src/theme/semantic.js        Maps primitives to purpose
+src/theme/semantic.js        Layer 2 — purpose, with light + dark modes
        ↓
-src/theme/components.js      Component-specific tokens
+src/theme/components.js      Layer 3 — per-component geometry
        ↓
-src/theme/index.js           Combines all layers into one object
+src/theme/mixins.js          Shared CSS fragments built on the tokens
+src/theme/glass.js           Glass + dispersion layers (re-exported by mixins)
+src/theme/motion.js          Curves, durations, gestures, amplitudes
        ↓
-src/theme/ThemeProvider.js   Wraps app, provides theme to all styled-components
+src/theme/index.js           createTheme(mode) resolves it all
        ↓
-src/app/layout.js            ThemeProvider mounted here
+src/theme/ThemeProvider.js   Provides the theme + GlobalStyle
+       ↓
+src/app/layout.js            Mounted here, wrapping every page
 ```
 
-## Token Layers
+Motion and the glass material are part of the same token system but large
+enough to document separately — see **MOTION.md**.
 
-### Layer 1: Global Tokens (`global.js`)
+## Layer 1 — Global tokens (`global.js`)
 
-Raw design values with no semantic meaning. These are the building blocks.
+Raw values with no meaning attached: colour ramps, the type scale, spacing, radii, border widths, control heights, shadows, motion, z-index and opacities.
 
 ```javascript
 export const global = {
   colors: {
-    blue500: '#3B82F6',
-    grey100: '#F5F5F5',
-    grey900: '#171717',
-    white: '#FFFFFF',
-    black: '#000000',
+    brand500: '#3B82F6',
+    neutral200: '#E4E4E7',
+    /* ...full ramps for neutral, brand, green, amber, red */
   },
-  fontSizes: {
-    xs: '0.75rem',    // 12px
-    sm: '0.875rem',   // 14px
-    md: '1rem',       // 16px
-    lg: '1.25rem',    // 20px
-    xl: '1.5rem',     // 24px
-    xxl: '2rem',      // 32px
-  },
-  fontWeights: {
-    regular: 400,
-    medium: 500,
-    semibold: 600,
-    bold: 700,
-  },
-  spacing: {
-    xs: '0.25rem',    // 4px
-    sm: '0.5rem',     // 8px
-    md: '1rem',       // 16px
-    lg: '1.5rem',     // 24px
-    xl: '2rem',       // 32px
-    xxl: '3rem',      // 48px
-  },
-  radii: {
-    sm: '0.25rem',
-    md: '0.5rem',
-    lg: '0.75rem',
-    full: '9999px',
-  },
+  spacing: { xs: '0.25rem', sm: '0.5rem', md: '0.75rem', lg: '1rem', /* ... */ },
+  sizes: { control: { sm: '2rem', md: '2.5rem', lg: '3rem' } },
+  /* ... */
 };
 ```
 
-### Layer 2: Semantic Tokens (`semantic.js`)
+**To rebrand, change the `brand` ramp.** Everything downstream follows.
 
-Maps global primitives to purpose-driven names. Components reference semantic tokens so that changing a primitive updates everything.
+`sizes.control` is what keeps Button, Input, Select and SearchBar the same height when placed on one row.
+
+## Layer 2 — Semantic tokens (`semantic.js`)
+
+Maps primitives to *roles*. This is the layer components actually read.
+
+It exports **two objects of identical shape**, one per colour mode:
 
 ```javascript
-import { global } from './global';
-
-export const semantic = {
-  colors: {
-    primary: global.colors.blue500,
-    background: global.colors.white,
-    foreground: global.colors.grey900,
-    surface: global.colors.grey100,
-  },
-  typography: {
-    body: {
-      size: global.fontSizes.md,
-      weight: global.fontWeights.regular,
-    },
-    heading: {
-      size: global.fontSizes.xl,
-      weight: global.fontWeights.bold,
-    },
-    caption: {
-      size: global.fontSizes.sm,
-      weight: global.fontWeights.regular,
-    },
-  },
-};
+export const semantic = { light, dark };
 ```
 
-### Layer 3: Component Tokens (`components.js`)
+That identical shape is what makes the Figma mapping 1:1 — a "Semantic" collection with Light and Dark modes.
 
-Component-specific token sets that reference both global and semantic layers.
+Each mode contains:
 
-```javascript
-import { global } from './global';
-import { semantic } from './semantic';
+| Group | Purpose |
+|-------|---------|
+| `colors.background` | canvas, subtle, sunken, raised, overlay, inverse, scrim |
+| `colors.text` | primary, secondary, muted, placeholder, disabled, inverse, onAccent, link |
+| `colors.border` | subtle, default, strong, inverse |
+| `colors.accent` | the brand: subtle, muted, border, default, hover, active, text, onAccent |
+| `colors.feedback` | info / success / warning / danger / neutral, each with the same 5 slots |
+| **`colors.state`** | **the shared interaction tokens — see below** |
+| `colors.glass` | translucent surface, inner highlight and shade for frosted panes |
+| `colors.dispersion` | the chromatic fringe used by keylines and sheens |
+| `shadows` | elevation set for that mode |
+| `typography`, `motion` | mode-independent, shared by both |
 
-export const components = {
-  button: {
-    padding: `${global.spacing.sm} ${global.spacing.md}`,
-    borderRadius: global.radii.md,
-    fontSize: global.fontSizes.md,
-    fontWeight: global.fontWeights.semibold,
-    primary: {
-      background: semantic.colors.primary,
-      color: global.colors.white,
-    },
-  },
-  input: {
-    padding: `${global.spacing.sm} ${global.spacing.md}`,
-    borderRadius: global.radii.md,
-    fontSize: global.fontSizes.md,
-    borderColor: global.colors.grey100,
-  },
-};
-```
+### The `state` group
 
-### Combined Theme Object (`index.js`)
+This is the most important group in the system. It holds one definition of each interaction state, shared by **every** component:
 
 ```javascript
-import { global } from './global';
-import { semantic } from './semantic';
-import { components } from './components';
-
-const theme = { global, semantic, components };
-export default theme;
-```
-
-## GlobalStyle (`GlobalStyle.js`)
-
-Replaces the traditional `globals.css` file. Uses `createGlobalStyle` from styled-components and reads values from the theme.
-
-```javascript
-'use client';
-
-import { createGlobalStyle } from 'styled-components';
-
-const GlobalStyle = createGlobalStyle`
-  html {
-    height: 100%;
-  }
-
-  html, body {
-    max-width: 100vw;
-    overflow-x: hidden;
-  }
-
-  body {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-    color: ${({ theme }) => theme.semantic.colors.foreground};
-    background: ${({ theme }) => theme.semantic.colors.background};
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: ${({ theme }) => theme.semantic.typography.body.size};
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  * {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-`;
-
-export default GlobalStyle;
-```
-
-Key points:
-- Must have `'use client'` directive (it uses browser APIs)
-- Accesses theme via `({ theme }) =>` — same pattern as any styled component
-- Handles the CSS reset (box-sizing, margin/padding zero, link styles)
-
-## ThemeProvider (`ThemeProvider.js`)
-
-Client component that wraps styled-components' provider and injects GlobalStyle.
-
-```javascript
-'use client';
-
-import { ThemeProvider as SCThemeProvider } from 'styled-components';
-import theme from './index';
-import GlobalStyle from './GlobalStyle';
-
-export default function ThemeProvider({ children }) {
-  return (
-    <SCThemeProvider theme={theme}>
-      <GlobalStyle />
-      {children}
-    </SCThemeProvider>
-  );
+state: {
+  hoverSurface, activeSurface, hoverBorder,
+  focusBorder, focusRing,
+  selectedSurface, selectedBorder, selectedText,
+  errorBorder, errorRing, errorText,
+  disabledSurface, disabledBorder, disabledText,
 }
 ```
 
-Key points:
-- Must have `'use client'` directive (React context is a client feature)
-- Aliased as `SCThemeProvider` to avoid naming conflict with our wrapper
-- `GlobalStyle` is rendered inside the provider so it can access the theme
+So the blue outline on a focused Input is not a separate value from the one on a focused Select, Checkbox or Tab — they are all `state.focusRing`. Change it once and every control in the library updates together.
 
-## Mounting in Layout
+## Layer 3 — Component tokens (`components.js`)
 
-The ThemeProvider is mounted in `src/app/layout.js`, wrapping all page content:
+Exports a **function**, because component tokens can reference the resolved semantic set for the active mode:
 
 ```javascript
-import ThemeProvider from "@/theme/ThemeProvider";
-
-export const metadata = {
-  title: "Create Next App",
-  description: "Generated by create next app",
-};
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
-      </body>
-    </html>
-  );
+export function createComponents(semantic) {
+  return { field, button, card, tag, modal, menu, /* ... */ };
 }
 ```
 
-## Accessing Theme in Styled Components
+The split used throughout:
 
-Any styled component in the app can access theme values:
+- **Geometry** (height, padding, radius, font size) → lives here.
+- **Colour** → comes from semantic tokens at the point of use.
+
+The `field` entry is shared: Input, Textarea, Select and SearchBar all read it, which is why they are pixel-identical.
+
+## Mixins (`mixins.js`)
+
+Tokens make the *values* shared; mixins make the *treatment* shared.
+
+| Mixin | Used by |
+|-------|---------|
+| `focusRing` | fields — recolours the border and adds the ring |
+| `focusRingOnly` | buttons, tabs, menu options — ring only, no border change |
+| `errorFocusRing` | fields in an error state |
+| `fieldBase` | Input, Textarea, Select trigger, SearchBar |
+| `disabledState` | anything disableable |
+| `visuallyHidden` | the native inputs behind Checkbox / Radio / Switch |
+| `truncate`, `typography(role)` | general |
+| `interactiveGlass` | the dispersion keyline + sheen layers — see MOTION.md |
+| `glassPanel`, `glassPanelStrong` | frosted panes: menus, modals, tooltips, glass Cards |
+| `focusKeyline` | the chromatic line that draws in on field focus |
 
 ```javascript
-const Heading = styled.h1`
-  font-size: ${({ theme }) => theme.semantic.typography.heading.size};
-  font-weight: ${({ theme }) => theme.semantic.typography.heading.weight};
-  color: ${({ theme }) => theme.semantic.colors.foreground};
+import { fieldBase } from '@/theme/mixins';
+
+export const StyledTextarea = styled.textarea`
+  ${fieldBase};
+  padding: ${({ theme }) => theme.global.spacing.md};
 `;
 ```
 
-## Required Next.js Config
-
-styled-components requires server-side rendering support in Next.js to prevent hydration errors. This is enabled in `next.config.mjs`:
+## Resolving the theme (`index.js`)
 
 ```javascript
-compiler: {
-  styledComponents: true,
-},
+export function createTheme(mode = 'light') {
+  const resolved = semantic[mode] ?? semantic.light;
+
+  return {
+    mode,
+    global,
+    semantic: resolved,
+    components: createComponents(resolved),
+  };
+}
 ```
 
-Without this, the server-rendered HTML won't include styled-components styles, causing a mismatch when React hydrates on the client.
+Because the mode is resolved *before* the theme reaches components, every `.style.js` reads the same path in either mode:
+
+```javascript
+color: ${({ theme }) => theme.semantic.colors.text.primary};
+```
+
+No component ever contains an `if (dark)`.
+
+## Colour mode (`src/context/ThemeModeContext.js`)
+
+The active mode lives in a context and persists to `localStorage`.
+
+```javascript
+'use client';
+import { useThemeMode } from '@/context/ThemeModeContext';
+
+function ModeToggle() {
+  const { mode, toggleMode } = useThemeMode();
+  return <Button onClick={toggleMode}>{mode === 'light' ? 'Dark' : 'Light'}</Button>;
+}
+```
+
+`localStorage` is read through `useSyncExternalStore` rather than copied into state in an effect. Two benefits:
+
+- **No hydration mismatch** — React uses `getServerSnapshot` for the server render *and* the first client render, then re-renders with the stored value.
+- **Cross-tab sync** — via the `storage` event, for free.
+
+Set the starting mode in `layout.js`:
+
+```javascript
+<ThemeProvider defaultMode="dark">{children}</ThemeProvider>
+```
+
+## GlobalStyle
+
+`createGlobalStyle`, replacing `globals.css`. Beyond the reset it:
+
+- sets `color-scheme` from `theme.mode`, so native scrollbars and autofill follow the theme;
+- makes form controls inherit typography;
+- provides a fallback `:focus-visible` outline;
+- honours `prefers-reduced-motion`.
+
+## Mapping to Figma
+
+| Code | Figma |
+|------|-------|
+| `global.js` | "Primitives" variable collection |
+| `semantic.js` | "Semantic" collection, **modes: Light / Dark** |
+| `components.js` | "Components" collection |
+| A component's props | Component properties / variant set |
+| `state.*` tokens | The variables bound to interaction states |
+
+Because both sides share the same names and the same layering, a change in either can be translated into the other.
+
+## Required Next.js config
+
+styled-components needs SSR support to avoid hydration errors, enabled in `next.config.mjs`:
+
+```javascript
+compiler: { styledComponents: true },
+```
+
+`src/lib/registry.js` collects the rules during the server render and injects them via `useServerInsertedHTML`.

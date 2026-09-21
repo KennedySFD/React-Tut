@@ -100,6 +100,17 @@ export { default as Button } from './button';
 export { default as Input } from './input';
 ```
 
+When a folder holds more than one component, the extra ones are named exports and pass straight through:
+
+```javascript
+// src/components/ui/radio/index.js
+export { default } from './Radio';
+export { default as RadioGroup } from './RadioGroup';
+
+// src/components/ui/index.js
+export { default as Radio, RadioGroup } from './radio';
+```
+
 When adding a new component, always update the category-level barrel file.
 
 ## `'use client'` Directive
@@ -127,18 +138,38 @@ Files that do NOT need it:
 1. All styling uses styled-components — no CSS files, no inline styles for components
 2. Inline styles (`style={{ }}`) are acceptable in test pages only
 3. Each component has its own `.style.js` file
-4. Variant-specific values use lookup objects, not inline ternaries
+4. Variant-specific values use lookup objects, not inline ternaries — `css` blocks once a variant owns interaction states too
 5. Styling props use `$` prefix (transient props) to avoid DOM warnings
 6. Browser states (hover, focus, active, disabled) use CSS pseudo-classes
 7. Pseudo-elements (placeholder, before, after) use `::` double colon
+8. Before writing a new surface, check `theme/mixins.js` — `fieldBase`, `focusRing` and friends exist so a treatment is defined once
 
 ## Theme Token Rules
 
-1. Raw values (hex colours, rem sizes) only appear in `global.js`
-2. `semantic.js` references `global.js` — never contains raw values
-3. `components.js` references both `global.js` and `semantic.js`
-4. Components should reference the theme via `({ theme }) =>` where possible
-5. If hardcoding values in a style file (for rapid prototyping), they should eventually be moved to the theme
+1. **No hardcoded values in a `.style.js` file.** Every colour, size, radius and duration comes from the theme
+2. Raw values (hex colours, rem sizes) only appear in `global.js`
+3. `semantic.js` references `global.js` — never contains raw values — and exports `{ light, dark }` of identical shape
+4. `components.js` exports `createComponents(semantic)`, referencing both layers
+5. **Components read `semantic` and `components`, never `global.colors`.** Global primitives are the same in both modes, so reaching for one breaks dark mode
+6. Geometry belongs in `components.js`; colour comes from `semantic` at the point of use
+7. Interaction states come from `semantic.colors.state.*`, so every component shares one definition of focus, hover, selected, error and disabled
+8. Components access the theme via `({ theme }) =>` — never by importing the theme object directly
+
+## Motion Rules
+
+See MOTION.md for the full system. The rules that matter when writing a component:
+
+1. **Never write a duration or an ease in a component.** Reference a gesture from `theme/motion.js`; add one there if it is missing
+2. **GSAP owns `transform`.** If GSAP animates a property, that property must not appear in the same element's CSS `transition` list, or the two will interpolate against each other
+3. A placement transform and an animated transform cannot share an element — split them across two
+4. Every motion hook respects `prefers-reduced-motion`; preserve that in anything new
+5. **Backticks are illegal inside a styled-components template literal**, including in CSS comments — they terminate the string
+
+## Colour Mode Rules
+
+1. A component must never branch on the mode. If you write `theme.mode === 'dark'` in a component, the missing token belongs in `semantic.js` instead
+2. Both mode objects must keep the same shape — a key present in `light` must exist in `dark`
+3. Read the active mode with `useThemeMode()` from `@/context/ThemeModeContext`, only for UI that *controls* the mode (like a toggle)
 
 ## Project Setup Checklist
 
