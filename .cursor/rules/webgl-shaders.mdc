@@ -1,0 +1,53 @@
+---
+description: Hard rules for WebGL/GLSL shader work in this project (architecture, debugging, quality).
+globs: src/canvas/**/*,**/*.{glsl,vert,frag},docs/shaders/**/*
+alwaysApply: false
+---
+
+# WebGL / shader rules
+
+Full knowledge base: `docs/shaders/README.md`. Effect library by target: `docs/shaders/library/` (TEXT, IMAGES, SCROLL, CURSOR).
+
+## Architecture (pick before writing GLSL)
+
+- **Default for site UI:** media planes over DOM (text stays HTML; images/video get WebGL). Fixed canvas with `pointer-events: none`. Sync planes to `getBoundingClientRect` / scroll. Drive with uniforms: `uTime`, `uScrollVelocity`, `uMouseEnter`, mouse plane coords.
+- **Full-page content texture (`html2canvas` / one tall texture):** only when the whole page must be one continuous warp. Expect soft text; mitigate with DPR capture, mipmaps, anisotropy — never promise native DOM sharpness.
+- **Never** attach a 2D context and a WebGL context to the same canvas.
+
+## three.js / R3F
+
+- Prefer `ShaderMaterial` / drei `shaderMaterial` over `RawShaderMaterial` unless you need full control.
+- Update dynamic values via `material.uniforms.uName.value` (guard missing keys after HMR).
+- Pixel-matched camera: `fov = 2 * atan(viewHeight/2/cameraZ) * (180/PI)`; size planes in CSS pixels.
+- Vertex displacement needs enough segments (dozens–hundreds on the bent axis).
+
+## Visibility & debugging
+
+- A correct Z-bend can look like “nothing” on white-on-white. Prove the stage with false colour (`vUv`, normalised uniforms) or shade by bend amount; use a contrasting clear colour while debugging.
+- Anchoring: prefer edges at z≈0 and bulge centre toward camera so the silhouette still covers the viewport. Pushing edges away causes corner gaps.
+- No `console.log` in GLSL — visualise or read uniforms from JS. Check compile/link logs on raw WebGL paths.
+
+## Texture quality
+
+- Match texture resolution to drawing-buffer DPR when magnifying.
+- For minification / oblique curves: mipmaps + high anisotropy.
+- Guard captures against `MAX_TEXTURE_SIZE`; fail soft (reduce scale), never upload oversized silently.
+
+## GLSL habits
+
+- Type-strict: `1.0` not `1` for floats.
+- Soft masks: `smoothstep` + `distance`; blends: `mix`. Hard cuts: `step`. (Book of Shaders ch. 05–07 — see `docs/shaders/library/BOOK-OF-SHADERS.md`.)
+- Organic variation: value/simplex noise or fBM; keep `for` loop bounds constant; cellular noise checks a fixed 3×3 neighbourhood.
+- Prefer transforming UVs / space (translate → rotate/scale → translate back) over ad-hoc shape math.
+- WebGL1 vs 2 syntax differs (`attribute`/`varying`/`texture2D`/`gl_FragColor` vs `in`/`out`/`texture`). Match the toolchain three.js expects for this repo’s version.
+- Name uniforms with `u` prefix, varyings with `v`.
+
+## Motion ownership
+
+- Idle / organic → `uTime` in shader.
+- Directed hover/page/click beats → GSAP animates uniforms (`gsap.to(material.uniforms.uX, { value })`; timelines for ripple 0→1→0). Prefer sharing the clock via `gsap.ticker` when not using R3F `useFrame` alone.
+- Respect `prefers-reduced-motion` with a simplified or static path.
+
+## Text
+
+- Default: DOM text. Rasterise text to a texture (VFX-JS foreignObject path or html2canvas) only for short hero lines; expect bitmap softness.

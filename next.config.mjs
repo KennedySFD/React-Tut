@@ -1,8 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
   reactCompiler: true,
-  compiler: {styledComponents: true,},
+  compiler: { styledComponents: true },
+  turbopack: {
+    rules: {
+      '*.glsl': {
+        loaders: ['raw-loader'],
+        as: '*.js',
+      },
+    },
+  },
 };
 
 export default nextConfig;
