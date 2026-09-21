@@ -27,43 +27,58 @@ For components that have multiple visual styles (primary, secondary, tertiary), 
 
 ### Step 1: Define the Lookup Object
 
+Each variant is a `css` block, not a flat object of values. This keeps a variant's rest, hover and active colours together, so adding a variant is **one entry** rather than edits scattered across five declarations.
+
+Note there are no hex codes — every colour is a semantic token:
+
 ```javascript
+import styled, { css } from "styled-components";
+
 const variants = {
-  primary: {
-    bg: "#3B82F6",
-    color: "#FFFFFF",
-    border: "transparent",
-    hoverBg: "#2563EB",
-    activeBg: "#1D4ED8",
-  },
-  secondary: {
-    bg: "#FFFFFF",
-    color: "#171717",
-    border: "#D4D4D4",
-    hoverBg: "#F5F5F5",
-    activeBg: "#E5E5E5",
-  },
-  tertiary: {
-    bg: "transparent",
-    color: "#3B82F6",
-    border: "transparent",
-    hoverBg: "#EFF6FF",
-    activeBg: "#DBEAFE",
-  },
+  primary: css`
+    background: ${({ theme }) => theme.semantic.colors.accent.default};
+    color: ${({ theme }) => theme.semantic.colors.accent.onAccent};
+    border-color: ${({ theme }) => theme.semantic.colors.accent.default};
+
+    &:hover:not(:disabled) {
+      background: ${({ theme }) => theme.semantic.colors.accent.hover};
+    }
+
+    &:active:not(:disabled) {
+      background: ${({ theme }) => theme.semantic.colors.accent.active};
+    }
+  `,
+
+  secondary: css`
+    background: ${({ theme }) => theme.semantic.colors.background.raised};
+    color: ${({ theme }) => theme.semantic.colors.text.primary};
+    border-color: ${({ theme }) => theme.semantic.colors.border.default};
+
+    &:hover:not(:disabled) {
+      background: ${({ theme }) => theme.semantic.colors.background.subtle};
+    }
+  `,
+
+  /* tertiary, ghost, danger … */
 };
 ```
 
-The property names (`bg`, `color`, `hoverBg`, etc.) are arbitrary — they can be named anything. They just need to match when you reference them in the styled component.
+Because the values are tokens, the same block produces the correct colours in **both** light and dark mode. No component ever contains an `if (dark)`.
 
-### Step 2: Read the Prop in the Styled Component
+### Step 2: Interpolate the Block
 
 ```javascript
 export const StyledButton = styled.button`
-  background: ${({ $variant }) => variants[$variant || "primary"].bg};
-  color: ${({ $variant }) => variants[$variant || "primary"].color};
-  border: 2px solid ${({ $variant }) => variants[$variant || "primary"].border};
+  /* geometry from component tokens */
+  height: ${({ theme, $size }) => theme.components.button.sizes[$size || "md"].height};
+  border: ${({ theme }) => theme.components.button.borderWidth} solid transparent;
+
+  /* colour from the variant block */
+  ${({ $variant }) => variants[$variant] ?? variants.primary};
 `;
 ```
+
+A flat lookup object of plain values (`{ bg, color }`) is still fine for something simple like a size scale — see the Size Prop Pattern below. Use `css` blocks once a variant owns interaction states too.
 
 ### Step 3: Pass the Prop from the Component
 
@@ -86,6 +101,46 @@ export default function Button({ variant, children, ...props }) {
 <Button variant="tertiary">Learn more</Button>
 <Button>Default (primary)</Button>
 ```
+
+## Shared Mixins
+
+Tokens make the *values* shared. Mixins make the *treatment* shared. They live in `src/theme/mixins.js` and are the mechanism behind the library's consistency.
+
+```javascript
+import { fieldBase, focusRing, focusRingOnly } from '@/theme/mixins';
+
+export const StyledTextarea = styled.textarea`
+  ${fieldBase};
+  padding: ${({ theme }) => theme.global.spacing.md};
+`;
+```
+
+| Mixin | What it does |
+|-------|--------------|
+| `focusRing` | Recolours the border and adds the ring — for fields |
+| `focusRingOnly` | Ring only, border untouched — for buttons, tabs, menu options |
+| `errorFocusRing` | Same geometry, error colourway |
+| `fieldBase` | The whole text-entry surface: border, hover, focus, error, disabled |
+| `disabledState` | Standard disabled treatment |
+| `visuallyHidden` | Hides an element but keeps it for screen readers |
+| `truncate` | Single-line ellipsis |
+| `typography(role)` | Applies a semantic type role in one line |
+
+The point of `focusRing`: an Input's focus ring and a Select's focus ring are not two blue outlines that happen to match. They are **one mixin reading one token**. Change `state.focusRing` in `semantic.js` and every control in the library updates together.
+
+Likewise `fieldBase` is why Input, Textarea, Select and SearchBar are indistinguishable from one another — there is only one definition of what a field looks like.
+
+### Which layer do I read?
+
+| You need | Read from |
+|----------|-----------|
+| A colour | `theme.semantic.colors.*` — **never** `theme.global.colors.*` |
+| An interaction state colour | `theme.semantic.colors.state.*` |
+| A component's height/padding/radius | `theme.components.<name>.*` |
+| A generic spacing/radius/z-index | `theme.global.spacing.*`, `.radii.*`, `.zIndex.*` |
+| A transition | `theme.semantic.motion.fast` / `.base` / `.slow` |
+
+Reaching into `global.colors` from a component defeats the mode system, because those primitives are the same in light and dark.
 
 ## How the Prop Line Works
 
