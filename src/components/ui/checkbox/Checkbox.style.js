@@ -51,18 +51,15 @@ export const Box = styled.span`
       return theme.semantic.colors.border.default;
     }};
   border-radius: ${({ theme }) => theme.components.choice.radius};
+  /* Overlay the keyline on the border rather than nesting it inside, which
+     would read as a box in a box — see glassVars. */
+  --ring-inset: ${({ theme }) => theme.components.choice.borderWidth};
   background: ${({ theme, $checked }) =>
     $checked ? theme.semantic.colors.accent.default : theme.semantic.colors.background.raised};
   color: ${({ theme }) => theme.semantic.colors.accent.onAccent};
   transition: background ${({ theme }) => theme.semantic.motion.fast},
     border-color ${({ theme }) => theme.semantic.motion.fast},
     box-shadow ${({ theme }) => theme.semantic.motion.fast};
-
-  /* Push the dispersion ring outward so it overlays the border instead of
-     nesting inside it — prevents the "box in a box" double-border. */
-  &::before {
-    inset: calc(-1 * ${({ theme }) => theme.components.choice.borderWidth});
-  }
 
   svg {
     width: 80%;

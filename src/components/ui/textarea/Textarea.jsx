@@ -37,7 +37,7 @@ export default function Textarea({
   const hasError = Boolean(error);
 
   const [focused, setFocused] = useState(false);
-  const keylineRef = useFieldMotion(focused);
+  const { ref: shellRef, handlers: motionHandlers } = useFieldMotion(focused, { disabled });
 
   const handleFocus = (event) => {
     setFocused(true);
@@ -61,7 +61,7 @@ export default function Textarea({
       describedById={describedById}
       className={className}
     >
-      <TextareaShell ref={keylineRef}>
+      <TextareaShell ref={shellRef} {...motionHandlers}>
         <StyledTextarea
           id={textareaId}
           rows={rows}

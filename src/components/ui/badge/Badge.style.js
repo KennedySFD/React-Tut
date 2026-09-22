@@ -35,14 +35,27 @@ export const StyledBadge = styled.span`
   top: 0;
   right: 0;
   transform: translate(50%, -50%);
+  /*
+   * Centred by the flexbox, not by line-height + text-align. Under the
+   * global box-sizing: border-box the 2px ring eats into the 1.25rem box,
+   * leaving a content box shorter than the line it holds — so a line-height
+   * matching the outer height sat the digit low by exactly the border width.
+   * A flex centre measures the content box it is actually given.
+   */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   min-width: 1.25rem;
   height: 1.25rem;
   padding: 0 ${({ theme }) => theme.global.spacing.xs};
   border-radius: ${({ theme }) => theme.global.radii.full};
   font-size: ${({ theme }) => theme.global.fontSizes.xs};
   font-weight: ${({ theme }) => theme.global.fontWeights.semibold};
-  line-height: 1.25rem;
-  text-align: center;
+  line-height: 1;
+  /* Equal-width digits, so "11" is as centred as "3" and the pill does not
+     twitch as a count ticks over. */
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
   border: 2px solid ${({ theme }) => theme.semantic.colors.background.canvas};
   ${({ $variant }) => variantColors($variant)};

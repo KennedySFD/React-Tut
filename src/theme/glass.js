@@ -8,6 +8,7 @@ import { css } from 'styled-components';
  *
  *   --ring-angle    rotation of the chromatic keyline   (deg, unitless)
  *   --ring-opacity  visibility of the keyline           (0–1)
+ *   --ring-inset    how far the layers sit outside the padding box (length)
  *   --sheen-x       position of the light streak        (%, unitless)
  *   --sheen-opacity visibility of the streak            (0–1)
  *
@@ -25,6 +26,19 @@ import { css } from 'styled-components';
 export const glassVars = css`
   --ring-angle: 0;
   --ring-opacity: 0;
+  /*
+   * An absolutely positioned pseudo-element is laid out against its parent's
+   * PADDING box, but border-radius: inherit copies the parent's BORDER box
+   * radius. On anything with a border those are two different rectangles: the
+   * layer comes out a border-width too small while carrying a corner curve a
+   * border-width too large, so the ring cuts the corners and floats inside the
+   * edge instead of sitting on it.
+   *
+   * Pulling the layer out by the border width makes its box and the inherited
+   * radius describe the same rectangle again. Components with a border set
+   * this to their own border width; borderless ones leave it at 0.
+   */
+  --ring-inset: 0px;
   /* 100 parks the highlight off the left edge, ready to sweep right */
   --sheen-x: 100;
   --sheen-opacity: 0;
@@ -39,7 +53,7 @@ export const dispersionRing = css`
   &::before {
     content: '';
     position: absolute;
-    inset: 0;
+    inset: calc(-1 * var(--ring-inset, 0px));
     z-index: -1;
     border-radius: inherit;
     padding: 1.5px;
@@ -64,13 +78,13 @@ export const dispersionRing = css`
 /**
  * A soft diagonal highlight that travels across the surface.
  *
- * The layer itself never moves — it stays pinned at `inset: 0` and the
- * *gradient inside it* slides via `background-position`. Translating the
- * element instead would carry its box outside the component, where nothing
- * clips it, and the streak would be visible to the left and right of the
- * component as it passed through.
+ * The layer itself never moves — it stays pinned to the component's border
+ * box and the *gradient inside it* slides via `background-position`.
+ * Translating the element instead would carry its box outside the component,
+ * where nothing clips it, and the streak would be visible to the left and
+ * right of the component as it passed through.
  *
- * Because the layer stays within the border box, `border-radius: inherit`
+ * Because the layer covers exactly the border box, `border-radius: inherit`
  * clips the highlight to the component's exact shape, with no need for
  * `overflow: hidden` on the parent — which would also clip focus rings and
  * any menu the component opens.
@@ -83,7 +97,7 @@ export const sheenLayer = css`
   &::after {
     content: '';
     position: absolute;
-    inset: 0;
+    inset: calc(-1 * var(--ring-inset, 0px));
     z-index: -1;
     border-radius: inherit;
     pointer-events: none;
@@ -113,6 +127,26 @@ export const interactiveGlass = css`
 `;
 
 /**
+ * The same chromatic keyline for text-entry surfaces: Input, Textarea, the
+ * Select trigger and SearchBar.
+ *
+ * It is `interactiveGlass` minus the sheen, for two reasons. `focusKeyline`
+ * already owns `::after` on every field, and a field is a place you put a
+ * cursor rather than a surface you strike — it should light up under the
+ * pointer without a highlight travelling across the text you are reading.
+ *
+ * Pair with the `useFieldMotion` hook, which drives both this and the focus
+ * keyline.
+ */
+export const fieldGlass = css`
+  position: relative;
+  isolation: isolate;
+  ${glassVars};
+  --ring-inset: ${({ theme }) => theme.components.field.borderWidth};
+  ${dispersionRing};
+`;
+
+/**
  * A translucent pane: modal dialogs, dropdown menus, tooltips, and any card
  * asking for the premium treatment.
  *
@@ -131,6 +165,7 @@ export const glassPanel = css`
     inset 0 -1px 0 ${({ theme }) => theme.semantic.colors.glass.shade},
     ${({ theme }) => theme.semantic.shadows.lg};
   ${glassVars};
+  --ring-inset: ${({ theme }) => theme.global.borderWidths.thin};
   ${dispersionRing};
 `;
 

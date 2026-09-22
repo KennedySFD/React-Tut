@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { fieldBase, focusKeyline, glassPanel, truncate } from '@/theme/mixins';
+import { fieldBase, fieldGlass, focusKeyline, glassPanel, truncate } from '@/theme/mixins';
 
 export const SelectWrapper = styled.div`
   position: relative;
@@ -13,7 +13,7 @@ export const SelectWrapper = styled.div`
  */
 export const SelectTrigger = styled.button`
   ${fieldBase};
-  position: relative;
+  ${fieldGlass};
   ${focusKeyline};
   display: flex;
   align-items: center;
