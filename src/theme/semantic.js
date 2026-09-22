@@ -248,7 +248,7 @@ const dark = {
       disabled: global.colors.neutral600,
       inverse: global.colors.neutral900,
       onAccent: global.colors.neutral0,
-      link: global.colors.brand400,
+      link: global.colors.neutral200,
     },
 
     border: {
@@ -259,23 +259,23 @@ const dark = {
     },
 
     accent: {
-      subtle: 'rgba(59, 130, 246, 0.14)',
-      muted: 'rgba(59, 130, 246, 0.22)',
-      border: global.colors.brand700,
-      default: global.colors.brand500,
-      hover: global.colors.brand400,
-      active: global.colors.brand300,
-      text: global.colors.brand300,
-      onAccent: global.colors.neutral0,
+      subtle: 'rgba(255, 255, 255, 0.08)',
+      muted: 'rgba(255, 255, 255, 0.14)',
+      border: global.colors.neutral600,
+      default: global.colors.neutral0,
+      hover: global.colors.neutral200,
+      active: global.colors.neutral300,
+      text: global.colors.neutral200,
+      onAccent: global.colors.neutral950,
     },
 
     feedback: {
       info: {
-        surface: 'rgba(59, 130, 246, 0.14)',
-        border: 'rgba(59, 130, 246, 0.32)',
-        text: global.colors.brand300,
-        solid: global.colors.brand500,
-        onSolid: global.colors.neutral0,
+        surface: 'rgba(255, 255, 255, 0.08)',
+        border: 'rgba(255, 255, 255, 0.20)',
+        text: global.colors.neutral300,
+        solid: global.colors.neutral300,
+        onSolid: global.colors.neutral950,
       },
       success: {
         surface: 'rgba(16, 185, 129, 0.14)',
@@ -312,12 +312,12 @@ const dark = {
       activeSurface: global.alphas.activeDark,
       hoverBorder: global.colors.neutral600,
 
-      focusBorder: global.colors.brand400,
+      focusBorder: global.colors.neutral300,
       focusRing: global.alphas.brandRingDark,
 
-      selectedSurface: 'rgba(59, 130, 246, 0.18)',
-      selectedBorder: global.colors.brand400,
-      selectedText: global.colors.brand300,
+      selectedSurface: 'rgba(255, 255, 255, 0.12)',
+      selectedBorder: global.colors.neutral300,
+      selectedText: global.colors.neutral100,
 
       errorBorder: global.colors.red400,
       errorRing: global.alphas.dangerRingDark,
