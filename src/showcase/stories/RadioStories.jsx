@@ -19,19 +19,40 @@ export const heroControls = {
 };
 
 export function Hero({ size, description, error, disabled }) {
-  const [checked, setChecked] = useState(true);
+  // A lone, sibling-less radio can never be unchecked by clicking it again —
+  // that transition is not a click firing and being ignored; native radio
+  // semantics never run a "checked -> unchecked" activation for it at all,
+  // since there is no other option in its group to switch to. So `onChange`
+  // never fires on the second click no matter what it does, and clicking a
+  // second time to prove the "off" state is stuck permanently "on". A real
+  // pair, exactly like RadioGroup renders, is what actually demonstrates the
+  // click affordance — and it is how every Radio in this library is used.
+  const [value, setValue] = useState('professional');
 
   return (
-    <Radio
-      name="hero-radio"
-      label="Professional"
-      description={description ? 'For small teams shipping to production.' : undefined}
-      checked={checked}
-      onChange={() => setChecked((current) => !current)}
-      size={size}
-      error={error}
-      disabled={disabled}
-    />
+    <Row $gap="xl">
+      <Radio
+        name="hero-radio"
+        value="starter"
+        label="Starter"
+        checked={value === 'starter'}
+        onChange={() => setValue('starter')}
+        size={size}
+        error={error}
+        disabled={disabled}
+      />
+      <Radio
+        name="hero-radio"
+        value="professional"
+        label="Professional"
+        description={description ? 'For small teams shipping to production.' : undefined}
+        checked={value === 'professional'}
+        onChange={() => setValue('professional')}
+        size={size}
+        error={error}
+        disabled={disabled}
+      />
+    </Row>
   );
 }
 

@@ -31,6 +31,8 @@ export const StyledTag = styled.span`
   line-height: 1;
   white-space: nowrap;
   border-radius: ${({ theme }) => theme.components.tag.radius};
+  /* Let the keyline sit on the border, not inside it — see glassVars. */
+  --ring-inset: ${({ theme }) => theme.components.tag.borderWidth};
   border: ${({ theme }) => theme.components.tag.borderWidth} solid
     ${({ theme, $variant, $solid }) =>
       $solid ? 'transparent' : resolveFamily(theme, $variant).border};

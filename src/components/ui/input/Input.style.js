@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { fieldBase, focusKeyline } from '@/theme/mixins';
+import { fieldBase, fieldGlass, focusKeyline } from '@/theme/mixins';
 
 /**
  * The bordered surface. Carries `fieldBase`, so its rest / hover / focus /
@@ -8,8 +8,9 @@ import { fieldBase, focusKeyline } from '@/theme/mixins';
  */
 export const InputShell = styled.div`
   ${fieldBase};
-  /* The dispersion keyline that draws in on focus; driven by useFieldMotion */
-  position: relative;
+  /* Hover keyline (::before) and focus keyline (::after) — both driven by
+     useFieldMotion, so a field lights up exactly as a Button does. */
+  ${fieldGlass};
   ${focusKeyline};
   display: flex;
   align-items: center;

@@ -41,7 +41,7 @@ export default function Input({
   const inputId = id ?? generatedId;
   const describedById = `${inputId}-description`;
   const [focused, setFocused] = useState(false);
-  const keylineRef = useFieldMotion(focused);
+  const { ref: shellRef, handlers: motionHandlers } = useFieldMotion(focused, { disabled });
 
   const hasError = Boolean(error);
 
@@ -68,7 +68,8 @@ export default function Input({
       className={className}
     >
       <InputShell
-        ref={keylineRef}
+        ref={shellRef}
+        {...motionHandlers}
         $size={size}
         $hasError={hasError}
         data-focused={focused}

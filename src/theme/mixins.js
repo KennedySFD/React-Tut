@@ -6,6 +6,7 @@ import { css } from 'styled-components';
  */
 export {
   dispersionRing,
+  fieldGlass,
   focusKeyline,
   glassPanel,
   glassPanelStrong,

@@ -109,6 +109,8 @@ export const StyledButton = styled.button`
   white-space: nowrap;
   border-radius: ${({ theme }) => theme.components.button.radius};
   border: ${({ theme }) => theme.components.button.borderWidth} solid transparent;
+  /* Let the keyline sit on the border, not inside it — see glassVars. */
+  --ring-inset: ${({ theme }) => theme.components.button.borderWidth};
   cursor: pointer;
   user-select: none;
   /* Colour only — GSAP owns transform, so it must not appear here or the two

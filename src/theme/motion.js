@@ -84,6 +84,11 @@ export const amplitude = {
   subtle: { lift: 0, press: 0.985, sheen: 0, ring: 0.75, label: -1 },
   /** Checkbox / radio / switch — the control is small, so the press is proportional. */
   choice: { lift: 0, press: 0.9, sheen: 0, ring: 1, label: 0 },
+  /**
+   * Text fields — the keyline only. A field is somewhere you place a cursor,
+   * so it must not move under the pointer or drift while you are typing.
+   */
+  field: { lift: 0, press: 1, sheen: 0, ring: 0.9, label: 0 },
 };
 
 /** Distance overlays travel as they reveal. */

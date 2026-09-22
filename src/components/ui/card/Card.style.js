@@ -30,6 +30,8 @@ export const StyledCard = styled.div`
   padding: ${({ theme, $padding }) => theme.components.card.paddings[$padding || 'md']};
   border: ${({ theme }) => theme.components.card.borderWidth} solid transparent;
   border-radius: ${({ theme }) => theme.components.card.radius};
+  /* Let the keyline sit on the border, not inside it — see glassVars. */
+  --ring-inset: ${({ theme }) => theme.components.card.borderWidth};
   /* No transform property here — GSAP drives the lift. */
   transition: box-shadow ${({ theme }) => theme.semantic.motion.base},
     border-color ${({ theme }) => theme.semantic.motion.base};

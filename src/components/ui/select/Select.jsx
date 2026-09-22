@@ -72,7 +72,9 @@ export default function Select({
   const listRef = useRef(null);
 
   // Two hooks each want a ref on the same node, so the refs are merged by hand
-  const keylineRef = useFieldMotion(open || focused);
+  const { ref: keylineRef, handlers: motionHandlers } = useFieldMotion(open || focused, {
+    disabled,
+  });
   const revealRef = useRevealMotion({ distance: 'menu', active: open });
 
   const setTriggerRef = (node) => {
@@ -191,6 +193,7 @@ export default function Select({
         <SelectTrigger
           type="button"
           ref={setTriggerRef}
+          {...motionHandlers}
           id={selectId}
           role="combobox"
           aria-haspopup="listbox"
