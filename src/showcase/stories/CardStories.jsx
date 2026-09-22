@@ -28,7 +28,13 @@ export function Hero({ variant, padding, interactive, footer }) {
       interactive={interactive}
       title="Project settings"
       description="Hover to lift, press to compress, tab to focus."
-      footer={footer ? <Button size="sm">Open</Button> : undefined}
+      footer={
+        footer
+          ? interactive
+            ? 'Open'
+            : <Button size="sm">Open</Button>
+          : undefined
+      }
       style={{ width: '100%' }}
     />
   );
