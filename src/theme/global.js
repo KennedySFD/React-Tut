@@ -30,16 +30,17 @@ export const global = {
     neutral950: '#09090B',
 
     // Brand ramp — swap these to rebrand the library
-    brand50: '#EFF6FF',
-    brand100: '#DBEAFE',
-    brand200: '#BFDBFE',
-    brand300: '#93C5FD',
-    brand400: '#60A5FA',
-    brand500: '#3B82F6',
-    brand600: '#2563EB',
-    brand700: '#1D4ED8',
-    brand800: '#1E40AF',
-    brand900: '#1E3A8A',
+    // Neutral-black primary: high-contrast, pairs with the dispersion gradient
+    brand50: '#FAFAFA',
+    brand100: '#F4F4F5',
+    brand200: '#E4E4E7',
+    brand300: '#D4D4D8',
+    brand400: '#A1A1AA',
+    brand500: '#18181B',
+    brand600: '#09090B',
+    brand700: '#000000',
+    brand800: '#000000',
+    brand900: '#000000',
 
     // Success
     green50: '#ECFDF5',
@@ -76,8 +77,8 @@ export const global = {
   alphas: {
     overlayLight: 'rgba(9, 9, 11, 0.45)',
     overlayDark: 'rgba(0, 0, 0, 0.65)',
-    brandRingLight: 'rgba(59, 130, 246, 0.35)',
-    brandRingDark: 'rgba(96, 165, 250, 0.40)',
+    brandRingLight: 'rgba(9, 9, 11, 0.25)',
+    brandRingDark: 'rgba(255, 255, 255, 0.30)',
     dangerRingLight: 'rgba(239, 68, 68, 0.30)',
     dangerRingDark: 'rgba(248, 113, 113, 0.35)',
     hoverLight: 'rgba(9, 9, 11, 0.04)',

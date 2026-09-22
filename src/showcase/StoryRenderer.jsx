@@ -5,27 +5,40 @@ import { DocColumn, Eyebrow, Hero, PageHead, PageSummary, PageTitle, StoryList }
 import * as accordion from './stories/AccordionStories';
 import * as alert from './stories/AlertStories';
 import * as avatar from './stories/AvatarStories';
+import * as avatarGroup from './stories/AvatarGroupStories';
 import * as badge from './stories/BadgeStories';
 import * as breadcrumb from './stories/BreadcrumbStories';
 import * as button from './stories/ButtonStories';
 import * as card from './stories/CardStories';
 import * as checkbox from './stories/CheckboxStories';
+import * as commandPalette from './stories/CommandPaletteStories';
 import * as divider from './stories/DividerStories';
+import * as drawer from './stories/DrawerStories';
+import * as dropdownMenu from './stories/DropdownMenuStories';
+import * as emptyState from './stories/EmptyStateStories';
 import * as field from './stories/FieldStories';
 import * as footer from './stories/FooterStories';
 import * as header from './stories/HeaderStories';
 import * as input from './stories/InputStories';
 import * as modal from './stories/ModalStories';
 import * as motion from './stories/MotionStories';
+import * as pagination from './stories/PaginationStories';
+import * as popover from './stories/PopoverStories';
+import * as progress from './stories/ProgressStories';
 import * as radio from './stories/RadioStories';
 import * as searchbar from './stories/SearchBarStories';
 import * as select from './stories/SelectStories';
 import * as skeleton from './stories/SkeletonStories';
+import * as slider from './stories/SliderStories';
 import * as spinner from './stories/SpinnerStories';
+import * as stepper from './stories/StepperStories';
 import * as switchControl from './stories/SwitchStories';
+import * as table from './stories/TableStories';
 import * as tabs from './stories/TabsStories';
 import * as tag from './stories/TagStories';
 import * as textarea from './stories/TextareaStories';
+import * as toast from './stories/ToastStories';
+import * as toggleGroup from './stories/ToggleGroupStories';
 import * as tokens from './stories/TokenStories';
 import * as tooltip from './stories/TooltipStories';
 
@@ -56,21 +69,35 @@ const modulesBySlug = {
   checkbox,
   radio,
   switch: switchControl,
+  slider,
+  'toggle-group': toggleGroup,
 
   avatar,
+  'avatar-group': avatarGroup,
   badge,
   card,
   tag,
   accordion,
   divider,
   skeleton,
+  table,
+  'empty-state': emptyState,
+  progress,
+  stepper,
 
   alert,
   modal,
   tooltip,
+  toast,
 
   breadcrumb,
   tabs,
+  pagination,
+
+  'dropdown-menu': dropdownMenu,
+  popover,
+  drawer,
+  'command-palette': commandPalette,
 
   header,
   footer,

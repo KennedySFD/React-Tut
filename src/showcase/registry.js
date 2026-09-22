@@ -17,6 +17,7 @@ export const categories = [
   'Data display',
   'Feedback',
   'Navigation',
+  'Overlay',
   'Layout',
 ];
 
@@ -95,12 +96,30 @@ export const registry = [
     category: 'Forms',
     summary: 'On/off toggle for settings that apply immediately.',
   },
+  {
+    slug: 'slider',
+    name: 'Slider',
+    category: 'Forms',
+    summary: 'Single-thumb range slider for selecting a numeric value.',
+  },
+  {
+    slug: 'toggle-group',
+    name: 'Toggle Group',
+    category: 'Forms',
+    summary: 'Segmented mutually exclusive buttons.',
+  },
 
   {
     slug: 'avatar',
     name: 'Avatar',
     category: 'Data display',
     summary: 'User or entity image with an initials fallback and status dot.',
+  },
+  {
+    slug: 'avatar-group',
+    name: 'Avatar Group',
+    category: 'Data display',
+    summary: 'Stacked avatars with an overflow +N indicator.',
   },
   {
     slug: 'badge',
@@ -138,6 +157,30 @@ export const registry = [
     category: 'Data display',
     summary: 'Pulsing placeholder shapes for content that is still loading.',
   },
+  {
+    slug: 'table',
+    name: 'Table',
+    category: 'Data display',
+    summary: 'Data table with sortable column headers and striped rows.',
+  },
+  {
+    slug: 'empty-state',
+    name: 'Empty State',
+    category: 'Data display',
+    summary: 'Placeholder with icon, message and CTA for empty lists.',
+  },
+  {
+    slug: 'progress',
+    name: 'Progress',
+    category: 'Data display',
+    summary: 'Determinate or indeterminate linear progress bar.',
+  },
+  {
+    slug: 'stepper',
+    name: 'Stepper',
+    category: 'Data display',
+    summary: 'Multi-step wizard indicator showing progress through a sequence.',
+  },
 
   {
     slug: 'alert',
@@ -157,6 +200,12 @@ export const registry = [
     category: 'Feedback',
     summary: 'Short label on hover and keyboard focus, in four placements.',
   },
+  {
+    slug: 'toast',
+    name: 'Toast',
+    category: 'Feedback',
+    summary: 'Transient auto-dismissing notification messages.',
+  },
 
   {
     slug: 'breadcrumb',
@@ -165,10 +214,41 @@ export const registry = [
     summary: 'A trail of links showing the current page hierarchy.',
   },
   {
+    slug: 'pagination',
+    name: 'Pagination',
+    category: 'Navigation',
+    summary: 'Page navigation with ellipsis for long lists.',
+  },
+  {
     slug: 'tabs',
     name: 'Tabs',
     category: 'Navigation',
     summary: 'Two variants with a single indicator that travels between tabs.',
+  },
+
+  {
+    slug: 'dropdown-menu',
+    name: 'Dropdown Menu',
+    category: 'Overlay',
+    summary: 'Contextual action list triggered by a button.',
+  },
+  {
+    slug: 'popover',
+    name: 'Popover',
+    category: 'Overlay',
+    summary: 'Positioned content panel — richer than a Tooltip.',
+  },
+  {
+    slug: 'drawer',
+    name: 'Drawer',
+    category: 'Overlay',
+    summary: 'Sliding panel from the left or right edge of the screen.',
+  },
+  {
+    slug: 'command-palette',
+    name: 'Command Palette',
+    category: 'Overlay',
+    summary: '⌘K search and action bar with keyboard navigation.',
   },
 
   {

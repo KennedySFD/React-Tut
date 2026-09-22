@@ -167,4 +167,85 @@ export const ExternalLinkIcon = (props) => (
   </Icon>
 );
 
+export const ChevronLeftIcon = (props) => (
+  <Icon {...props}>
+    <path d="m15 6-6 6 6 6" />
+  </Icon>
+);
+
+export const ChevronUpIcon = (props) => (
+  <Icon {...props}>
+    <path d="m6 15 6-6 6 6" />
+  </Icon>
+);
+
+export const MoreHorizontalIcon = (props) => (
+  <Icon {...props}>
+    <circle cx="12" cy="12" r="1" />
+    <circle cx="5" cy="12" r="1" />
+    <circle cx="19" cy="12" r="1" />
+  </Icon>
+);
+
+export const SortIcon = (props) => (
+  <Icon {...props}>
+    <path d="m7 15 5 5 5-5M7 9l5-5 5 5" />
+  </Icon>
+);
+
+export const SortAscIcon = (props) => (
+  <Icon {...props}>
+    <path d="m7 9 5-5 5 5" />
+    <path d="M12 4v16" />
+  </Icon>
+);
+
+export const SortDescIcon = (props) => (
+  <Icon {...props}>
+    <path d="m7 15 5 5 5-5" />
+    <path d="M12 4v16" />
+  </Icon>
+);
+
+export const PanelLeftIcon = (props) => (
+  <Icon {...props}>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="M9 3v18" />
+  </Icon>
+);
+
+export const CommandIcon = (props) => (
+  <Icon {...props}>
+    <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3Z" />
+  </Icon>
+);
+
+export const FileIcon = (props) => (
+  <Icon {...props}>
+    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+    <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+  </Icon>
+);
+
+export const InboxIcon = (props) => (
+  <Icon {...props}>
+    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+    <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z" />
+  </Icon>
+);
+
+export const SlidersIcon = (props) => (
+  <Icon {...props}>
+    <line x1="4" x2="4" y1="21" y2="14" />
+    <line x1="4" x2="4" y1="10" y2="3" />
+    <line x1="12" x2="12" y1="21" y2="12" />
+    <line x1="12" x2="12" y1="8" y2="3" />
+    <line x1="20" x2="20" y1="21" y2="16" />
+    <line x1="20" x2="20" y1="12" y2="3" />
+    <line x1="2" x2="6" y1="14" y2="14" />
+    <line x1="10" x2="14" y1="8" y2="8" />
+    <line x1="18" x2="22" y1="16" y2="16" />
+  </Icon>
+);
+
 export default Icon;
