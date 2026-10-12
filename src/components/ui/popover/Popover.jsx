@@ -2,7 +2,15 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRevealMotion } from '@/hooks/useRevealMotion';
-import { PopoverRoot, PopoverPanel } from './Popover.style';
+import { cx } from '@/lib/cx';
+import styles from './Popover.module.scss';
+
+const placementClass = {
+  top: styles.top,
+  bottom: styles.bottom,
+  left: styles.left,
+  right: styles.right,
+};
 
 /**
  * Popover
@@ -14,6 +22,7 @@ export default function Popover({
   trigger,
   placement = 'bottom',
   children,
+  className,
   ...props
 }) {
   const [open, setOpen] = useState(false);
@@ -40,16 +49,19 @@ export default function Popover({
   }, [open, close]);
 
   return (
-    <PopoverRoot ref={rootRef} {...props}>
+    <div ref={rootRef} className={cx(styles.root, className)} {...props}>
       {typeof trigger === 'function'
         ? trigger({ onClick: toggle, 'aria-expanded': open })
         : <span onClick={toggle}>{trigger}</span>}
 
       {open && (
-        <PopoverPanel ref={panelRef} $placement={placement}>
+        <div
+          ref={panelRef}
+          className={cx(styles.panel, placementClass[placement] || styles.bottom)}
+        >
           {children}
-        </PopoverPanel>
+        </div>
       )}
-    </PopoverRoot>
+    </div>
   );
 }

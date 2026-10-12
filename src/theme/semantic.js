@@ -160,6 +160,8 @@ const light = {
         border: global.colors.red200,
         text: global.colors.red700,
         solid: global.colors.red600,
+        solidHover: global.colors.red700,
+        solidActive: global.colors.red800,
         onSolid: global.colors.neutral0,
       },
       neutral: {
@@ -259,8 +261,8 @@ const dark = {
     },
 
     accent: {
-      subtle: 'rgba(255, 255, 255, 0.08)',
-      muted: 'rgba(255, 255, 255, 0.14)',
+      subtle: global.alphas.whiteSubtle,
+      muted: global.alphas.whiteMuted,
       border: global.colors.neutral600,
       default: global.colors.neutral0,
       hover: global.colors.neutral200,
@@ -296,6 +298,8 @@ const dark = {
         border: 'rgba(239, 68, 68, 0.32)',
         text: global.colors.red400,
         solid: global.colors.red500,
+        solidHover: global.colors.red600,
+        solidActive: global.colors.red700,
         onSolid: global.colors.neutral0,
       },
       neutral: {

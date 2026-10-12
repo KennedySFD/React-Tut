@@ -6,20 +6,9 @@ import Button from '@/components/ui/button';
 import Tag from '@/components/ui/tag';
 import { MoonIcon, SunIcon } from '@/components/icons';
 import { useThemeMode } from '@/context/ThemeModeContext';
+import { cx } from '@/lib/cx';
 import { getGroupedRegistry, registry } from './registry';
-import {
-  Brand,
-  BrandMark,
-  BrandName,
-  Content,
-  GroupLabel,
-  NavLink,
-  Shell,
-  Sidebar,
-  SidebarInner,
-  TopBar,
-  TopBarActions,
-} from './ShowcaseChrome.style';
+import styles from './ShowcaseChrome.module.scss';
 
 /**
  * The persistent frame around every showcase page.
@@ -34,14 +23,14 @@ export default function ShowcaseChrome({ children }) {
   const groups = getGroupedRegistry();
 
   return (
-    <Shell>
-      <TopBar>
-        <Brand as={Link} href="/showcase">
-          <BrandMark aria-hidden="true">UI</BrandMark>
-          <BrandName>Component Library</BrandName>
-        </Brand>
+    <div className={styles.shell}>
+      <header className={styles.topBar}>
+        <Link className={styles.brand} href="/showcase">
+          <span className={styles.brandMark} aria-hidden="true">UI</span>
+          <span className={styles.brandName}>Component Library</span>
+        </Link>
 
-        <TopBarActions>
+        <div className={styles.actions}>
           <Tag variant="accent" size="sm">
             {registry.length} entries
           </Tag>
@@ -53,40 +42,42 @@ export default function ShowcaseChrome({ children }) {
           >
             {mode === 'light' ? 'Dark' : 'Light'}
           </Button>
-        </TopBarActions>
-      </TopBar>
+        </div>
+      </header>
 
-      <Content>
-        <Sidebar aria-label="Components">
-          <SidebarInner>
-            <NavLink as={Link} href="/showcase" $active={pathname === '/showcase'}>
+      <div className={styles.content}>
+        <nav className={styles.sidebar} aria-label="Components">
+          <div className={styles.sidebarInner}>
+            <Link
+              className={cx(styles.navLink, pathname === '/showcase' && styles.active)}
+              href="/showcase"
+            >
               Overview
-            </NavLink>
+            </Link>
 
             {groups.map((group) => (
               <div key={group.category}>
-                <GroupLabel>{group.category}</GroupLabel>
+                <span className={styles.groupLabel}>{group.category}</span>
                 {group.entries.map((entry) => {
                   const href = `/showcase/${entry.slug}`;
                   return (
-                    <NavLink
+                    <Link
                       key={entry.slug}
-                      as={Link}
+                      className={cx(styles.navLink, pathname === href && styles.active)}
                       href={href}
-                      $active={pathname === href}
                       aria-current={pathname === href ? 'page' : undefined}
                     >
                       {entry.name}
-                    </NavLink>
+                    </Link>
                   );
                 })}
               </div>
             ))}
-          </SidebarInner>
-        </Sidebar>
+          </div>
+        </nav>
 
         <main>{children}</main>
-      </Content>
-    </Shell>
+      </div>
+    </div>
   );
 }

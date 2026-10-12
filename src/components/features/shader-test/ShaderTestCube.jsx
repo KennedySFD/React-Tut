@@ -1,6 +1,6 @@
 'use client';
 
-import styled from 'styled-components';
+import styles from './ShaderTestCube.module.scss';
 
 /**
  * Article after the cube orbit. ShaderScrollScene pins a sticky viewport for
@@ -8,23 +8,23 @@ import styled from 'styled-components';
  */
 export default function ShaderTestCube() {
   return (
-    <Article>
-      <Title>After the orbit</Title>
-      <Lead>
+    <article className={styles.article}>
+      <h1 className={styles.title}>After the orbit</h1>
+      <p className={styles.lead}>
         The camera finished a full turn around the cube. Scroll is unlocked
         now — keep going and the page moves like a normal document while the
         scene stays parked behind this copy.
-      </Lead>
+      </p>
 
       {SECTIONS.map((section) => (
-        <Section key={section.heading}>
-          <Heading>{section.heading}</Heading>
+        <section key={section.heading} className={styles.section}>
+          <h2 className={styles.heading}>{section.heading}</h2>
           {section.paragraphs.map((p) => (
             <p key={p.slice(0, 24)}>{p}</p>
           ))}
-        </Section>
+        </section>
       ))}
-    </Article>
+    </article>
   );
 }
 
@@ -62,53 +62,3 @@ const SECTIONS = [
     ],
   },
 ];
-
-const Article = styled.article`
-  position: relative;
-  z-index: 1;
-  box-sizing: border-box;
-  width: 100%;
-  padding: clamp(3rem, 8vh, 6rem) clamp(1.25rem, 4vw, 3rem) 8rem;
-  background: #efe8dc;
-  color: #1c1914;
-`;
-
-const Title = styled.h1`
-  margin: 0 0 0.75rem;
-  max-width: 14ch;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(2.5rem, 7vw, 4.5rem);
-  font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-`;
-
-const Lead = styled.p`
-  margin: 0 0 3rem;
-  max-width: 38rem;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(1.15rem, 2.4vw, 1.45rem);
-  line-height: 1.55;
-  color: #3a342c;
-`;
-
-const Section = styled.section`
-  max-width: 40rem;
-  margin-bottom: 2.75rem;
-
-  p {
-    margin: 0 0 1.1rem;
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: #2a251f;
-  }
-`;
-
-const Heading = styled.h2`
-  margin: 0 0 0.85rem;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(1.35rem, 3vw, 1.75rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-`;

@@ -3,15 +3,7 @@
 import { Button, Card, Tag } from '@/components/ui';
 import { amplitude, curves, gesture } from '@/theme/motion';
 import { Grid, Hint, Row, Stack, StateCell, StateName, Story } from '../kit';
-import {
-  CurveBox,
-  CurveGrid,
-  CurveMeta,
-  CurveName,
-  ScaleBar,
-  ScaleLabel,
-  ScaleRow,
-} from './token.style';
+import styles from './token.module.scss';
 
 /**
  * Plots a cubic-bezier from its control points. Drawn from the same numbers
@@ -23,9 +15,9 @@ function CurvePlot({ points: [x1, y1, x2, y2] }) {
 
   return (
     <svg viewBox="0 0 100 100" role="img" aria-label="Easing curve">
-      <line className="grid-line" x1="0" y1="100" x2="100" y2="100" />
-      <line className="grid-line" x1="0" y1="0" x2="0" y2="100" />
-      <path className="curve" d={path} />
+      <line className={styles.gridLine} x1="0" y1="100" x2="100" y2="100" />
+      <line className={styles.gridLine} x1="0" y1="0" x2="0" y2="100" />
+      <path className={styles.curve} d={path} />
     </svg>
   );
 }
@@ -37,15 +29,15 @@ export default function MotionStories() {
         title="Curves"
         description="A curve is declared once as four control points. Those points render both the CSS cubic-bezier() and the GSAP CustomEase, so a transition and a tween run the identical easing function rather than two that merely look alike."
       >
-        <CurveGrid>
+        <div className={styles.curveGrid}>
           {Object.entries(curves).map(([name, curve]) => (
-            <CurveBox key={name}>
+            <div key={name} className={styles.curveBox}>
               <CurvePlot points={curve.points} />
-              <CurveName>{name}</CurveName>
-              <CurveMeta>{curve.css}</CurveMeta>
-            </CurveBox>
+              <span className={styles.curveName}>{name}</span>
+              <span className={styles.curveMeta}>{curve.css}</span>
+            </div>
           ))}
-        </CurveGrid>
+        </div>
       </Story>
 
       <Story
@@ -54,13 +46,13 @@ export default function MotionStories() {
       >
         <Stack $gap="sm">
           {Object.entries(gesture).map(([name, value]) => (
-            <ScaleRow key={name}>
-              <ScaleLabel>{name}</ScaleLabel>
-              <ScaleBar $width={`${value.duration * 220}px`} />
-              <CurveMeta>
+            <div key={name} className={styles.scaleRow}>
+              <span className={styles.scaleLabel}>{name}</span>
+              <div className={styles.scaleBar} style={{ width: `${value.duration * 220}px` }} />
+              <span className={styles.curveMeta}>
                 {value.duration}s · {value.ease}
-              </CurveMeta>
-            </ScaleRow>
+              </span>
+            </div>
           ))}
         </Stack>
       </Story>

@@ -1,6 +1,6 @@
 'use client';
 
-import styled from 'styled-components';
+import styles from './ShaderTestCylinderHorizontal.module.scss';
 
 /** Stable Unsplash set — 20 shots for a filmstrip row (no copy). */
 const IMAGE_URLS = [
@@ -33,10 +33,11 @@ const IMAGE_URLS = [
  */
 export default function ShaderTestCylinderHorizontal() {
   return (
-    <Viewport data-horizontal-scroll>
-      <Strip data-horizontal-scroll-content>
+    <div className={styles.viewport} data-horizontal-scroll>
+      <div className={styles.strip} data-horizontal-scroll-content>
         {IMAGE_URLS.map((src, index) => (
-          <Shot
+          <img
+            className={styles.shot}
             key={`${index}-${src}`}
             data-canvas
             crossOrigin="anonymous"
@@ -45,43 +46,7 @@ export default function ShaderTestCylinderHorizontal() {
             loading={index < 4 ? 'eager' : 'lazy'}
           />
         ))}
-      </Strip>
-    </Viewport>
+      </div>
+    </div>
   );
 }
-
-const Viewport = styled.div`
-  width: 100%;
-  height: 100vh;
-  overflow-x: auto;
-  overflow-y: hidden;
-  overscroll-behavior: none;
-  touch-action: pan-x;
-  background: #0b0b0b;
-  /* Hide native bar; Lenis smooths wheel. */
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-const Strip = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: clamp(0.75rem, 1.5vw, 1.5rem);
-  box-sizing: border-box;
-  width: max-content;
-  min-height: 100%;
-  padding: 0 clamp(8vw, 12vw, 16vw);
-`;
-
-const Shot = styled.img`
-  flex: 0 0 auto;
-  height: min(72vh, 680px);
-  width: auto;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
-  display: block;
-  background: #1a1a1a;
-`;

@@ -1,0 +1,56 @@
+@use '../../../theme/mixins' as *;
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  border: var(--global-borderWidths-thin) solid var(--semantic-colors-border-default);
+  border-radius: var(--global-radii-lg);
+  overflow: hidden;
+  background: var(--semantic-colors-background-subtle);
+  padding: 0.125rem;
+  gap: 0.125rem;
+}
+
+.item {
+  @include typography(label);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--global-spacing-xs);
+  padding: var(--global-spacing-sm) var(--global-spacing-lg);
+  border: none;
+  background: transparent;
+  color: var(--semantic-colors-text-muted);
+  font-size: var(--global-fontSizes-sm);
+  cursor: pointer;
+  border-radius: var(--global-radii-md);
+  transition:
+    background var(--semantic-motion-fast),
+    color var(--semantic-motion-fast),
+    box-shadow var(--semantic-motion-fast);
+
+  &.active {
+    background: var(--semantic-colors-background-raised);
+    color: var(--semantic-colors-text-primary);
+    box-shadow: var(--semantic-shadows-sm);
+  }
+
+  &:hover:not(:disabled) {
+    color: var(--semantic-colors-text-primary);
+  }
+
+  &:focus-visible {
+    @include focus-ring-only;
+  }
+
+  &:disabled {
+    opacity: var(--global-opacities-disabled);
+    cursor: default;
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+}

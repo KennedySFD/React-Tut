@@ -1,0 +1,102 @@
+@use '../../../theme/mixins' as *;
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--global-zIndex-modal);
+  display: flex;
+  justify-content: center;
+  padding-top: 20vh;
+  background: var(--semantic-colors-background-scrim);
+}
+
+.panel {
+  @include glass-panel-strong;
+  width: min(36rem, 90vw);
+  max-height: 24rem;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--global-radii-xl);
+  overflow: hidden;
+}
+
+.input {
+  @include typography(body);
+  width: 100%;
+  padding: var(--global-spacing-lg) var(--global-spacing-xl);
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--semantic-colors-text-primary);
+  font-size: var(--global-fontSizes-md);
+
+  &::placeholder {
+    color: var(--semantic-colors-text-muted);
+  }
+}
+
+.list {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--global-spacing-xs);
+  border-top: var(--global-borderWidths-thin) solid var(--semantic-colors-border-subtle);
+}
+
+.groupLabel {
+  @include typography(caption);
+  display: block;
+  padding: var(--global-spacing-sm) var(--global-spacing-md);
+  color: var(--semantic-colors-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--global-letterSpacings-wide);
+}
+
+.result {
+  @include typography(body);
+  display: flex;
+  align-items: center;
+  gap: var(--global-spacing-sm);
+  width: 100%;
+  padding: var(--global-spacing-sm) var(--global-spacing-md);
+  border: none;
+  background: transparent;
+  color: var(--semantic-colors-text-primary);
+  font-size: var(--global-fontSizes-sm);
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--global-radii-md);
+  transition: background var(--semantic-motion-fast);
+
+  &.active,
+  &:hover {
+    background: var(--semantic-colors-state-hoverSurface);
+  }
+
+  &:focus-visible {
+    @include focus-ring-only;
+  }
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    color: var(--semantic-colors-text-muted);
+  }
+
+  &.empty {
+    color: inherit;
+    cursor: default;
+  }
+}
+
+.shortcut {
+  @include typography(caption);
+  margin-left: auto;
+  padding: 0.125rem 0.375rem;
+  font-family: var(--global-fontFamilies-mono);
+  font-size: var(--global-fontSizes-xs);
+  background: var(--semantic-colors-background-subtle);
+  border: var(--global-borderWidths-thin) solid var(--semantic-colors-border-subtle);
+  border-radius: var(--global-radii-sm);
+  color: var(--semantic-colors-text-muted);
+}

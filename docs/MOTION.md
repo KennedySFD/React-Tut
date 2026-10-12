@@ -9,7 +9,7 @@ Uniformity here is **structural, not conventional**. It is not a rule people hav
 ```
 src/theme/motion.js      Curves, durations, gestures, amplitudes  (the contract)
 src/lib/gsap.js          Registers those curves with GSAP
-src/theme/glass.js       The visual layers the motion drives
+src/theme/_mixins.scss   The visual layers the motion drives (`interactive-glass`)
 src/hooks/use*Motion.js  The four behaviours components consume
 ```
 
@@ -92,13 +92,12 @@ Two effect layers attach to a component as **pseudo-elements**, driven entirely 
 
 GSAP animates those four variables. Because the layers are pseudo-elements, **no component renders extra markup to receive the effect** — it arrives through a mixin alone.
 
-```javascript
-import { interactiveGlass } from '@/theme/mixins';
+```scss
+@use '../../../theme/mixins' as *;
 
-export const StyledButton = styled.button`
-  ${interactiveGlass};
-  /* ...rest of the component */
-`;
+.root {
+  @include interactive-glass;
+}
 ```
 
 ### Why `z-index: -1`
@@ -168,7 +167,7 @@ Glass is invisible without something behind it to refract. A frosted pane over a
 ```javascript
 const { ref, handlers } = useInteractiveMotion({ preset: 'control', disabled });
 
-return <StyledButton ref={ref} {...handlers}>…</StyledButton>;
+return <button ref={ref} className={styles.root} type="button" {...handlers}>…</button>;
 ```
 
 Any descendant marked `data-motion-label` receives the shared text lift, which is how a button's label rides with its surface.
@@ -181,11 +180,11 @@ Any descendant marked `data-motion-label` receives the shared text lift, which i
 4. **An effect layer sized to its component must not be translated.** It will leave the component's bounds and be drawn outside it. Move what is *inside* the layer instead — see the sheen above.
 5. **Every hook respects `prefers-reduced-motion`**, falling back to setting the end state directly. The interface still reflects what happened; it just stops moving to get there. Preserve this in anything new.
 6. **Bound the variable tweens.** Animating a custom property used inside a gradient forces a repaint each frame. That is fine for a one-shot hover on a single element, and not fine as an infinite loop across a list.
-7. **Backticks are illegal inside a styled-components template literal**, including in CSS comments — they terminate the string.
+7. **Import the glass mixin with a relative `@use`.** `@use 'mixins'` does not resolve, because Sass is not given a load path.
 
 ## Adding motion to a new component
 
-1. Add `${interactiveGlass}` to its styled root.
+1. Add `@include interactive-glass` to its root class.
 2. Call `useInteractiveMotion` with the amplitude preset that fits its family.
 3. Spread `handlers` and attach `ref`.
 4. Mark its text `data-motion-label` if it should ride along.

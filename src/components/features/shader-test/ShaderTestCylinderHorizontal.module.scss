@@ -1,0 +1,37 @@
+@use '../../../theme/mixins' as *;
+
+.viewport {
+  width: 100%;
+  height: 100vh;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior: none;
+  touch-action: pan-x;
+  background: #0b0b0b;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.strip {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(0.75rem, 1.5vw, 1.5rem);
+  box-sizing: border-box;
+  width: max-content;
+  min-height: 100%;
+  padding: 0 clamp(8vw, 12vw, 16vw);
+}
+
+.shot {
+  flex: 0 0 auto;
+  height: min(72vh, 680px);
+  width: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  display: block;
+  background: #1a1a1a;
+}

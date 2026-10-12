@@ -1,0 +1,187 @@
+@use '../../../theme/mixins' as *;
+
+.root {
+  @include interactive-glass;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--components-button-fontWeight);
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: var(--components-button-radius);
+  border: var(--components-button-borderWidth) solid transparent;
+  --ring-inset: var(--components-button-borderWidth);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background var(--semantic-motion-fast),
+    border-color var(--semantic-motion-fast),
+    color var(--semantic-motion-fast),
+    box-shadow var(--semantic-motion-fast),
+    filter var(--semantic-motion-fast);
+
+  &:focus-visible {
+    @include focus-ring-only;
+  }
+
+  &:disabled {
+    @include disabled-state;
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.sm {
+  height: var(--components-button-sizes-sm-height);
+  padding: 0 var(--components-button-sizes-sm-paddingX);
+  font-size: var(--components-button-sizes-sm-fontSize);
+
+  svg {
+    width: var(--components-button-sizes-sm-iconSize);
+    height: var(--components-button-sizes-sm-iconSize);
+  }
+}
+
+.md {
+  height: var(--components-button-sizes-md-height);
+  padding: 0 var(--components-button-sizes-md-paddingX);
+  font-size: var(--components-button-sizes-md-fontSize);
+
+  svg {
+    width: var(--components-button-sizes-md-iconSize);
+    height: var(--components-button-sizes-md-iconSize);
+  }
+}
+
+.lg {
+  height: var(--components-button-sizes-lg-height);
+  padding: 0 var(--components-button-sizes-lg-paddingX);
+  font-size: var(--components-button-sizes-lg-fontSize);
+
+  svg {
+    width: var(--components-button-sizes-lg-iconSize);
+    height: var(--components-button-sizes-lg-iconSize);
+  }
+}
+
+.iconOnly {
+  padding: 0;
+}
+
+.sm.iconOnly { width: var(--components-button-sizes-sm-height); }
+.md.iconOnly { width: var(--components-button-sizes-md-height); }
+.lg.iconOnly { width: var(--components-button-sizes-lg-height); }
+
+.fullWidth { width: 100%; }
+
+.primary {
+  background: var(--semantic-colors-accent-default);
+  color: var(--semantic-colors-accent-onAccent);
+  border-color: var(--semantic-colors-accent-default);
+
+  &:hover:not(:disabled) {
+    background: var(--semantic-colors-accent-hover);
+    border-color: var(--semantic-colors-accent-hover);
+  }
+
+  &:active:not(:disabled) {
+    background: var(--semantic-colors-accent-active);
+    border-color: var(--semantic-colors-accent-active);
+  }
+}
+
+.secondary {
+  background: var(--semantic-colors-background-raised);
+  color: var(--semantic-colors-text-primary);
+  border-color: var(--semantic-colors-border-default);
+
+  &:hover:not(:disabled) {
+    background: var(--semantic-colors-background-subtle);
+    border-color: var(--semantic-colors-state-hoverBorder);
+  }
+
+  &:active:not(:disabled) {
+    background: var(--semantic-colors-background-sunken);
+  }
+}
+
+.tertiary {
+  background: var(--semantic-colors-accent-subtle);
+  color: var(--semantic-colors-accent-text);
+  border-color: transparent;
+
+  &:hover:not(:disabled) {
+    background: var(--semantic-colors-accent-muted);
+  }
+
+  &:active:not(:disabled) {
+    background: var(--semantic-colors-accent-muted);
+    color: var(--semantic-colors-accent-active);
+  }
+}
+
+.ghost {
+  background: transparent;
+  color: var(--semantic-colors-text-secondary);
+  border-color: transparent;
+
+  &:hover:not(:disabled) {
+    background: var(--semantic-colors-state-hoverSurface);
+    color: var(--semantic-colors-text-primary);
+  }
+
+  &:active:not(:disabled) {
+    background: var(--semantic-colors-state-activeSurface);
+  }
+}
+
+.danger {
+  background: var(--semantic-colors-feedback-danger-solid);
+  color: var(--semantic-colors-feedback-danger-onSolid);
+  border-color: var(--semantic-colors-feedback-danger-solid);
+
+  &:hover:not(:disabled) {
+    background: var(--semantic-colors-feedback-danger-solidHover);
+    border-color: var(--semantic-colors-feedback-danger-solidHover);
+  }
+
+  &:active:not(:disabled) {
+    background: var(--semantic-colors-feedback-danger-solidActive);
+    border-color: var(--semantic-colors-feedback-danger-solidActive);
+  }
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--components-button-gap);
+  white-space: nowrap;
+}
+
+.glowSurface {
+  position: absolute;
+  inset: calc(-1 * var(--ring-inset, 0px));
+  z-index: -1;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.glowCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.labelChar {
+  display: inline-block;
+  white-space: pre;
+  will-change: transform;
+}
+
+.labelText {
+  @include visually-hidden;
+}

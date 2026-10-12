@@ -13,16 +13,18 @@ export const heroControls = {
   },
   size: { type: 'select', options: ['sm', 'md', 'lg'], default: 'md' },
   icon: { type: 'boolean', default: false },
+  shader: { type: 'boolean', default: false },
   loading: { type: 'boolean', default: false },
   disabled: { type: 'boolean', default: false },
 };
 
 /** The isolated instance: hover it, press it, tab to it. */
-export function Hero({ variant, size, icon, loading, disabled }) {
+export function Hero({ variant, size, icon, shader, loading, disabled }) {
   return (
     <Button
       variant={variant}
       size={size}
+      shader={shader}
       loading={loading}
       disabled={disabled}
       iconLeft={icon ? <PlusIcon /> : undefined}
@@ -104,6 +106,32 @@ export default function ButtonStories() {
         </Row>
       </Story>
 
+      <Story
+        title="WebGL light"
+        description="An optional fourth layer, on the same gesture tokens as the CSS ones."
+      >
+        <Row>
+          <Button shader>Primary</Button>
+          <Button shader variant="secondary">
+            Secondary
+          </Button>
+          <Button shader variant="danger">
+            Danger
+          </Button>
+          <Button shader size="lg">
+            Large
+          </Button>
+        </Row>
+        <Hint>
+          <span>
+            Light pools under the cursor and a ring leaves the point of contact on press, tinted
+            from the same <code>dispersion</code> tokens as the keyline. The surface is only
+            mounted while you are touching the control, so the page never holds a GL context per
+            button. Skipped entirely under <code>prefers-reduced-motion</code>.
+          </span>
+        </Hint>
+      </Story>
+
       <Story title="Full width" description="Stretches to fill its container.">
         <Button fullWidth variant="secondary">
           Full width
@@ -135,6 +163,13 @@ export default function ButtonStories() {
             type: 'boolean',
             default: 'false',
             description: 'Square button. Pass an icon as children and an aria-label.',
+          },
+          {
+            name: 'shader',
+            type: 'boolean',
+            default: 'false',
+            description:
+              'Adds the WebGL light layer: pooling under the cursor, a ring on press.',
           },
           { name: 'iconLeft', type: 'ReactNode', description: 'Leading icon.' },
           { name: 'iconRight', type: 'ReactNode', description: 'Trailing icon.' },

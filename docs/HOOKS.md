@@ -21,7 +21,11 @@ They all return a `ref` to attach, and `useInteractiveMotion` also returns a
 ```javascript
 const { ref, handlers } = useInteractiveMotion({ preset: 'control', disabled });
 
-return <StyledButton ref={ref} {...handlers}>Save</StyledButton>;
+return (
+  <button ref={ref} className={styles.root} type="button" {...handlers}>
+    Save
+  </button>
+);
 ```
 
 Every one of them checks `prefers-reduced-motion` and sets the end state

@@ -75,16 +75,18 @@ Every page is wrapped in this layout. It defines the `<html>` and `<body>` tags 
 
 ```javascript
 import ThemeProvider from "@/theme/ThemeProvider";
+import "@/theme/tokens.css";
+import "@/theme/globals.css";
 
 export const metadata = {
   title: "Component Library",
   description:
-    "A token-driven React component library built with Next.js and styled-components.",
+    "A token-driven React component library built with Next.js and CSS modules.",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
@@ -117,7 +119,6 @@ Pages are **Server Components** by default. Add `'use client'` at the top if the
 - Event handlers (onClick, onChange)
 - React hooks (useState, useEffect)
 - Browser APIs
-- styled-components
 
 ## Server Components vs Client Components
 
@@ -138,7 +139,7 @@ export default function About() {
 ### Client Components
 
 - Render on the client (and are pre-rendered on the server)
-- Can use hooks, event handlers, browser APIs, styled-components
+- Can use hooks, event handlers, and browser APIs
 - Must have `'use client'` at the top of the file
 
 ```javascript
@@ -158,8 +159,9 @@ Add `'use client'` when the file:
 - Uses any React hook (`useState`, `useEffect`, `useRef`, etc.)
 - Has event handlers (`onClick`, `onChange`, `onSubmit`)
 - Uses browser-only APIs (`window`, `document`, `localStorage`)
-- Uses styled-components
 - Imports from a library that requires client-side rendering
+
+Importing a CSS module does not require `'use client'`.
 
 ## Creating a New Route
 

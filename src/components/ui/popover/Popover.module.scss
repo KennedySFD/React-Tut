@@ -1,0 +1,39 @@
+@use '../../../theme/mixins' as *;
+
+.root {
+  position: relative;
+  display: inline-flex;
+}
+
+.panel {
+  @include glass-panel-strong;
+  position: absolute;
+  z-index: var(--global-zIndex-dropdown);
+  min-width: 16rem;
+  padding: var(--global-spacing-lg);
+  border-radius: var(--global-radii-lg);
+
+  &.top {
+    bottom: calc(100% + 0.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &.bottom {
+    top: calc(100% + 0.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &.left {
+    right: calc(100% + 0.5rem);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &.right {
+    left: calc(100% + 0.5rem);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

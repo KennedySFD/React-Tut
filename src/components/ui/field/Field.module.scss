@@ -1,0 +1,35 @@
+@use '../../../theme/mixins' as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--components-field-label-gap);
+  width: auto;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.label {
+  @include typography(label);
+  color: var(--semantic-colors-text-secondary);
+
+  &.disabled {
+    color: var(--semantic-colors-text-disabled);
+  }
+
+  span[data-required] {
+    color: var(--semantic-colors-state-errorText);
+    margin-left: var(--global-spacing-xxs);
+  }
+}
+
+.help {
+  @include typography(caption);
+  color: var(--semantic-colors-text-muted);
+
+  &.error {
+    color: var(--semantic-colors-state-errorText);
+  }
+}

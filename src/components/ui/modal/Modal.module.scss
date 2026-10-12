@@ -1,0 +1,104 @@
+@use '../../../theme/mixins' as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--global-zIndex-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--global-spacing-xl);
+  background: var(--semantic-colors-background-scrim);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  /* GSAP fades this in. */
+  opacity: 0;
+}
+
+.dialog {
+  @include glass-panel-strong;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: calc(100vh - var(--global-spacing-xxxl));
+  border-radius: var(--components-modal-radius);
+  outline: none;
+  /* GSAP reveals this — no transform on a transition. */
+  opacity: 0;
+
+  &.sm { max-width: var(--components-modal-widths-sm); }
+  &.md { max-width: var(--components-modal-widths-md); }
+  &.lg { max-width: var(--components-modal-widths-lg); }
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--global-spacing-lg);
+  padding: var(--components-modal-padding);
+  padding-bottom: var(--global-spacing-md);
+}
+
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--global-spacing-xs);
+}
+
+.title {
+  @include typography(subheading);
+  color: var(--semantic-colors-text-primary);
+}
+
+.subtitle {
+  @include typography(caption);
+  color: var(--semantic-colors-text-muted);
+}
+
+.body {
+  padding: 0 var(--components-modal-padding);
+  overflow-y: auto;
+  color: var(--semantic-colors-text-secondary);
+  font-size: var(--global-fontSizes-sm);
+  line-height: var(--global-lineHeights-relaxed);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--global-spacing-sm);
+  padding: var(--components-modal-padding);
+  padding-top: var(--global-spacing-lg);
+}
+
+.close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--global-spacing-xs);
+  border: none;
+  border-radius: var(--global-radii-sm);
+  background: transparent;
+  color: var(--semantic-colors-text-muted);
+  cursor: pointer;
+  transition:
+    background var(--semantic-motion-fast),
+    color var(--semantic-motion-fast);
+
+  &:hover {
+    background: var(--semantic-colors-state-hoverSurface);
+    color: var(--semantic-colors-text-primary);
+  }
+
+  &:focus-visible {
+    @include focus-ring-only;
+  }
+
+  svg {
+    width: var(--global-sizes-icon-lg);
+    height: var(--global-sizes-icon-lg);
+  }
+}

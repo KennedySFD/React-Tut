@@ -1,7 +1,8 @@
 'use client';
 
 import { useId } from 'react';
-import { HiddenInput, LabelText, SwitchRoot, Thumb, Track } from './Switch.style';
+import { cx } from '@/lib/cx';
+import styles from './Switch.module.scss';
 
 /**
  * Switch — an on/off toggle. Use for settings that apply immediately;
@@ -25,9 +26,19 @@ export default function Switch({
   const inputId = id ?? generatedId;
 
   return (
-    <SwitchRoot htmlFor={inputId} $disabled={disabled} $checked={checked} className={className}>
-      <HiddenInput
+    <label
+      htmlFor={inputId}
+      className={cx(
+        styles.root,
+        styles[size],
+        disabled && styles.disabled,
+        checked && styles.checked,
+        className,
+      )}
+    >
+      <input
         id={inputId}
+        className={styles.hidden}
         type="checkbox"
         role="switch"
         checked={checked}
@@ -36,11 +47,11 @@ export default function Switch({
         {...props}
       />
 
-      <Track data-track $checked={checked} $size={size} aria-hidden="true">
-        <Thumb $checked={checked} $size={size} />
-      </Track>
+      <span className={styles.track} data-track aria-hidden="true">
+        <span className={styles.thumb} />
+      </span>
 
-      {label && <LabelText>{label}</LabelText>}
-    </SwitchRoot>
+      {label && <span className={styles.label}>{label}</span>}
+    </label>
   );
 }

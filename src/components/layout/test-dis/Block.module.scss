@@ -1,0 +1,26 @@
+@use '../../../theme/mixins' as *;
+
+.wrapper {
+  background: white;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 2rem;
+  border-radius: 0.5rem;
+  border-style: solid;
+  border-color: hsl(0, 0%, 92%);
+  min-width: 0;
+  max-width: 700px;
+}
+
+.heading {
+  color: black;
+  font-size: 1rem;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+.column {
+  background: red;
+  height: 100px;
+}

@@ -2,7 +2,8 @@
 
 import { CloseIcon } from '@/components/icons';
 import { useInteractiveMotion } from '@/hooks/useInteractiveMotion';
-import { Dot, RemoveButton, StyledTag } from './Tag.style';
+import { cx } from '@/lib/cx';
+import styles from './Tag.module.scss';
 
 /**
  * Tag — compact status or category label (also known as a badge or chip).
@@ -19,24 +20,37 @@ export default function Tag({
   solid = false,
   dot = false,
   onRemove,
+  className,
   children,
   ...props
 }) {
   const { ref, handlers } = useInteractiveMotion({ preset: 'chip' });
 
   return (
-    <StyledTag ref={ref} $variant={variant} $size={size} $solid={solid} {...handlers} {...props}>
-      {dot && <Dot aria-hidden="true" />}
+    <span
+      ref={ref}
+      className={cx(
+        styles.root,
+        styles[variant] || styles.neutral,
+        styles[size] || styles.md,
+        solid && styles.solid,
+        className,
+      )}
+      {...handlers}
+      {...props}
+    >
+      {dot && <span className={styles.dot} aria-hidden="true" />}
       {children}
       {onRemove && (
-        <RemoveButton
+        <button
           type="button"
+          className={styles.remove}
           onClick={onRemove}
           aria-label={typeof children === 'string' ? `Remove ${children}` : 'Remove'}
         >
           <CloseIcon />
-        </RemoveButton>
+        </button>
       )}
-    </StyledTag>
+    </span>
   );
 }

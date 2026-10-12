@@ -1,6 +1,7 @@
 'use client';
 
-import { StyledDivider } from './Divider.style';
+import { cx } from '@/lib/cx';
+import styles from './Divider.module.scss';
 
 /**
  * Divider — a visual separator between sections of content.
@@ -13,28 +14,33 @@ export default function Divider({
   orientation = 'horizontal',
   weight = 'default',
   label,
+  className,
   ...props
 }) {
+  const tone = styles[weight] || styles.default;
+
   if (label && orientation === 'horizontal') {
     return (
-      <StyledDivider
+      <div
         role="separator"
-        $orientation={orientation}
-        $weight={weight}
-        $hasLabel
+        className={cx(styles.root, styles.hasLabel, tone, className)}
         {...props}
       >
         <span>{label}</span>
-      </StyledDivider>
+      </div>
     );
   }
 
   return (
-    <StyledDivider
+    <div
       role="separator"
       aria-orientation={orientation}
-      $orientation={orientation}
-      $weight={weight}
+      className={cx(
+        styles.root,
+        orientation === 'vertical' ? styles.vertical : styles.horizontal,
+        tone,
+        className,
+      )}
       {...props}
     />
   );

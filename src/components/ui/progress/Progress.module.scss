@@ -1,0 +1,60 @@
+@use '../../../theme/mixins' as *;
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--global-spacing-xs);
+}
+
+.track {
+  position: relative;
+  width: 100%;
+  height: 0.5rem;
+  background: var(--semantic-colors-background-sunken);
+  border-radius: var(--global-radii-full);
+  overflow: hidden;
+
+  &.sm { height: 0.25rem; }
+  &.lg { height: 0.75rem; }
+}
+
+.fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--semantic-colors-accent-default);
+  transition: width 0.4s var(--semantic-motion-base);
+
+  &.indeterminate {
+    width: 40%;
+    background-size: 200% 100%;
+    background-image: linear-gradient(
+      90deg,
+      transparent 25%,
+      currentColor 50%,
+      transparent 75%
+    );
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+}
+
+.labelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.label {
+  @include typography(caption);
+  color: var(--semantic-colors-text-secondary);
+}
+
+.value {
+  @include typography(caption);
+  font-family: var(--global-fontFamilies-mono);
+  color: var(--semantic-colors-text-muted);
+}

@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Fallback, StyledAvatar, StyledImage, StatusDot } from './Avatar.style';
+import { cx } from '@/lib/cx';
+import styles from './Avatar.module.scss';
 
 /**
  * Avatar — user or entity image with an initials fallback.
@@ -20,10 +21,12 @@ export default function Avatar({
   size = 'md',
   variant = 'neutral',
   status,
+  className,
   ...props
 }) {
   const [imgError, setImgError] = useState(false);
   const showImage = src && !imgError;
+  const sizeClass = styles[size] || styles.md;
 
   const initials = name
     .split(' ')
@@ -33,19 +36,28 @@ export default function Avatar({
     .toUpperCase();
 
   return (
-    <StyledAvatar $size={size} $variant={variant} {...props}>
+    <div
+      className={cx(styles.root, sizeClass, styles[variant] || styles.neutral, className)}
+      {...props}
+    >
       {showImage ? (
-        <StyledImage
+        <img
+          className={styles.image}
           src={src}
           alt={alt || name}
           onError={() => setImgError(true)}
         />
       ) : (
-        <Fallback $size={size} aria-label={alt || name}>
+        <span className={cx(styles.fallback, sizeClass)} aria-label={alt || name}>
           {initials || '?'}
-        </Fallback>
+        </span>
       )}
-      {status && <StatusDot $status={status} $size={size} aria-label={status} />}
-    </StyledAvatar>
+      {status && (
+        <span
+          className={cx(styles.status, sizeClass, styles[status] || styles.offline)}
+          aria-label={status}
+        />
+      )}
+    </div>
   );
 }

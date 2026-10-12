@@ -1,41 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Page,
-  PageTitle,
-  PageIntro,
-  Layout,
-  ControlPanel,
-  ControlLabel,
-  DisplayButton,
-  DemoPanel,
-  CurrentValue,
-  Explanation,
-  DemoArea,
-  OuterContext,
-  ContextText,
-  DemoContainer,
-  DemoHeading,
-  DemoInlineHeading,
-  DemoBox,
-  DemoInlineBox,
-  DemoWarning,
-  CompareSection,
-  CompareHeading,
-  CompareNote,
-  CompareGrid,
-  CompareCard,
-  CompareLabel,
-  CompareFrame,
-  BlockItem,
-  InlineItem,
-  BlockContainerMini,
-  InlineContainerMini,
-  FlowText,
-} from './DisplayTest.style';
+import { cx } from '@/lib/cx';
+import styles from './DisplayTest.module.scss';
 
 const BOX_COLORS = ['#3B82F6', '#10B981', '#F59E0B'];
+
+const DISPLAY_CLASS = {
+  block: styles.block,
+  inline: styles.inline,
+  'inline-block': styles.inlineBlock,
+  flex: styles.flex,
+  'inline-flex': styles.inlineFlex,
+  grid: styles.grid,
+  'inline-grid': styles.inlineGrid,
+  none: styles.none,
+  contents: styles.contents,
+  'flow-root': styles.flowRoot,
+};
 
 const DISPLAY_OPTIONS = [
   {
@@ -98,144 +80,144 @@ export default function DisplayTest() {
 
   const demoContent = isInlineDisplay ? (
     <>
-      <DemoInlineHeading>Heading </DemoInlineHeading>
-      <DemoInlineBox $color={BOX_COLORS[0]}>Box 1 </DemoInlineBox>
-      <DemoInlineBox $color={BOX_COLORS[1]}>Box 2 </DemoInlineBox>
-      <DemoInlineBox $color={BOX_COLORS[2]}>Box 3</DemoInlineBox>
+      <span className={styles.demoInlineHeading}>Heading </span>
+      <span className={styles.demoInlineBox} style={{ background: BOX_COLORS[0] }}>Box 1 </span>
+      <span className={styles.demoInlineBox} style={{ background: BOX_COLORS[1] }}>Box 2 </span>
+      <span className={styles.demoInlineBox} style={{ background: BOX_COLORS[2] }}>Box 3</span>
     </>
   ) : (
     <>
-      <DemoHeading>Heading</DemoHeading>
-      <DemoBox $color={BOX_COLORS[0]}>Box 1</DemoBox>
-      <DemoBox $color={BOX_COLORS[1]}>Box 2</DemoBox>
-      <DemoBox $color={BOX_COLORS[2]}>Box 3</DemoBox>
+      <h3 className={styles.demoHeading}>Heading</h3>
+      <div className={styles.demoBox} style={{ background: BOX_COLORS[0] }}>Box 1</div>
+      <div className={styles.demoBox} style={{ background: BOX_COLORS[1] }}>Box 2</div>
+      <div className={styles.demoBox} style={{ background: BOX_COLORS[2] }}>Box 3</div>
     </>
   );
 
   return (
-    <Page>
-      <PageTitle>CSS Display Playground</PageTitle>
-      <PageIntro>
+    <div className={styles.page}>
+      <h1 className={styles.pageTitle}>CSS Display Playground</h1>
+      <p className={styles.pageIntro}>
         Pick a display value from the list to experiment. If block and inline feel confusing,
         start with the comparison below — it shows the core difference side by side.
-      </PageIntro>
+      </p>
 
-      <CompareSection>
-        <CompareHeading>Block vs inline — example 1: on the boxes themselves</CompareHeading>
-        <CompareNote>
+      <section className={styles.compareSection}>
+        <h3 className={styles.compareHeading}>Block vs inline — example 1: on the boxes themselves</h3>
+        <p className={styles.compareNote}>
           Same three labels (A, B, C). Only the display on each box changes. Block = each box
           takes a full line and stacks. Inline = boxes sit in a row like words — with copy on
           either side so you can see them flow in the sentence.
-        </CompareNote>
-        <CompareGrid>
-          <CompareCard>
-            <CompareLabel>display: block</CompareLabel>
-            <CompareFrame>
-              <BlockItem $color={BOX_COLORS[0]}>A</BlockItem>
-              <BlockItem $color={BOX_COLORS[1]}>B</BlockItem>
-              <BlockItem $color={BOX_COLORS[2]}>C</BlockItem>
-            </CompareFrame>
-          </CompareCard>
-          <CompareCard>
-            <CompareLabel>display: inline</CompareLabel>
-            <CompareFrame>
-              <FlowText>Some text before </FlowText>
-              <InlineItem $color={BOX_COLORS[0]}>A</InlineItem>{' '}
-              <InlineItem $color={BOX_COLORS[1]}>B</InlineItem>{' '}
-              <InlineItem $color={BOX_COLORS[2]}>C</InlineItem>
-              <FlowText> some text after.</FlowText>
-            </CompareFrame>
-          </CompareCard>
-        </CompareGrid>
-      </CompareSection>
+        </p>
+        <div className={styles.compareGrid}>
+          <div className={styles.compareCard}>
+            <p className={styles.compareLabel}>display: block</p>
+            <div className={styles.compareFrame}>
+              <div className={styles.blockItem} style={{ background: BOX_COLORS[0] }}>A</div>
+              <div className={styles.blockItem} style={{ background: BOX_COLORS[1] }}>B</div>
+              <div className={styles.blockItem} style={{ background: BOX_COLORS[2] }}>C</div>
+            </div>
+          </div>
+          <div className={styles.compareCard}>
+            <p className={styles.compareLabel}>display: inline</p>
+            <div className={styles.compareFrame}>
+              <span className={styles.flowText}>Some text before </span>
+              <span className={styles.inlineItem} style={{ background: BOX_COLORS[0] }}>A</span>{' '}
+              <span className={styles.inlineItem} style={{ background: BOX_COLORS[1] }}>B</span>{' '}
+              <span className={styles.inlineItem} style={{ background: BOX_COLORS[2] }}>C</span>
+              <span className={styles.flowText}> some text after.</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <CompareSection>
-        <CompareHeading>Block vs inline — example 2: container in a sentence</CompareHeading>
-        <CompareNote>
+      <section className={styles.compareSection}>
+        <h3 className={styles.compareHeading}>Block vs inline — example 2: container in a sentence</h3>
+        <p className={styles.compareNote}>
           Same sentence with a blue box in the middle. Block container breaks onto its own line
           and stretches full width. Inline container hugs the word inside and stays in the sentence.
-        </CompareNote>
-        <CompareGrid>
-          <CompareCard>
-            <CompareLabel>display: block (container)</CompareLabel>
-            <CompareFrame>
-              <FlowText>Some text before.</FlowText>
-              <BlockContainerMini>BOX</BlockContainerMini>
-              <FlowText>Some text after.</FlowText>
-            </CompareFrame>
-          </CompareCard>
-          <CompareCard>
-            <CompareLabel>display: inline (container)</CompareLabel>
-            <CompareFrame>
-              <FlowText>Some text before </FlowText>
-              <InlineContainerMini>BOX</InlineContainerMini>
-              <FlowText> some text after.</FlowText>
-            </CompareFrame>
-          </CompareCard>
-        </CompareGrid>
-      </CompareSection>
+        </p>
+        <div className={styles.compareGrid}>
+          <div className={styles.compareCard}>
+            <p className={styles.compareLabel}>display: block (container)</p>
+            <div className={styles.compareFrame}>
+              <span className={styles.flowText}>Some text before.</span>
+              <div className={styles.blockContainerMini}>BOX</div>
+              <span className={styles.flowText}>Some text after.</span>
+            </div>
+          </div>
+          <div className={styles.compareCard}>
+            <p className={styles.compareLabel}>display: inline (container)</p>
+            <div className={styles.compareFrame}>
+              <span className={styles.flowText}>Some text before </span>
+              <span className={styles.inlineContainerMini}>BOX</span>
+              <span className={styles.flowText}> some text after.</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <Layout>
-        <ControlPanel>
-          <ControlLabel>display:</ControlLabel>
+      <div className={styles.layout}>
+        <aside className={styles.controlPanel}>
+          <p className={styles.controlLabel}>display:</p>
           {DISPLAY_OPTIONS.map((option) => (
-            <DisplayButton
+            <button
               key={option.value}
-              $active={display === option.value}
+              className={cx(styles.displayButton, display === option.value && styles.active)}
               onClick={() => setDisplay(option.value)}
             >
               {option.value}
-            </DisplayButton>
+            </button>
           ))}
-        </ControlPanel>
+        </aside>
 
-        <DemoPanel>
-          <CurrentValue>display: {display}</CurrentValue>
-          <Explanation>{selected?.description}</Explanation>
+        <div className={styles.demoPanel}>
+          <h2 className={styles.currentValue}>display: {display}</h2>
+          <p className={styles.explanation}>{selected?.description}</p>
 
           {isInlineDisplay && (
-            <DemoWarning>
+            <p className={styles.demoWarning}>
               The playground switches to <strong>inline children</strong> (spans) here.
               Before, it used block divs inside an inline container — browsers cannot lay that
               out properly, so it looked almost the same as block. That was the source of the
               confusion.
-            </DemoWarning>
+            </p>
           )}
 
-          <DemoArea>
-            <OuterContext>
+          <div className={styles.demoArea}>
+            <div className={styles.outerContext}>
               {isInlineDisplay ? (
                 <>
-                  <ContextText $variant="before">
+                  <span className={cx(styles.contextText, styles.before)}>
                     <strong>Before — </strong>Some text before{' '}
-                  </ContextText>
-                  <DemoContainer $display={display}>{demoContent}</DemoContainer>
-                  <ContextText $variant="after">
+                  </span>
+                  <div className={cx(styles.demoContainer, DISPLAY_CLASS[display])}>{demoContent}</div>
+                  <span className={cx(styles.contextText, styles.after)}>
                     {' '}
                     <strong>After — </strong>some text after.
-                  </ContextText>
+                  </span>
                 </>
               ) : (
                 <>
-                  <ContextText $variant="before">
+                  <span className={cx(styles.contextText, styles.before)}>
                     <strong>Before — </strong>
                     The quick brown fox jumps over the lazy dog. This yellow text sits in the same
                     paragraph as the blue box — watch whether it stays on the same line or gets
                     pushed to a new one when you change display.
-                  </ContextText>{' '}
-                  <DemoContainer $display={display}>{demoContent}</DemoContainer>{' '}
-                  <ContextText $variant="after">
+                  </span>{' '}
+                  <div className={cx(styles.demoContainer, DISPLAY_CLASS[display])}>{demoContent}</div>{' '}
+                  <span className={cx(styles.contextText, styles.after)}>
                     <strong>After — </strong>
                     Pack my box with five dozen liquor jugs. This green text comes right after the
                     blue box in the same flow. With inline values it should sit beside the box; with
                     block it usually drops below.
-                  </ContextText>
+                  </span>
                 </>
               )}
-            </OuterContext>
-          </DemoArea>
-        </DemoPanel>
-      </Layout>
-    </Page>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

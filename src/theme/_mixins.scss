@@ -1,0 +1,220 @@
+@mixin focus-ring {
+  outline: none;
+  border-color: var(--semantic-colors-state-focusBorder);
+  box-shadow: 0 0 0 var(--global-borderWidths-ring) var(--semantic-colors-state-focusRing);
+}
+
+@mixin error-focus-ring {
+  outline: none;
+  border-color: var(--semantic-colors-state-errorBorder);
+  box-shadow: 0 0 0 var(--global-borderWidths-ring) var(--semantic-colors-state-errorRing);
+}
+
+@mixin focus-ring-only {
+  outline: none;
+  box-shadow: 0 0 0 var(--global-borderWidths-ring) var(--semantic-colors-state-focusRing);
+}
+
+@mixin disabled-state {
+  cursor: not-allowed;
+  opacity: var(--global-opacities-disabled);
+}
+
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin typography($role) {
+  font-family: var(--semantic-typography-#{$role}-family);
+  font-size: var(--semantic-typography-#{$role}-size);
+  font-weight: var(--semantic-typography-#{$role}-weight);
+  line-height: var(--semantic-typography-#{$role}-lineHeight);
+  letter-spacing: var(--semantic-typography-#{$role}-letterSpacing);
+}
+
+@mixin glass-vars {
+  --ring-angle: 0;
+  --ring-opacity: 0;
+  --ring-inset: 0px;
+  --sheen-x: 100;
+  --sheen-opacity: 0;
+}
+
+@mixin dispersion-ring {
+  &::before {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * var(--ring-inset, 0px));
+    z-index: -1;
+    border-radius: inherit;
+    padding: 1.5px;
+    pointer-events: none;
+    opacity: var(--ring-opacity, 0);
+    background: conic-gradient(
+      from calc(var(--ring-angle, 0) * 1deg),
+      var(--semantic-colors-dispersion-cyan) 0deg,
+      var(--semantic-colors-dispersion-violet) 90deg,
+      var(--semantic-colors-dispersion-rose) 180deg,
+      var(--semantic-colors-dispersion-amber) 270deg,
+      var(--semantic-colors-dispersion-cyan) 360deg
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+  }
+}
+
+@mixin sheen-layer {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * var(--ring-inset, 0px));
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: var(--sheen-opacity, 0);
+    background-image: linear-gradient(
+      105deg,
+      transparent 38%,
+      var(--semantic-colors-dispersion-sheen) 50%,
+      transparent 62%
+    );
+    background-size: 300% 100%;
+    background-repeat: no-repeat;
+    background-position: calc(var(--sheen-x, 100) * 1%) 0;
+  }
+}
+
+@mixin interactive-glass {
+  position: relative;
+  isolation: isolate;
+  @include glass-vars;
+  @include dispersion-ring;
+  @include sheen-layer;
+}
+
+@mixin field-glass {
+  position: relative;
+  isolation: isolate;
+  @include glass-vars;
+  --ring-inset: var(--components-field-borderWidth);
+  @include dispersion-ring;
+}
+
+@mixin glass-panel {
+  position: relative;
+  isolation: isolate;
+  background: var(--semantic-colors-glass-surface);
+  backdrop-filter: blur(var(--global-blurs-glass)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--global-blurs-glass)) saturate(180%);
+  border: var(--global-borderWidths-thin) solid var(--semantic-colors-border-subtle);
+  box-shadow:
+    inset 0 1px 0 var(--semantic-colors-glass-highlight),
+    inset 0 -1px 0 var(--semantic-colors-glass-shade),
+    var(--semantic-shadows-lg);
+  @include glass-vars;
+  --ring-inset: var(--global-borderWidths-thin);
+  @include dispersion-ring;
+}
+
+@mixin glass-panel-strong {
+  @include glass-panel;
+  background: var(--semantic-colors-glass-surfaceStrong);
+  backdrop-filter: blur(var(--global-blurs-strong)) saturate(180%);
+  -webkit-backdrop-filter: blur(var(--global-blurs-strong)) saturate(180%);
+}
+
+@mixin keyline-vars {
+  --keyline-scale: 0;
+  --keyline-opacity: 0;
+}
+
+@mixin focus-keyline {
+  @include keyline-vars;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: var(--global-radii-md);
+    right: var(--global-radii-md);
+    bottom: -1px;
+    height: var(--global-borderWidths-thin);
+    z-index: 1;
+    pointer-events: none;
+    border-radius: var(--global-radii-full);
+    opacity: var(--keyline-opacity, 0);
+    transform: scaleX(var(--keyline-scale, 0));
+    transform-origin: center;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--semantic-colors-dispersion-cyan) 22%,
+      var(--semantic-colors-dispersion-violet) 50%,
+      var(--semantic-colors-dispersion-rose) 78%,
+      transparent 100%
+    );
+  }
+}
+
+@mixin field-base($size: md) {
+  width: 100%;
+  font-family: var(--semantic-typography-body-family);
+  font-size: var(--components-field-sizes-#{$size}-fontSize);
+  color: var(--semantic-colors-text-primary);
+  background: var(--semantic-colors-background-raised);
+  border: var(--components-field-borderWidth) solid var(--semantic-colors-border-default);
+  border-radius: var(--components-field-radius);
+  transition:
+    border-color var(--semantic-motion-fast),
+    box-shadow var(--semantic-motion-fast),
+    background var(--semantic-motion-fast);
+
+  &::placeholder {
+    color: var(--semantic-colors-text-placeholder);
+  }
+
+  &:hover:not(:disabled):not([aria-disabled='true']) {
+    border-color: var(--semantic-colors-state-hoverBorder);
+  }
+
+  &:focus-visible,
+  &[data-focused='true'] {
+    @include focus-ring;
+  }
+
+  &[data-invalid='true'] {
+    border-color: var(--semantic-colors-state-errorBorder);
+
+    &:hover:not(:disabled):not([aria-disabled='true']) {
+      border-color: var(--semantic-colors-state-errorBorder);
+    }
+
+    &:focus-visible,
+    &[data-focused='true'] {
+      @include error-focus-ring;
+    }
+  }
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    background: var(--semantic-colors-state-disabledSurface);
+    border-color: var(--semantic-colors-state-disabledBorder);
+    color: var(--semantic-colors-text-disabled);
+    cursor: not-allowed;
+  }
+}

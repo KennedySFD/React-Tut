@@ -5,15 +5,8 @@ import Field from '@/components/ui/field';
 import { useFieldMotion } from '@/hooks/useFieldMotion';
 import { useRevealMotion } from '@/hooks/useRevealMotion';
 import { CheckIcon, ChevronDownIcon } from '@/components/icons';
-import {
-  Chevron,
-  EmptyState,
-  Menu,
-  Option,
-  SelectTrigger,
-  SelectWrapper,
-  TriggerValue,
-} from './Select.style';
+import { cx } from '@/lib/cx';
+import styles from './Select.module.scss';
 
 /** Walks to the next non-disabled option, wrapping at either end. */
 function getNextEnabledIndex(options, from, direction) {
@@ -189,12 +182,13 @@ export default function Select({
       describedById={describedById}
       className={className}
     >
-      <SelectWrapper ref={wrapperRef}>
-        <SelectTrigger
+      <div className={styles.wrapper} ref={wrapperRef}>
+        <button
           type="button"
           ref={setTriggerRef}
           {...motionHandlers}
           id={selectId}
+          className={cx(styles.trigger, styles[size])}
           role="combobox"
           aria-haspopup="listbox"
           aria-expanded={open}
@@ -205,8 +199,7 @@ export default function Select({
           aria-invalid={hasError || undefined}
           aria-describedby={helperText || error ? describedById : undefined}
           disabled={disabled}
-          $size={size}
-          $hasError={hasError}
+          data-invalid={hasError || undefined}
           data-focused={open}
           onClick={() => (open ? closeMenu() : openMenu())}
           onKeyDown={handleKeyDown}
@@ -214,22 +207,29 @@ export default function Select({
           onBlur={() => setFocused(false)}
           {...props}
         >
-          <TriggerValue $isPlaceholder={!selectedOption}>
+          <span className={cx(styles.value, !selectedOption && styles.placeholder)}>
             {selectedOption ? selectedOption.label : placeholder}
-          </TriggerValue>
-          <Chevron $open={open} $size={size}>
+          </span>
+          <span className={cx(styles.chevron, open && styles.open)}>
             <ChevronDownIcon />
-          </Chevron>
-        </SelectTrigger>
+          </span>
+        </button>
 
         {open && (
-          <Menu ref={setListRef} id={listboxId} role="listbox" aria-labelledby={selectId}>
-            {options.length === 0 && <EmptyState>{emptyMessage}</EmptyState>}
+          <ul
+            ref={setListRef}
+            id={listboxId}
+            className={styles.menu}
+            role="listbox"
+            aria-labelledby={selectId}
+          >
+            {options.length === 0 && <li className={styles.empty}>{emptyMessage}</li>}
 
             {options.map((option, index) => (
-              <Option
+              <li
                 key={option.value}
                 id={`${selectId}-option-${index}`}
+                className={styles.option}
                 role="option"
                 aria-selected={option.value === value}
                 aria-disabled={option.disabled || undefined}
@@ -239,11 +239,11 @@ export default function Select({
               >
                 {option.label}
                 {option.value === value && <CheckIcon />}
-              </Option>
+              </li>
             ))}
-          </Menu>
+          </ul>
         )}
-      </SelectWrapper>
+      </div>
     </Field>
   );
 }

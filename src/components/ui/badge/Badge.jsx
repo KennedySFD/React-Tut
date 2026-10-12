@@ -1,6 +1,7 @@
 'use client';
 
-import { BadgeDot, StyledBadge, Wrapper } from './Badge.style';
+import { cx } from '@/lib/cx';
+import styles from './Badge.module.scss';
 
 /**
  * Badge — a small count or status indicator, typically overlaid on another element.
@@ -18,21 +19,23 @@ export default function Badge({
   dot = false,
   showZero = false,
   variant = 'danger',
+  className,
   children,
   ...props
 }) {
   const num = typeof count === 'number' ? count : parseInt(count, 10) || 0;
   const hidden = !dot && num === 0 && !showZero;
   const label = num > max ? `${max}+` : `${num}`;
+  const tone = styles[variant] || styles.danger;
 
   return (
-    <Wrapper {...props}>
+    <span className={cx(styles.wrapper, className)} {...props}>
       {children}
       {dot && !hidden ? (
-        <BadgeDot $variant={variant} aria-label="notification" />
+        <span className={cx(styles.dot, tone)} aria-label="notification" />
       ) : !hidden ? (
-        <StyledBadge $variant={variant}>{label}</StyledBadge>
+        <span className={cx(styles.badge, tone)}>{label}</span>
       ) : null}
-    </Wrapper>
+    </span>
   );
 }

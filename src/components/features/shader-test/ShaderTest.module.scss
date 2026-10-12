@@ -1,0 +1,177 @@
+@use '../../../theme/mixins' as *;
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+  color: var(--semantic-colors-text-primary);
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: var(--global-fontWeights-bold);
+  line-height: 1.2;
+  margin: 0 0 0.75rem;
+}
+
+.meta {
+  font-size: var(--global-fontSizes-sm);
+  color: #6b7280;
+  margin: 0 0 1.25rem;
+}
+
+.labNote {
+  font-size: var(--global-fontSizes-sm);
+  line-height: 1.55;
+  color: #4b5563;
+  background: #f3f4f6;
+  border-left: 3px solid #9ca3af;
+  padding: 0.75rem 1rem;
+  margin: 0 0 2.5rem;
+
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.9em;
+  }
+}
+
+.heroImage {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: var(--global-radii-lg);
+  margin-bottom: 2.5rem;
+}
+
+.body {
+  font-size: var(--global-fontSizes-md);
+  line-height: 1.8;
+  margin: 0 0 1.5rem;
+  color: #374151;
+}
+
+.subheading {
+  font-size: 1.5rem;
+  font-weight: var(--global-fontWeights-semibold);
+  line-height: 1.3;
+  margin: 2.5rem 0 1rem;
+}
+
+.inlineImage {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  border-radius: var(--global-radii-md);
+  margin: 1.5rem 0 2rem;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 2.5rem 0;
+}
+
+.mediaPage {
+  width: 100%;
+  min-height: 100vh;
+  background: transparent;
+}
+
+.heroStage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: transparent;
+}
+
+.fullBleedHero {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  margin: 0;
+  border-radius: 0;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(1.5rem, 4vw, 3.5rem);
+  pointer-events: none;
+  color: #f8fafc;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+
+  .title,
+  .body {
+    pointer-events: auto;
+    max-width: 40rem;
+  }
+
+  .title {
+    color: #f8fafc;
+    margin-bottom: 0.85rem;
+  }
+
+  .body {
+    color: rgba(248, 250, 252, 0.92);
+    margin: 0;
+  }
+}
+
+.carouselControls {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(1.25rem, 4vh, 2.5rem);
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  pointer-events: auto;
+}
+
+.carouselButton {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(0, 0, 0, 0.45);
+  color: #f8fafc;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.65);
+    border-color: rgba(255, 255, 255, 0.55);
+  }
+}
+
+.carouselDots {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.carouselDot {
+  appearance: none;
+  width: 0.55rem;
+  height: 0.55rem;
+  padding: 0;
+  border-radius: 0;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  cursor: pointer;
+
+  &[aria-current='true'] {
+    background: #f8fafc;
+  }
+}

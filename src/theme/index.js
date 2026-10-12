@@ -4,13 +4,14 @@ import { createComponents } from './components';
 import { motion } from './motion';
 
 /**
- * Builds the theme object handed to styled-components' ThemeProvider.
+ * Builds the theme object for JavaScript readers (token stories, shader tints).
+ * CSS reads the same values as custom properties in tokens.css.
  *
  * The semantic layer is resolved for the requested mode *before* it reaches
- * components, so every `.style.js` file can read the same path regardless of
- * light or dark:
+ * callers, so every reader uses the same path regardless of light or dark:
  *
- *   ${({ theme }) => theme.semantic.colors.state.focusRing}
+ *   theme.semantic.colors.state.focusRing
+ *   var(--semantic-colors-state-focusRing)
  *
  * @param {'light'|'dark'} mode
  */

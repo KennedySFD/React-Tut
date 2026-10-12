@@ -1,6 +1,7 @@
 'use client';
 
-import { StyledSpinner } from './Spinner.style';
+import { cx } from '@/lib/cx';
+import styles from './Spinner.module.scss';
 
 /**
  * Indeterminate loading indicator. Inherits `currentColor`, so it works on any
@@ -9,6 +10,13 @@ import { StyledSpinner } from './Spinner.style';
  * @param {'sm'|'md'|'lg'} size
  * @param {string} label - accessible description of what is loading
  */
-export default function Spinner({ size = 'md', label = 'Loading', ...props }) {
-  return <StyledSpinner $size={size} role="status" aria-label={label} {...props} />;
+export default function Spinner({ size = 'md', label = 'Loading', className, ...props }) {
+  return (
+    <span
+      className={cx(styles.root, styles[size] || styles.md, className)}
+      role="status"
+      aria-label={label}
+      {...props}
+    />
+  );
 }

@@ -5,3 +5,4 @@ export { default as ShaderTestCylinderHorizontal } from './ShaderTestCylinderHor
 export { default as ShaderTestMosaic } from './ShaderTestMosaic';
 export { default as ShaderTestBurnCarousel } from './ShaderTestBurnCarousel';
 export { default as ShaderTestCube } from './ShaderTestCube';
+export { default as ShaderTestCloudReveal } from './ShaderTestCloudReveal';

@@ -1,0 +1,89 @@
+@use '../../../theme/mixins' as *;
+
+.root {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--global-radii-full);
+  overflow: hidden;
+  border: var(--global-borderWidths-thin) solid var(--semantic-colors-border-subtle);
+
+  &.sm { width: 1.75rem; height: 1.75rem; }
+  &.md { width: 2.5rem; height: 2.5rem; }
+  &.lg { width: 3.5rem; height: 3.5rem; }
+  &.xl { width: 5rem; height: 5rem; }
+
+  &.neutral {
+    background: var(--semantic-colors-background-subtle);
+    color: var(--semantic-colors-text-secondary);
+  }
+
+  &.accent {
+    background: var(--semantic-colors-accent-subtle);
+    color: var(--semantic-colors-accent-text);
+  }
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-weight: var(--global-fontWeights-semibold);
+  font-size: 0.875rem;
+  user-select: none;
+
+  &.sm { font-size: 0.625rem; }
+  &.md { font-size: 0.875rem; }
+  &.lg { font-size: 1.125rem; }
+  &.xl { font-size: 1.5rem; }
+}
+
+.status {
+  position: absolute;
+  border-radius: var(--global-radii-full);
+  background: #A1A1AA;
+  border: 2px solid var(--semantic-colors-background-canvas);
+
+  &.sm {
+    bottom: 0px;
+    right: 0px;
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+
+  &.md {
+    bottom: 1px;
+    right: 1px;
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+
+  &.lg {
+    bottom: 2px;
+    right: 2px;
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  &.xl {
+    bottom: 3px;
+    right: 3px;
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  &.online { background: #22C55E; }
+  &.offline { background: #A1A1AA; }
+  &.busy { background: #EF4444; }
+  &.away { background: #F59E0B; }
+}

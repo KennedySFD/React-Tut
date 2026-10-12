@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Input from '@/components/ui/input';
 import { CloseIcon, SearchIcon } from '@/components/icons';
-import { ClearButton } from './SearchBar.style';
+import styles from './SearchBar.module.scss';
 
 /**
  * SearchBar — a search-shaped Input.
@@ -66,9 +66,14 @@ export default function SearchBar({
       iconLeft={<SearchIcon />}
       iconRight={
         currentValue ? (
-          <ClearButton type="button" onClick={handleClear} aria-label="Clear search">
+          <button
+            type="button"
+            className={styles.clear}
+            onClick={handleClear}
+            aria-label="Clear search"
+          >
             <CloseIcon size="0.875rem" />
-          </ClearButton>
+          </button>
         ) : null
       }
       {...props}

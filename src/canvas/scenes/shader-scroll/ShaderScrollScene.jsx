@@ -6,13 +6,15 @@ import * as THREE from 'three';
 import { folder, useControls, Leva } from 'leva';
 import { bezier } from '@leva-ui/plugin-bezier';
 import Lenis from 'lenis';
-import styled from 'styled-components';
+import { cx } from '@/lib/cx';
+import styles from './ShaderScrollScene.module.scss';
 import ScrollPlane from '@/canvas/components/scroll-plane';
 import MediaPlanesLab from '@/canvas/components/media-planes-lab';
 import MosaicPlanesLab from '@/canvas/components/mosaic-planes-lab';
 import CylinderImagesLab from '@/canvas/components/cylinder-images-lab';
 import BurnCarousel from '@/canvas/components/burn-carousel';
 import CubeLab from '@/canvas/components/cube-lab';
+import CloudRevealLab from '@/canvas/components/cloud-reveal-lab';
 import { resolveCaptureScale, clampedDevicePixelRatio } from '@/canvas/helpers';
 
 const CAMERA_POS = 600;
@@ -39,25 +41,6 @@ function CameraSetup() {
   return null;
 }
 
-const CanvasLayer = styled.div`
-  position: fixed;
-  inset: 0;
-  /* behind = under DOM (media-planes hero overlay). front = over DOM images. */
-  z-index: ${({ $stack }) => ($stack === 'behind' ? 0 : 2)};
-  pointer-events: none;
-
-  & > div,
-  & canvas {
-    pointer-events: none !important;
-  }
-`;
-
-const Spacer = styled.div`
-  position: relative;
-  z-index: 1;
-  pointer-events: none;
-`;
-
 /**
  * ShaderScroll lab shell.
  *
@@ -67,6 +50,7 @@ const Spacer = styled.div`
  * - `media-planes` — Architecture A: hover bulge / dispersion on images.
  * - `mosaic` — Architecture A: hover bulge + pixel mosaic cubes (no dispersion).
  * - `burn-carousel` — full-bleed slides with paper-burn wipe.
+ * - `cloud-reveal` — Architecture A: cursor parts a cloud mask to swap photos.
  * - `cube` — minimal white cube + lights (R3F hello-world).
  */
 export default function ShaderScrollScene({
@@ -78,6 +62,7 @@ export default function ShaderScrollScene({
   mosaicContent,
   burnCarouselContent,
   cubeContent,
+  cloudRevealContent,
   captureScale = 1,
   anisotropy = false,
   mipmaps = false,
@@ -118,6 +103,22 @@ export default function ShaderScrollScene({
     pixelCount,
     mosaicRadius,
     cubeDepth,
+    cloudRadius,
+    cloudEdge,
+    cloudScale,
+    cloudTurbulence,
+    cloudSpeed,
+    cloudDetail,
+    cloudGlow,
+    cloudDrag,
+    cloudTaper,
+    cloudFollow,
+    cloudRipple,
+    cloudRippleScale,
+    cloudRippleSpeed,
+    cloudIdleFade,
+    cloudIdleDelay,
+    cloudIdleFadeTime,
     burnSpeed,
     burnNoiseScale,
     burnNoiseStrength,
@@ -141,6 +142,7 @@ export default function ShaderScrollScene({
         'Cylinder horizontal (images)': 'cylinder-horizontal',
         'Media planes (hover)': 'media-planes',
         'Mosaic bulge (hover)': 'mosaic',
+        'Cloud reveal (hover)': 'cloud-reveal',
         'Burn carousel': 'burn-carousel',
         'Cube lab': 'cube',
       },
@@ -268,6 +270,121 @@ export default function ShaderScrollScene({
       },
       { render: (get) => get('architecture') === 'mosaic' }
     ),
+    'Cloud Reveal': folder(
+      {
+        cloudRadius: {
+          value: 0.3,
+          min: 0.05,
+          max: 0.9,
+          step: 0.01,
+          label: 'revealRadius',
+        },
+        cloudEdge: {
+          value: 0.12,
+          min: 0.01,
+          max: 0.5,
+          step: 0.01,
+          label: 'edgeSoftness',
+        },
+        cloudScale: {
+          value: 4.5,
+          min: 1,
+          max: 14,
+          step: 0.1,
+          label: 'cloudScale (higher = smaller puffs)',
+        },
+        cloudTurbulence: {
+          value: 0.18,
+          min: 0,
+          max: 0.6,
+          step: 0.01,
+          label: 'turbulence (billow depth)',
+        },
+        cloudSpeed: {
+          value: 0.6,
+          min: 0,
+          max: 3,
+          step: 0.05,
+          label: 'cloudDrift (0 = frozen)',
+        },
+        cloudDetail: {
+          value: 0.6,
+          min: 0,
+          max: 1,
+          step: 0.05,
+          label: 'wispDetail',
+        },
+        cloudGlow: {
+          value: 0.15,
+          min: 0,
+          max: 1,
+          step: 0.01,
+          label: 'edgeGlow',
+        },
+        cloudDrag: {
+          value: 0.55,
+          min: 0,
+          max: 1,
+          step: 0.01,
+          label: 'drag (trail length)',
+        },
+        cloudTaper: {
+          value: 1.2,
+          min: 0.3,
+          max: 3,
+          step: 0.05,
+          label: 'trailTaper (higher = pointier)',
+        },
+        cloudFollow: {
+          value: 0.12,
+          min: 0.01,
+          max: 1,
+          step: 0.01,
+          label: 'followSpeed (lower = more lag)',
+        },
+        cloudRipple: {
+          value: 0.5,
+          min: 0,
+          max: 1,
+          step: 0.01,
+          label: 'ripple (pebble strength)',
+        },
+        cloudRippleScale: {
+          value: 38,
+          min: 10,
+          max: 90,
+          step: 1,
+          label: 'rippleScale (ring spacing)',
+        },
+        cloudRippleSpeed: {
+          value: 3,
+          min: 0.2,
+          max: 10,
+          step: 0.1,
+          label: 'rippleSpeed (ring spread)',
+        },
+        cloudIdleFade: {
+          value: true,
+          label: 'fadeWhenIdle (solid until you move)',
+        },
+        cloudIdleDelay: {
+          value: 0.35,
+          min: 0,
+          max: 3,
+          step: 0.05,
+          label: 'idleDelay (s)',
+          render: (get) => get('Cloud Reveal.cloudIdleFade'),
+        },
+        cloudIdleFadeTime: {
+          value: 2.5,
+          min: 0.3,
+          max: 8,
+          step: 0.1,
+          label: 'fadeOutTime (s)',
+        },
+      },
+      { render: (get) => get('architecture') === 'cloud-reveal' }
+    ),
     'Burn Carousel': folder(
       {
         burnSpeed: {
@@ -384,6 +501,7 @@ export default function ShaderScrollScene({
   const isCylinderHorizontal = architecture === 'cylinder-horizontal';
   const isMediaPlanes = architecture === 'media-planes';
   const isMosaic = architecture === 'mosaic';
+  const isCloudReveal = architecture === 'cloud-reveal';
   const isBurnCarousel = architecture === 'burn-carousel';
   const isCubeLab = architecture === 'cube';
   const isDomOverlay =
@@ -391,6 +509,7 @@ export default function ShaderScrollScene({
     isCylinderHorizontal ||
     isMediaPlanes ||
     isMosaic ||
+    isCloudReveal ||
     isBurnCarousel ||
     isCubeLab;
   // Behind: media-planes / cube (DOM scrolls over). Front: photos / burn.
@@ -405,6 +524,7 @@ export default function ShaderScrollScene({
   const cylinderHorizontalNode = cylinderHorizontalContent ?? children;
   const mediaNode = mediaPlanesContent ?? children;
   const mosaicNode = mosaicContent ?? mediaPlanesContent ?? children;
+  const cloudRevealNode = cloudRevealContent ?? children;
   const burnNode = burnCarouselContent ?? children;
   const cubeNode = cubeContent ?? null;
 
@@ -412,7 +532,9 @@ export default function ShaderScrollScene({
     ? cubeNode
     : isBurnCarousel
       ? burnNode
-      : isMosaic
+      : isCloudReveal
+        ? cloudRevealNode
+        : isMosaic
         ? mosaicNode
         : isMediaPlanes
           ? mediaNode
@@ -726,6 +848,7 @@ export default function ShaderScrollScene({
                 background:
                   isMediaPlanes ||
                   isMosaic ||
+                  isCloudReveal ||
                   isBurnCarousel ||
                   isCubeLab ||
                   isCylinderHorizontal
@@ -767,7 +890,7 @@ export default function ShaderScrollScene({
         {activeContent}
       </div>
 
-      <CanvasLayer $stack={canvasStack}>
+      <div className={cx(styles.canvasLayer, canvasStack === 'behind' && styles.behind)}>
         <Canvas
           key={architecture}
           dpr={[1, 2]}
@@ -821,6 +944,27 @@ export default function ShaderScrollScene({
               cubeDepth={cubeDepth}
             />
           )}
+          {isCloudReveal && (
+            <CloudRevealLab
+              root={contentEl}
+              radius={cloudRadius}
+              edgeSoftness={cloudEdge}
+              cloudScale={cloudScale}
+              turbulence={cloudTurbulence}
+              cloudSpeed={cloudSpeed}
+              detail={cloudDetail}
+              edgeGlow={cloudGlow}
+              drag={cloudDrag}
+              trailTaper={cloudTaper}
+              followSpeed={cloudFollow}
+              ripple={cloudRipple}
+              rippleScale={cloudRippleScale}
+              rippleSpeed={cloudRippleSpeed}
+              idleFade={cloudIdleFade}
+              idleDelay={cloudIdleDelay}
+              idleFadeTime={cloudIdleFadeTime}
+            />
+          )}
           {isBurnCarousel && (
             <BurnCarousel
               burnSpeed={burnSpeed}
@@ -864,10 +1008,10 @@ export default function ShaderScrollScene({
             />
           )}
         </Canvas>
-      </CanvasLayer>
+      </div>
 
       {isFullPageCylinder && (
-        <Spacer style={{ height: `${contentRatio * 100}vh` }} />
+        <div className={styles.spacer} style={{ height: `${contentRatio * 100}vh` }} />
       )}
     </>
   );

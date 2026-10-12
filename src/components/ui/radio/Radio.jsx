@@ -3,15 +3,8 @@
 import { useId } from 'react';
 import { useInteractiveMotion } from '@/hooks/useInteractiveMotion';
 import { useStateMotion } from '@/hooks/useStateMotion';
-import {
-  Circle,
-  Description,
-  Dot,
-  HiddenInput,
-  LabelText,
-  RadioRoot,
-  TextGroup,
-} from './Radio.style';
+import { cx } from '@/lib/cx';
+import styles from './Radio.module.scss';
 
 /**
  * Radio — one option within a group. Radios sharing a `name` are mutually
@@ -44,15 +37,20 @@ export default function Radio({
   });
 
   return (
-    <RadioRoot
+    <label
       htmlFor={inputId}
-      $disabled={disabled}
-      $checked={checked}
-      className={className}
+      className={cx(
+        styles.root,
+        styles[size],
+        disabled && styles.disabled,
+        checked && styles.checked,
+        className,
+      )}
       {...handlers}
     >
-      <HiddenInput
+      <input
         id={inputId}
+        className={styles.hidden}
         type="radio"
         name={name}
         value={value}
@@ -64,25 +62,26 @@ export default function Radio({
         {...props}
       />
 
-      <Circle
+      <span
         ref={circleRef}
         data-box
-        $checked={checked}
-        $size={size}
-        $hasError={error}
+        data-invalid={error || undefined}
+        className={styles.circle}
         aria-hidden="true"
       >
-        <Dot ref={dotRef} />
-      </Circle>
+        <span className={styles.dot} ref={dotRef} />
+      </span>
 
       {(label || description) && (
-        <TextGroup>
-          {label && <LabelText $size={size}>{label}</LabelText>}
+        <span className={styles.text}>
+          {label && <span className={styles.label}>{label}</span>}
           {description && (
-            <Description id={`${inputId}-description`}>{description}</Description>
+            <span className={styles.description} id={`${inputId}-description`}>
+              {description}
+            </span>
           )}
-        </TextGroup>
+        </span>
       )}
-    </RadioRoot>
+    </label>
   );
 }

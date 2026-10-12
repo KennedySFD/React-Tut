@@ -1,6 +1,12 @@
 'use client';
 
-import { ProgressRoot, Track, Fill, LabelRow, ProgressLabel, ProgressValue } from './Progress.style';
+import { cx } from '@/lib/cx';
+import styles from './Progress.module.scss';
+
+const sizeClass = {
+  sm: styles.sm,
+  lg: styles.lg,
+};
 
 /**
  * Progress
@@ -19,12 +25,14 @@ export default function Progress({
   label,
   showValue = false,
   indeterminate = false,
+  className,
   ...props
 }) {
   const clamped = Math.min(Math.max(value, 0), 100);
 
   return (
-    <ProgressRoot
+    <div
+      className={cx(styles.root, className)}
       role="progressbar"
       aria-valuenow={indeterminate ? undefined : clamped}
       aria-valuemin={0}
@@ -33,14 +41,17 @@ export default function Progress({
       {...props}
     >
       {(label || showValue) && (
-        <LabelRow>
-          {label && <ProgressLabel>{label}</ProgressLabel>}
-          {showValue && !indeterminate && <ProgressValue>{clamped}%</ProgressValue>}
-        </LabelRow>
+        <div className={styles.labelRow}>
+          {label && <span className={styles.label}>{label}</span>}
+          {showValue && !indeterminate && <span className={styles.value}>{clamped}%</span>}
+        </div>
       )}
-      <Track $size={size}>
-        <Fill $value={clamped} $indeterminate={indeterminate} />
-      </Track>
-    </ProgressRoot>
+      <div className={cx(styles.track, sizeClass[size])}>
+        <div
+          className={cx(styles.fill, indeterminate && styles.indeterminate)}
+          style={indeterminate ? undefined : { width: `${clamped}%` }}
+        />
+      </div>
+    </div>
   );
 }

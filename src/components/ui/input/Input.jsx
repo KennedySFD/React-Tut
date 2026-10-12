@@ -3,7 +3,8 @@
 import { useId, useState } from 'react';
 import Field from '@/components/ui/field';
 import { useFieldMotion } from '@/hooks/useFieldMotion';
-import { BareInput, IconSlot, InputShell } from './Input.style';
+import { cx } from '@/lib/cx';
+import styles from './Input.module.scss';
 
 /**
  * Input — standard single-line text field.
@@ -67,18 +68,19 @@ export default function Input({
       describedById={describedById}
       className={className}
     >
-      <InputShell
+      <div
         ref={shellRef}
         {...motionHandlers}
-        $size={size}
-        $hasError={hasError}
+        className={cx(styles.shell, styles[size])}
         data-focused={focused}
+        data-invalid={hasError || undefined}
         aria-disabled={disabled || undefined}
       >
-        {iconLeft && <IconSlot $size={size}>{iconLeft}</IconSlot>}
+        {iconLeft && <span className={styles.icon}>{iconLeft}</span>}
 
-        <BareInput
+        <input
           id={inputId}
+          className={styles.input}
           disabled={disabled}
           required={required}
           aria-invalid={hasError || undefined}
@@ -88,8 +90,8 @@ export default function Input({
           {...props}
         />
 
-        {iconRight && <IconSlot $size={size}>{iconRight}</IconSlot>}
-      </InputShell>
+        {iconRight && <span className={styles.icon}>{iconRight}</span>}
+      </div>
     </Field>
   );
 }

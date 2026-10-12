@@ -1,31 +1,31 @@
 'use client';
 
-import { useMemo } from 'react';
-import { ThemeProvider as SCThemeProvider } from 'styled-components';
+import { useLayoutEffect, useMemo } from 'react';
 import { ThemeModeProvider, useThemeMode } from '@/context/ThemeModeContext';
 import { createTheme } from './index';
-import GlobalStyle from './GlobalStyle';
 
-/**
- * Rebuilds the styled-components theme whenever the colour mode changes.
- * Kept separate so it can call useThemeMode() inside the provider above it.
- */
-function ThemedRoot({ children }) {
+function ThemeAttribute() {
   const { mode } = useThemeMode();
-  const theme = useMemo(() => createTheme(mode), [mode]);
 
-  return (
-    <SCThemeProvider theme={theme}>
-      <GlobalStyle />
-      {children}
-    </SCThemeProvider>
-  );
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    root.dataset.theme = mode;
+    root.style.colorScheme = mode;
+  }, [mode]);
+
+  return null;
+}
+
+export function useTheme() {
+  const { mode } = useThemeMode();
+  return useMemo(() => createTheme(mode), [mode]);
 }
 
 export default function ThemeProvider({ children, defaultMode = 'light' }) {
   return (
     <ThemeModeProvider defaultMode={defaultMode}>
-      <ThemedRoot>{children}</ThemedRoot>
+      <ThemeAttribute />
+      {children}
     </ThemeModeProvider>
   );
 }

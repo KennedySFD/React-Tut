@@ -1,0 +1,65 @@
+@use '../../../theme/mixins' as *;
+
+.root {
+  border: none;
+  flex-shrink: 0;
+}
+
+.vertical {
+  align-self: stretch;
+  width: 0;
+  border-left: var(--global-borderWidths-thin) solid;
+}
+
+.horizontal {
+  width: 100%;
+  height: 0;
+  border-top: var(--global-borderWidths-thin) solid;
+}
+
+.hasLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--global-spacing-md);
+  width: 100%;
+  color: var(--semantic-colors-text-muted);
+  font-size: var(--global-fontSizes-xs);
+  font-weight: var(--global-fontWeights-medium);
+  letter-spacing: var(--global-letterSpacings-wide);
+  text-transform: uppercase;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 0;
+    border-top: var(--global-borderWidths-thin) solid;
+  }
+}
+
+.subtle {
+  border-color: var(--semantic-colors-border-subtle);
+
+  &::before,
+  &::after {
+    border-color: var(--semantic-colors-border-subtle);
+  }
+}
+
+.default {
+  border-color: var(--semantic-colors-border-default);
+
+  &::before,
+  &::after {
+    border-color: var(--semantic-colors-border-default);
+  }
+}
+
+.strong {
+  border-color: var(--semantic-colors-border-strong);
+
+  &::before,
+  &::after {
+    border-color: var(--semantic-colors-border-strong);
+  }
+}

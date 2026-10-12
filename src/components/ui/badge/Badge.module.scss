@@ -1,0 +1,70 @@
+@use '../../../theme/mixins' as *;
+
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  /*
+   * Centred by flex, not line-height. Under border-box the 2px ring eats
+   * into the 1.25rem box, so a line-height matching the outer height sat
+   * the digit low by the border width.
+   */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 var(--global-spacing-xs);
+  border-radius: var(--global-radii-full);
+  font-size: var(--global-fontSizes-xs);
+  font-weight: var(--global-fontWeights-semibold);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  border: 2px solid var(--semantic-colors-background-canvas);
+}
+
+.dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(30%, -30%);
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: var(--global-radii-full);
+  border: 2px solid var(--semantic-colors-background-canvas);
+}
+
+.accent {
+  background: var(--semantic-colors-accent-default);
+  color: var(--semantic-colors-accent-onAccent);
+}
+
+.danger {
+  background: var(--semantic-colors-feedback-danger-solid);
+  color: var(--semantic-colors-feedback-danger-onSolid);
+}
+
+.success {
+  background: var(--semantic-colors-feedback-success-solid);
+  color: var(--semantic-colors-feedback-success-onSolid);
+}
+
+.warning {
+  background: var(--semantic-colors-feedback-warning-solid);
+  color: var(--semantic-colors-feedback-warning-onSolid);
+}
+
+.neutral {
+  background: var(--semantic-colors-feedback-neutral-solid);
+  color: var(--semantic-colors-feedback-neutral-onSolid);
+}

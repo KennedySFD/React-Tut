@@ -1,17 +1,9 @@
 'use client';
 
-import { useTheme } from 'styled-components';
 import { useThemeMode } from '@/context/ThemeModeContext';
 import { Grid, Stack, Story } from '../kit';
-import {
-  ScaleBar,
-  ScaleLabel,
-  ScaleRow,
-  Swatch,
-  SwatchChip,
-  SwatchGrid,
-  SwatchName,
-} from './token.style';
+import { useTheme } from '@/theme/ThemeProvider';
+import styles from './token.module.scss';
 
 const colorTokenPaths = [
   'background.canvas',
@@ -46,49 +38,49 @@ export default function TokenStories() {
         title="Semantic colours"
         description={`Resolved for the active mode (${mode}). Toggle the theme in the header and every value here — and every component in the library — resolves against the other mode.`}
       >
-        <SwatchGrid>
+        <div className={styles.swatchGrid}>
           {colorTokenPaths.map((path) => (
-            <Swatch key={path}>
-              <SwatchChip $color={read(theme.semantic.colors, path)} />
-              <SwatchName>{path}</SwatchName>
-            </Swatch>
+            <div key={path} className={styles.swatch}>
+              <div className={styles.swatchChip} style={{ background: read(theme.semantic.colors, path) }} />
+              <span className={styles.swatchName}>{path}</span>
+            </div>
           ))}
-        </SwatchGrid>
+        </div>
       </Story>
 
       <Story
         title="Interaction states"
         description="The tokens that keep a focused Input identical to a focused Select, Tab or Checkbox."
       >
-        <SwatchGrid>
+        <div className={styles.swatchGrid}>
           {Object.entries(theme.semantic.colors.state).map(([name, value]) => (
-            <Swatch key={name}>
-              <SwatchChip $color={value} />
-              <SwatchName>state.{name}</SwatchName>
-            </Swatch>
+            <div key={name} className={styles.swatch}>
+              <div className={styles.swatchChip} style={{ background: value }} />
+              <span className={styles.swatchName}>state.{name}</span>
+            </div>
           ))}
-        </SwatchGrid>
+        </div>
       </Story>
 
       <Story
         title="Dispersion"
         description="The chromatic fringe used by keylines and sheens. Kept low-saturation so it reads as refraction rather than as a rainbow."
       >
-        <SwatchGrid>
+        <div className={styles.swatchGrid}>
           {Object.entries(theme.semantic.colors.dispersion).map(([name, value]) => (
-            <Swatch key={name}>
-              <SwatchChip $color={value} />
-              <SwatchName>dispersion.{name}</SwatchName>
-            </Swatch>
+            <div key={name} className={styles.swatch}>
+              <div className={styles.swatchChip} style={{ background: value }} />
+              <span className={styles.swatchName}>dispersion.{name}</span>
+            </div>
           ))}
-        </SwatchGrid>
+        </div>
       </Story>
 
       <Story title="Type scale" description="Semantic roles, not raw sizes.">
         <Stack $gap="md">
           {['display', 'heading', 'subheading', 'body', 'label', 'caption'].map((role) => (
-            <ScaleRow key={role}>
-              <ScaleLabel>{role}</ScaleLabel>
+            <div key={role} className={styles.scaleRow}>
+              <span className={styles.scaleLabel}>{role}</span>
               <span
                 style={{
                   fontSize: theme.semantic.typography[role].size,
@@ -98,7 +90,7 @@ export default function TokenStories() {
               >
                 The quick brown fox
               </span>
-            </ScaleRow>
+            </div>
           ))}
         </Stack>
       </Story>
@@ -106,12 +98,12 @@ export default function TokenStories() {
       <Story title="Spacing scale">
         <Stack $gap="sm">
           {spacingScale.map(([name, value]) => (
-            <ScaleRow key={name}>
-              <ScaleLabel>
+            <div key={name} className={styles.scaleRow}>
+              <span className={styles.scaleLabel}>
                 {name} · {value}
-              </ScaleLabel>
-              <ScaleBar $width={value} />
-            </ScaleRow>
+              </span>
+              <div className={styles.scaleBar} style={{ width: value }} />
+            </div>
           ))}
         </Stack>
       </Story>
@@ -128,9 +120,9 @@ export default function TokenStories() {
                   border: `1px solid ${theme.semantic.colors.accent.border}`,
                 }}
               />
-              <ScaleLabel>
+              <span className={styles.scaleLabel}>
                 {name} · {value}
-              </ScaleLabel>
+              </span>
             </Stack>
           ))}
         </Grid>

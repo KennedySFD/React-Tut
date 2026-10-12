@@ -1,0 +1,73 @@
+@use '../../../theme/mixins' as *;
+
+/* The bordered surface. field-base is the same treatment Select and Textarea use. */
+.shell {
+  @include field-glass;
+  @include focus-keyline;
+  display: flex;
+  align-items: center;
+  gap: var(--components-field-gap);
+}
+
+.sm {
+  @include field-base(sm);
+  height: var(--components-field-sizes-sm-height);
+  padding: 0 var(--components-field-sizes-sm-paddingX);
+}
+
+.md {
+  @include field-base(md);
+  height: var(--components-field-sizes-md-height);
+  padding: 0 var(--components-field-sizes-md-paddingX);
+}
+
+.lg {
+  @include field-base(lg);
+  height: var(--components-field-sizes-lg-height);
+  padding: 0 var(--components-field-sizes-lg-paddingX);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+
+  &::placeholder {
+    color: var(--semantic-colors-text-placeholder);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: var(--semantic-colors-text-disabled);
+    -webkit-text-fill-color: var(--semantic-colors-text-disabled);
+  }
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--semantic-colors-text-muted);
+}
+
+.sm .icon svg {
+  width: var(--components-field-sizes-sm-iconSize);
+  height: var(--components-field-sizes-sm-iconSize);
+}
+
+.md .icon svg {
+  width: var(--components-field-sizes-md-iconSize);
+  height: var(--components-field-sizes-md-iconSize);
+}
+
+.lg .icon svg {
+  width: var(--components-field-sizes-lg-iconSize);
+  height: var(--components-field-sizes-lg-iconSize);
+}

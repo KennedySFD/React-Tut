@@ -1,0 +1,30 @@
+@use '../../../theme/mixins' as *;
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.root {
+  display: inline-block;
+  flex-shrink: 0;
+  border: var(--components-spinner-borderWidth) solid currentColor;
+  border-top-color: transparent;
+  border-radius: var(--global-radii-full);
+  opacity: var(--global-opacities-muted);
+  animation: spin 600ms linear infinite;
+
+  &.sm {
+    width: var(--components-spinner-sizes-sm);
+    height: var(--components-spinner-sizes-sm);
+  }
+
+  &.md {
+    width: var(--components-spinner-sizes-md);
+    height: var(--components-spinner-sizes-md);
+  }
+
+  &.lg {
+    width: var(--components-spinner-sizes-lg);
+    height: var(--components-spinner-sizes-lg);
+  }
+}

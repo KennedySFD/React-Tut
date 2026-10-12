@@ -1,0 +1,92 @@
+@use '../../../theme/mixins' as *;
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0);    opacity: 1; }
+  to   { transform: translateX(100%); opacity: 0; }
+}
+
+.viewport {
+  position: fixed;
+  bottom: var(--global-spacing-xl);
+  right: var(--global-spacing-xl);
+  z-index: var(--global-zIndex-tooltip);
+  display: flex;
+  flex-direction: column;
+  gap: var(--global-spacing-sm);
+  max-width: 22rem;
+  pointer-events: none;
+}
+
+.toast {
+  @include glass-panel-strong;
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--global-spacing-md);
+  padding: var(--global-spacing-md) var(--global-spacing-lg);
+  border-left: 3px solid var(--semantic-colors-feedback-neutral-solid);
+  border-radius: var(--global-radii-lg);
+  animation: slideIn 0.28s var(--semantic-motion-fast) forwards;
+
+  &.leaving {
+    animation-name: slideOut;
+  }
+
+  &.info { border-left-color: var(--semantic-colors-feedback-info-solid); }
+  &.success { border-left-color: var(--semantic-colors-feedback-success-solid); }
+  &.warning { border-left-color: var(--semantic-colors-feedback-warning-solid); }
+  &.danger { border-left-color: var(--semantic-colors-feedback-danger-solid); }
+  &.neutral { border-left-color: var(--semantic-colors-feedback-neutral-solid); }
+}
+
+.icon {
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+  color: var(--semantic-colors-feedback-neutral-text);
+
+  &.info { color: var(--semantic-colors-feedback-info-text); }
+  &.success { color: var(--semantic-colors-feedback-success-text); }
+  &.warning { color: var(--semantic-colors-feedback-warning-text); }
+  &.danger { color: var(--semantic-colors-feedback-danger-text); }
+  &.neutral { color: var(--semantic-colors-feedback-neutral-text); }
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  @include typography(label);
+  color: var(--semantic-colors-text-primary);
+  margin: 0;
+}
+
+.description {
+  @include typography(caption);
+  color: var(--semantic-colors-text-secondary);
+  margin: var(--global-spacing-xxs) 0 0;
+}
+
+.close {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--semantic-colors-text-muted);
+  cursor: pointer;
+  border-radius: var(--global-radii-sm);
+  transition: color var(--semantic-motion-fast);
+
+  &:hover { color: var(--semantic-colors-text-primary); }
+}

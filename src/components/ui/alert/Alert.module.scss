@@ -1,0 +1,99 @@
+@use '../../../theme/mixins' as *;
+
+.root {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--components-alert-gap);
+  padding: var(--components-alert-padding);
+  border: var(--components-alert-borderWidth) solid transparent;
+  border-radius: var(--components-alert-radius);
+  color: var(--semantic-colors-text-primary);
+
+  &.info {
+    background: var(--semantic-colors-feedback-info-surface);
+    border-color: var(--semantic-colors-feedback-info-border);
+  }
+
+  &.success {
+    background: var(--semantic-colors-feedback-success-surface);
+    border-color: var(--semantic-colors-feedback-success-border);
+  }
+
+  &.warning {
+    background: var(--semantic-colors-feedback-warning-surface);
+    border-color: var(--semantic-colors-feedback-warning-border);
+  }
+
+  &.danger {
+    background: var(--semantic-colors-feedback-danger-surface);
+    border-color: var(--semantic-colors-feedback-danger-border);
+  }
+}
+
+.icon {
+  display: inline-flex;
+  flex-shrink: 0;
+
+  svg {
+    width: var(--components-alert-iconSize);
+    height: var(--components-alert-iconSize);
+  }
+
+  &.info { color: var(--semantic-colors-feedback-info-text); }
+  &.success { color: var(--semantic-colors-feedback-success-text); }
+  &.warning { color: var(--semantic-colors-feedback-warning-text); }
+  &.danger { color: var(--semantic-colors-feedback-danger-text); }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--global-spacing-xs);
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  @include typography(label);
+
+  &.info { color: var(--semantic-colors-feedback-info-text); }
+  &.success { color: var(--semantic-colors-feedback-success-text); }
+  &.warning { color: var(--semantic-colors-feedback-warning-text); }
+  &.danger { color: var(--semantic-colors-feedback-danger-text); }
+}
+
+.message {
+  @include typography(body);
+  font-size: var(--global-fontSizes-sm);
+  color: var(--semantic-colors-text-secondary);
+}
+
+.dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: var(--global-spacing-xxs);
+  border: none;
+  border-radius: var(--global-radii-sm);
+  background: transparent;
+  color: var(--semantic-colors-text-muted);
+  cursor: pointer;
+  transition:
+    background var(--semantic-motion-fast),
+    color var(--semantic-motion-fast);
+
+  &:hover {
+    background: var(--semantic-colors-state-hoverSurface);
+    color: var(--semantic-colors-text-primary);
+  }
+
+  &:focus-visible {
+    @include focus-ring-only;
+  }
+
+  svg {
+    width: var(--global-sizes-icon-md);
+    height: var(--global-sizes-icon-md);
+  }
+}

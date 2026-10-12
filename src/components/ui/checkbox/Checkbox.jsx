@@ -4,15 +4,8 @@ import { useEffect, useId, useRef } from 'react';
 import { CheckIcon, MinusIcon } from '@/components/icons';
 import { useInteractiveMotion } from '@/hooks/useInteractiveMotion';
 import { useStateMotion } from '@/hooks/useStateMotion';
-import {
-  Box,
-  CheckboxRoot,
-  Description,
-  HiddenInput,
-  LabelText,
-  Mark,
-  TextGroup,
-} from './Checkbox.style';
+import { cx } from '@/lib/cx';
+import styles from './Checkbox.module.scss';
 
 /**
  * Checkbox
@@ -63,16 +56,21 @@ export default function Checkbox({
   });
 
   return (
-    <CheckboxRoot
+    <label
       htmlFor={inputId}
-      $disabled={disabled}
-      $checked={isMarked}
-      className={className}
+      className={cx(
+        styles.root,
+        styles[size],
+        disabled && styles.disabled,
+        isMarked && styles.checked,
+        className,
+      )}
       {...handlers}
     >
-      <HiddenInput
+      <input
         ref={inputRef}
         id={inputId}
+        className={styles.hidden}
         type="checkbox"
         checked={checked}
         disabled={disabled}
@@ -82,25 +80,28 @@ export default function Checkbox({
         {...props}
       />
 
-      <Box
+      <span
         ref={boxRef}
         data-box
-        $checked={isMarked}
-        $size={size}
-        $hasError={error}
+        data-invalid={error || undefined}
+        className={styles.box}
         aria-hidden="true"
       >
-        <Mark ref={markRef}>{indeterminate ? <MinusIcon /> : <CheckIcon />}</Mark>
-      </Box>
+        <span className={styles.mark} ref={markRef}>
+          {indeterminate ? <MinusIcon /> : <CheckIcon />}
+        </span>
+      </span>
 
       {(label || description) && (
-        <TextGroup>
-          {label && <LabelText $size={size}>{label}</LabelText>}
+        <span className={styles.text}>
+          {label && <span className={styles.label}>{label}</span>}
           {description && (
-            <Description id={`${inputId}-description`}>{description}</Description>
+            <span className={styles.description} id={`${inputId}-description`}>
+              {description}
+            </span>
           )}
-        </TextGroup>
+        </span>
       )}
-    </CheckboxRoot>
+    </label>
   );
 }
