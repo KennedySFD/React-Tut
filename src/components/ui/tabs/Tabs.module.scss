@@ -1,0 +1,111 @@
+@use '../../../theme/mixins' as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--global-spacing-lg);
+  width: 100%;
+}
+
+.list {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  border-bottom: none;
+  overflow-x: auto;
+
+  &.pill {
+    gap: var(--components-tabs-gap);
+    padding: var(--global-spacing-xs);
+    background: var(--semantic-colors-background-sunken);
+    border-radius: var(--global-radii-lg);
+  }
+
+  &.underline {
+    border-bottom: var(--global-borderWidths-thin) solid var(--semantic-colors-border-subtle);
+  }
+}
+
+.indicator {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  /* Positioned by GSAP; hidden until it has been measured. */
+  opacity: 0;
+  left: 0;
+
+  &.pill {
+    top: var(--global-spacing-xs);
+    bottom: var(--global-spacing-xs);
+    border-radius: var(--components-tabs-tab-radius);
+    background: var(--semantic-colors-background-raised);
+    box-shadow: var(--semantic-shadows-xs);
+  }
+
+  &.underline {
+    bottom: calc(-1 * var(--global-borderWidths-thin));
+    height: var(--components-tabs-indicatorWidth);
+    border-radius: var(--global-radii-full);
+    background: linear-gradient(
+      90deg,
+      var(--semantic-colors-dispersion-cyan) 0%,
+      var(--semantic-colors-state-selectedBorder) 50%,
+      var(--semantic-colors-dispersion-rose) 100%
+    );
+  }
+}
+
+.tab {
+  @include interactive-glass;
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--global-spacing-sm);
+  padding: var(--components-tabs-tab-paddingY) var(--components-tabs-tab-paddingX);
+  font-size: var(--components-tabs-tab-fontSize);
+  font-weight: var(--components-tabs-tab-fontWeight);
+  white-space: nowrap;
+  border: none;
+  background: transparent;
+  color: var(--semantic-colors-text-secondary);
+  cursor: pointer;
+  border-radius: var(--components-tabs-tab-radius);
+  transition: color var(--semantic-motion-fast);
+
+  &:hover:not(:disabled):not([aria-selected='true']) {
+    color: var(--semantic-colors-text-primary);
+  }
+
+  &[aria-selected='true'] {
+    color: var(--semantic-colors-state-selectedText);
+  }
+
+  &.pill[aria-selected='true'] {
+    color: var(--semantic-colors-text-primary);
+  }
+
+  &:focus-visible {
+    @include focus-ring-only;
+  }
+
+  &:disabled {
+    color: var(--semantic-colors-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.panel {
+  color: var(--semantic-colors-text-secondary);
+  font-size: var(--global-fontSizes-sm);
+  line-height: var(--global-lineHeights-relaxed);
+
+  &:focus-visible {
+    @include focus-ring-only;
+    border-radius: var(--global-radii-md);
+  }
+}

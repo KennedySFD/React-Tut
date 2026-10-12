@@ -1,0 +1,51 @@
+@use '../../../theme/mixins' as *;
+
+.article {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 100%;
+  padding: clamp(3rem, 8vh, 6rem) clamp(1.25rem, 4vw, 3rem) 8rem;
+  background: #efe8dc;
+  color: #1c1914;
+}
+
+.title {
+  margin: 0 0 0.75rem;
+  max-width: 14ch;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.lead {
+  margin: 0 0 3rem;
+  max-width: 38rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+  line-height: 1.55;
+  color: #3a342c;
+}
+
+.section {
+  max-width: 40rem;
+  margin-bottom: 2.75rem;
+
+  p {
+    margin: 0 0 1.1rem;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #2a251f;
+  }
+}
+
+.heading {
+  margin: 0 0 0.85rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}

@@ -8,6 +8,7 @@ import ShaderTest, {
   ShaderTestMosaic,
   ShaderTestBurnCarousel,
   ShaderTestCube,
+  ShaderTestCloudReveal,
 } from '@/components/features/shader-test';
 
 const ShaderScrollScene = dynamic(
@@ -22,6 +23,7 @@ const ShaderScrollScene = dynamic(
  * - Cylinder horizontal (images)
  * - Media planes (hover)
  * - Mosaic bulge (hover)
+ * - Cloud reveal (hover)
  * - Burn carousel
  * - Cube lab
  */
@@ -39,6 +41,7 @@ export default function ShaderTestPage() {
       mosaicContent={<ShaderTestMosaic />}
       burnCarouselContent={<ShaderTestBurnCarousel />}
       cubeContent={<ShaderTestCube />}
+      cloudRevealContent={<ShaderTestCloudReveal />}
     />
   );
 }

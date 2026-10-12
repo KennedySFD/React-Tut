@@ -1,0 +1,49 @@
+@use '../../../theme/mixins' as *;
+
+.root {
+  ol {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--global-spacing-xs);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--global-spacing-xs);
+  @include typography(caption);
+  color: var(--semantic-colors-text-muted);
+
+  &:last-child {
+    color: var(--semantic-colors-text-primary);
+    font-weight: var(--global-fontWeights-medium);
+  }
+}
+
+.link {
+  color: var(--semantic-colors-text-secondary);
+  text-decoration: none;
+  transition: color var(--semantic-motion-fast);
+
+  &:hover {
+    color: var(--semantic-colors-text-primary);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 var(--global-borderWidths-ring) var(--semantic-colors-state-focusRing);
+    border-radius: var(--global-radii-sm);
+  }
+}
+
+.separator {
+  display: inline-flex;
+  color: var(--semantic-colors-text-muted);
+  opacity: 0.6;
+}

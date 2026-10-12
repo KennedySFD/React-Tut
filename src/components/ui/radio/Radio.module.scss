@@ -1,0 +1,113 @@
+@use '../../../theme/mixins' as *;
+
+.hidden {
+  @include visually-hidden;
+}
+
+.root {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--components-choice-gap);
+  cursor: pointer;
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: var(--global-opacities-disabled);
+  }
+
+  input:focus-visible + [data-box] {
+    border-color: var(--semantic-colors-state-focusBorder);
+    box-shadow: 0 0 0 var(--global-borderWidths-ring) var(--semantic-colors-state-focusRing);
+  }
+
+  &:hover [data-box] {
+    border-color: var(--semantic-colors-state-hoverBorder);
+  }
+
+  &.checked:hover [data-box] {
+    border-color: var(--semantic-colors-accent-hover);
+  }
+
+  &.disabled:hover [data-box] {
+    border-color: var(--semantic-colors-state-disabledBorder);
+  }
+}
+
+.circle {
+  @include interactive-glass;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--components-choice-sizes-md-box);
+  height: var(--components-choice-sizes-md-box);
+  margin-top: 0.0625rem;
+  border: var(--components-choice-borderWidth) solid var(--semantic-colors-border-default);
+  border-radius: var(--global-radii-full);
+  --ring-inset: var(--components-choice-borderWidth);
+  background: var(--semantic-colors-background-raised);
+  transition:
+    border-color var(--semantic-motion-fast),
+    box-shadow var(--semantic-motion-fast);
+
+}
+
+.sm .circle {
+  width: var(--components-choice-sizes-sm-box);
+  height: var(--components-choice-sizes-sm-box);
+}
+
+.checked .circle {
+  border-color: var(--semantic-colors-accent-default);
+}
+
+.circle[data-invalid='true'] {
+  border-color: var(--semantic-colors-state-errorBorder);
+}
+
+/* Resting scale is the off state. GSAP owns the pop, so transform is not transitioned. */
+.dot {
+  width: 50%;
+  height: 50%;
+  border-radius: var(--global-radii-full);
+  background: var(--semantic-colors-accent-default);
+  opacity: 0;
+  transform: scale(0.3);
+}
+
+.label {
+  @include typography(body);
+  font-size: var(--components-choice-sizes-md-font);
+  color: var(--semantic-colors-text-primary);
+}
+
+.sm .label {
+  font-size: var(--components-choice-sizes-sm-font);
+}
+
+.description {
+  @include typography(caption);
+  display: block;
+  color: var(--semantic-colors-text-muted);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--global-spacing-xxs);
+}
+
+.group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.vertical {
+  flex-direction: column;
+  gap: var(--global-spacing-md);
+}
+
+.horizontal {
+  flex-direction: row;
+  gap: var(--global-spacing-xl);
+}

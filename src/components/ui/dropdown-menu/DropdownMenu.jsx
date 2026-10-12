@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRevealMotion } from '@/hooks/useRevealMotion';
-import { MenuRoot, MenuPanel, MenuItem, MenuSeparator, MenuLabel } from './DropdownMenu.style';
+import { cx } from '@/lib/cx';
+import styles from './DropdownMenu.module.scss';
 
 /**
  * DropdownMenu
@@ -14,6 +15,7 @@ export default function DropdownMenu({
   trigger,
   align = 'left',
   children,
+  className,
   ...props
 }) {
   const [open, setOpen] = useState(false);
@@ -42,23 +44,24 @@ export default function DropdownMenu({
   }, [open, close]);
 
   return (
-    <MenuRoot ref={rootRef} {...props}>
+    <div ref={rootRef} className={cx(styles.root, className)} {...props}>
       {typeof trigger === 'function'
         ? trigger({ onClick: toggle, 'aria-expanded': open })
         : <span onClick={toggle}>{trigger}</span>}
 
       {open && (
-        <MenuPanel ref={panelRef} $align={align} role="menu">
+        <div ref={panelRef} className={cx(styles.panel, align === 'right' && styles.right)} role="menu">
           {children}
-        </MenuPanel>
+        </div>
       )}
-    </MenuRoot>
+    </div>
   );
 }
 
-DropdownMenu.Item = function DropdownMenuItem({ icon: Icon, danger, children, onClick, ...props }) {
+DropdownMenu.Item = function DropdownMenuItem({ icon: Icon, danger, children, onClick, className, ...props }) {
   return (
-    <MenuItem
+    <button
+      className={cx(styles.item, className)}
       role="menuitem"
       data-danger={danger || undefined}
       onClick={onClick}
@@ -66,14 +69,14 @@ DropdownMenu.Item = function DropdownMenuItem({ icon: Icon, danger, children, on
     >
       {Icon && <Icon />}
       {children}
-    </MenuItem>
+    </button>
   );
 };
 
 DropdownMenu.Separator = function DropdownMenuSeparator() {
-  return <MenuSeparator role="separator" />;
+  return <div className={styles.separator} role="separator" />;
 };
 
 DropdownMenu.Label = function DropdownMenuLabel({ children }) {
-  return <MenuLabel>{children}</MenuLabel>;
+  return <span className={styles.label}>{children}</span>;
 };

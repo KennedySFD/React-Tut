@@ -4,7 +4,8 @@ import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { CloseIcon } from '@/components/icons';
 import gsap from '@/lib/gsap';
-import { Scrim, Panel, DrawerHeader, DrawerTitle, DrawerBody, DrawerCloseBtn } from './Drawer.style';
+import { cx } from '@/lib/cx';
+import styles from './Drawer.module.scss';
 
 /**
  * Drawer
@@ -22,6 +23,7 @@ export default function Drawer({
   side = 'right',
   title,
   children,
+  className,
   ...props
 }) {
   const panelRef = useRef(null);
@@ -55,27 +57,28 @@ export default function Drawer({
 
   return createPortal(
     <>
-      <Scrim
+      <div
         ref={scrimRef}
+        className={styles.scrim}
         style={{ opacity: 0, pointerEvents: open ? 'auto' : 'none' }}
         onClick={onClose}
       />
-      <Panel
+      <aside
         ref={panelRef}
-        $side={side}
+        className={cx(styles.panel, side === 'left' ? styles.left : styles.right, className)}
         role="dialog"
         aria-modal="true"
         aria-label={title}
         {...props}
       >
-        <DrawerHeader>
-          <DrawerTitle>{title}</DrawerTitle>
-          <DrawerCloseBtn onClick={onClose} aria-label="Close">
+        <div className={styles.header}>
+          <h2 className={styles.title}>{title}</h2>
+          <button className={styles.close} onClick={onClose} aria-label="Close">
             <CloseIcon />
-          </DrawerCloseBtn>
-        </DrawerHeader>
-        <DrawerBody>{children}</DrawerBody>
-      </Panel>
+          </button>
+        </div>
+        <div className={styles.body}>{children}</div>
+      </aside>
     </>,
     document.body,
   );

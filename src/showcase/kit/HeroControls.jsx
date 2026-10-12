@@ -1,13 +1,8 @@
 'use client';
 
 import Switch from '@/components/ui/switch';
-import {
-  ControlGroup,
-  ControlLabel,
-  HeroControlBar,
-  Segmented,
-  SegmentedOption,
-} from './kit.style';
+import { cx } from '@/lib/cx';
+import styles from './kit.module.scss';
 
 /**
  * Builds the initial control values from a schema.
@@ -37,7 +32,7 @@ export default function HeroControls({ schema, values, onChange }) {
   if (entries.length === 0) return null;
 
   return (
-    <HeroControlBar role="group" aria-label="Component controls">
+    <div className={styles.heroControlBar} role="group" aria-label="Component controls">
       {entries.map(([name, control]) => {
         const label = control.label ?? name;
 
@@ -54,28 +49,28 @@ export default function HeroControls({ schema, values, onChange }) {
         }
 
         return (
-          <ControlGroup key={name}>
-            <ControlLabel>{label}</ControlLabel>
-            <Segmented role="group" aria-label={label}>
+          <div key={name} className={styles.controlGroup}>
+            <span className={styles.controlLabel}>{label}</span>
+            <div className={styles.segmented} role="group" aria-label={label}>
               {control.options.map((option) => {
                 const active = values[name] === option;
 
                 return (
-                  <SegmentedOption
+                  <button
                     key={String(option)}
+                    className={cx(styles.segmentedOption, active && styles.active)}
                     type="button"
-                    $active={active}
                     aria-pressed={active}
                     onClick={() => onChange(name, option)}
                   >
                     {String(option)}
-                  </SegmentedOption>
+                  </button>
                 );
               })}
-            </Segmented>
-          </ControlGroup>
+            </div>
+          </div>
         );
       })}
-    </HeroControlBar>
+    </div>
   );
 }

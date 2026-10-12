@@ -48,7 +48,7 @@ Three files:
 ```
 button/
 ├── Button.jsx           The React component (logic, props, rendering)
-├── Button.style.js      Styled-components (visual styling)
+├── Button.module.scss   SCSS module (visual styling)
 └── index.js             Barrel file (re-exports the component)
 ```
 
@@ -63,46 +63,48 @@ button/
 ```javascript
 'use client';
 
-import { StyledButton } from './Button.style';
+import { cx } from '@/lib/cx';
+import styles from './Button.module.scss';
 
 export default function Button({ variant = 'primary', size = 'md', children, ...props }) {
   return (
-    <StyledButton $variant={variant} $size={size} {...props}>
+    <button className={cx(styles.root, styles[variant], styles[size])} type="button" {...props}>
       {children}
-    </StyledButton>
+    </button>
   );
 }
 ```
 
-- `'use client'` — required, styled-components needs browser APIs.
-- Styling props are passed down with a `$` prefix (transient).
+- `'use client'` — required when the component uses hooks or event handlers. The stylesheet does not require it.
+- `cx` joins the root class with the variant and size classes, and drops false values.
 - `...props` spreads the rest (`onClick`, `disabled`…) onto the DOM element.
 
 ### Style file
 
-Variants are a lookup object of `css` blocks, so a variant owns its rest / hover / active colours together. Adding a variant is one entry, not edits in five places.
+Each variant is a class, so it owns its rest, hover, and active colours together. Adding a variant is one class, not edits in five places. Mixins are imported with a relative path.
 
-```javascript
-import styled, { css } from 'styled-components';
-import { focusRingOnly } from '@/theme/mixins';
+```scss
+@use '../../../theme/mixins' as *;
 
-const variants = {
-  primary: css`
-    background: ${({ theme }) => theme.semantic.colors.accent.default};
-    &:hover:not(:disabled) {
-      background: ${({ theme }) => theme.semantic.colors.accent.hover};
-    }
-  `,
-  /* secondary, tertiary, ghost, danger */
-};
+.root {
+  height: var(--components-button-sizes-md-height);
 
-export const StyledButton = styled.button`
-  height: ${({ theme, $size }) => theme.components.button.sizes[$size || 'md'].height};
+  &:focus-visible {
+    @include focus-ring-only;
+  }
+}
 
-  ${({ $variant }) => variants[$variant] ?? variants.primary};
+.primary {
+  background: var(--semantic-colors-accent-default);
 
-  &:focus-visible { ${focusRingOnly}; }
-`;
+  &:hover:not(:disabled) {
+    background: var(--semantic-colors-accent-hover);
+  }
+}
+
+.md {
+  height: var(--components-button-sizes-md-height);
+}
 ```
 
 See STYLING.md for the full pattern and THEMING.md for the tokens.
@@ -125,7 +127,7 @@ Two pieces of shared machinery keep the library consistent.
 
 `SearchBar` is not a restyled input — it *is* an `Input` with a search icon and a clear button. It inherits the border, hover and focus tokens automatically.
 
-The same instinct applies generally: before writing a new `.style.js`, check whether an existing component or the `fieldBase` mixin already describes the surface.
+The same instinct applies generally: before writing a new stylesheet, check whether an existing component or the `field-base` mixin already describes the surface.
 
 ## Icons
 
@@ -299,10 +301,10 @@ showcase `Shell` so they cannot drift:
 
 1. Create the folder: `src/components/ui/newcomponent/`
 2. `NewComponent.jsx` — the component, with `'use client'`
-3. `NewComponent.style.js` — styled-components, reading tokens and mixins
+3. `NewComponent.module.scss` — classes and CSS variables, `@include interactive-glass` when it should move
 4. `index.js` — `export { default } from './NewComponent';`
 5. Add a line to `src/components/ui/index.js`
-6. Wire up motion: `${interactiveGlass}` in the style file, `useInteractiveMotion`
+6. Wire up motion: `@include interactive-glass` in the style file, `useInteractiveMotion`
    with the right amplitude preset in the component (see MOTION.md)
 7. Add an entry to `src/showcase/registry.js`
 8. Add `src/showcase/stories/NewComponentStories.jsx` — stories as the default
@@ -312,7 +314,7 @@ showcase `Shell` so they cannot drift:
 ## Naming rules
 
 - **Component names** — PascalCase: `Button`, `SearchBar`
-- **File names** — PascalCase: `Button.jsx`, `Button.style.js`
+- **File names** — PascalCase: `Button.jsx`, `Button.module.scss`
 - **Folder names** — lowercase: `button/`, `searchbar/`
-- **Styled components** — `Styled` prefix where it wraps the root element (`StyledButton`); descriptive names for internal parts (`InputShell`, `Track`, `Thumb`)
+- **Classes** — camelCase: `.root` for the element, `.primary` / `.md` for variants, and a descriptive name for each part (`.label`, `.track`, `.thumb`)
 - **Barrel files** — always `index.js`

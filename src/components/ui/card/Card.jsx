@@ -1,7 +1,8 @@
 'use client';
 
 import { useInteractiveMotion } from '@/hooks/useInteractiveMotion';
-import { CardDescription, CardFooter, CardImage, CardTitle, StyledCard } from './Card.style';
+import { cx } from '@/lib/cx';
+import styles from './Card.module.scss';
 
 /**
  * Card — a surface for grouping related content.
@@ -31,31 +32,35 @@ export default function Card({
   description,
   footer,
   as,
+  className,
   children,
   ...props
 }) {
-  const element = as ?? (interactive ? 'button' : 'div');
+  const Tag = as ?? (interactive ? 'button' : 'div');
   const { ref, handlers } = useInteractiveMotion({
     preset: 'surface',
     disabled: !interactive,
   });
 
   return (
-    <StyledCard
+    <Tag
       ref={ref}
-      as={element}
-      type={element === 'button' ? 'button' : undefined}
-      $variant={variant}
-      $padding={padding}
-      $interactive={interactive}
+      type={Tag === 'button' ? 'button' : undefined}
+      className={cx(
+        styles.root,
+        styles[variant] || styles.elevated,
+        styles[padding] || styles.md,
+        interactive && styles.interactive,
+        className,
+      )}
       {...(interactive ? handlers : {})}
       {...props}
     >
-      {image && <CardImage src={image} alt={imageAlt} loading="lazy" />}
-      {title && <CardTitle>{title}</CardTitle>}
-      {description && <CardDescription>{description}</CardDescription>}
+      {image && <img className={styles.image} src={image} alt={imageAlt} loading="lazy" />}
+      {title && <h3 className={styles.title}>{title}</h3>}
+      {description && <p className={styles.description}>{description}</p>}
       {children}
-      {footer && <CardFooter>{footer}</CardFooter>}
-    </StyledCard>
+      {footer && <div className={styles.footer}>{footer}</div>}
+    </Tag>
   );
 }

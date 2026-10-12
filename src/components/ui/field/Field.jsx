@@ -1,6 +1,7 @@
 'use client';
 
-import { FieldLabel, FieldRoot, HelpText } from './Field.style';
+import { cx } from '@/lib/cx';
+import styles from './Field.module.scss';
 
 /**
  * Field — the shared chrome around a form control: label, the control itself,
@@ -31,31 +32,35 @@ export default function Field({
 }) {
   const hasError = Boolean(error);
   const message = error || helperText;
+  const LabelTag = as || 'label';
 
   return (
-    <FieldRoot $fullWidth={fullWidth} className={className}>
+    <div className={cx(styles.root, fullWidth && styles.fullWidth, className)}>
       {label && (
-        <FieldLabel as={as} htmlFor={htmlFor} $disabled={disabled}>
+        <LabelTag
+          className={cx(styles.label, disabled && styles.disabled)}
+          htmlFor={htmlFor}
+        >
           {label}
           {required && (
             <span data-required aria-hidden="true">
               *
             </span>
           )}
-        </FieldLabel>
+        </LabelTag>
       )}
 
       {children}
 
       {message && (
-        <HelpText
+        <span
           id={describedById}
-          $isError={hasError}
+          className={cx(styles.help, hasError && styles.error)}
           role={hasError ? 'alert' : undefined}
         >
           {message}
-        </HelpText>
+        </span>
       )}
-    </FieldRoot>
+    </div>
   );
 }

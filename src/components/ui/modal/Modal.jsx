@@ -4,17 +4,8 @@ import { useEffect, useId, useRef, useSyncExternalStore } from 'react';
 import { createPortal } from 'react-dom';
 import { CloseIcon } from '@/components/icons';
 import { useRevealMotion } from '@/hooks/useRevealMotion';
-import {
-  Body,
-  CloseButton,
-  Dialog,
-  Footer,
-  Header,
-  Overlay,
-  Subtitle,
-  Title,
-  TitleGroup,
-} from './Modal.style';
+import { cx } from '@/lib/cx';
+import styles from './Modal.module.scss';
 
 const FOCUSABLE =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
@@ -55,6 +46,7 @@ export default function Modal({
   closeOnOverlayClick = true,
   closeOnEscape = true,
   showCloseButton = true,
+  className,
   children,
   ...props
 }) {
@@ -138,35 +130,35 @@ export default function Modal({
   };
 
   return createPortal(
-    <Overlay ref={overlayRef} onMouseDown={handleOverlayMouseDown}>
-      <Dialog
+    <div ref={overlayRef} className={styles.overlay} onMouseDown={handleOverlayMouseDown}>
+      <div
         ref={setDialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
         tabIndex={-1}
-        $size={size}
+        className={cx(styles.dialog, styles[size] || styles.md, className)}
         {...props}
       >
         {(title || showCloseButton) && (
-          <Header>
-            <TitleGroup>
-              {title && <Title id={titleId}>{title}</Title>}
-              {subtitle && <Subtitle>{subtitle}</Subtitle>}
-            </TitleGroup>
+          <header className={styles.header}>
+            <div className={styles.titleGroup}>
+              {title && <h2 className={styles.title} id={titleId}>{title}</h2>}
+              {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+            </div>
 
             {showCloseButton && (
-              <CloseButton type="button" onClick={onClose} aria-label="Close dialog">
+              <button type="button" className={styles.close} onClick={onClose} aria-label="Close dialog">
                 <CloseIcon />
-              </CloseButton>
+              </button>
             )}
-          </Header>
+          </header>
         )}
 
-        {children && <Body>{children}</Body>}
-        {footer && <Footer>{footer}</Footer>}
-      </Dialog>
-    </Overlay>,
+        {children && <div className={styles.body}>{children}</div>}
+        {footer && <footer className={styles.footer}>{footer}</footer>}
+      </div>
+    </div>,
     document.body,
   );
 }

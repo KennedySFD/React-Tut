@@ -3,7 +3,8 @@
 import { useId, useState } from 'react';
 import Field from '@/components/ui/field';
 import { useFieldMotion } from '@/hooks/useFieldMotion';
-import { StyledTextarea, TextareaShell } from './Textarea.style';
+import { cx } from '@/lib/cx';
+import styles from './Textarea.module.scss';
 
 /**
  * Textarea — multi-line text field.
@@ -61,22 +62,21 @@ export default function Textarea({
       describedById={describedById}
       className={className}
     >
-      <TextareaShell ref={shellRef} {...motionHandlers}>
-        <StyledTextarea
+      <div ref={shellRef} className={styles.shell} {...motionHandlers}>
+        <textarea
           id={textareaId}
+          className={cx(styles.control, styles[size], styles[resize])}
           rows={rows}
           disabled={disabled}
           required={required}
-          $size={size}
-          $hasError={hasError}
-          $resize={resize}
+          data-invalid={hasError || undefined}
           aria-invalid={hasError || undefined}
           aria-describedby={helperText || error ? describedById : undefined}
           onFocus={handleFocus}
           onBlur={handleBlur}
           {...props}
         />
-      </TextareaShell>
+      </div>
     </Field>
   );
 }

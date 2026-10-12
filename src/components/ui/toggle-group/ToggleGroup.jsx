@@ -1,6 +1,7 @@
 'use client';
 
-import { ToggleGroupRoot, ToggleItem } from './ToggleGroup.style';
+import { cx } from '@/lib/cx';
+import styles from './ToggleGroup.module.scss';
 
 /**
  * ToggleGroup
@@ -16,25 +17,27 @@ export default function ToggleGroup({
   onChange,
   items = [],
   disabled = false,
+  className,
   ...props
 }) {
   return (
-    <ToggleGroupRoot role="group" {...props}>
+    <div role="group" className={cx(styles.root, className)} {...props}>
       {items.map((item) => {
         const Icon = item.icon;
+        const active = value === item.value;
         return (
-          <ToggleItem
+          <button
             key={item.value}
-            $active={value === item.value}
+            className={cx(styles.item, active && styles.active)}
             onClick={() => onChange?.(item.value)}
             disabled={disabled}
-            aria-pressed={value === item.value}
+            aria-pressed={active}
           >
             {Icon && <Icon />}
             {item.label}
-          </ToggleItem>
+          </button>
         );
       })}
-    </ToggleGroupRoot>
+    </div>
   );
 }

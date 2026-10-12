@@ -1,7 +1,8 @@
 'use client';
 
 import { useCallback, useRef } from 'react';
-import { SliderRoot, LabelRow, SliderLabel, SliderValue, TrackWrap, Track, FilledTrack, Thumb } from './Slider.style';
+import { cx } from '@/lib/cx';
+import styles from './Slider.module.scss';
 
 /**
  * Slider
@@ -17,6 +18,7 @@ export default function Slider({
   showValue = true,
   disabled = false,
   onChange,
+  className,
   ...props
 }) {
   const trackRef = useRef(null);
@@ -67,23 +69,25 @@ export default function Slider({
   );
 
   return (
-    <SliderRoot {...props}>
+    <div className={cx(styles.root, className)} {...props}>
       {(label || showValue) && (
-        <LabelRow>
-          {label && <SliderLabel>{label}</SliderLabel>}
-          {showValue && <SliderValue>{value}</SliderValue>}
-        </LabelRow>
+        <div className={styles.labelRow}>
+          {label && <span className={styles.label}>{label}</span>}
+          {showValue && <span className={styles.value}>{value}</span>}
+        </div>
       )}
-      <TrackWrap
+      <div
         ref={trackRef}
+        className={styles.trackWrap}
         data-disabled={disabled || undefined}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
       >
-        <Track />
-        <FilledTrack $pct={pct} />
-        <Thumb
-          $pct={pct}
+        <div className={styles.track} />
+        <div className={styles.fill} style={{ width: `${pct}%` }} />
+        <div
+          className={styles.thumb}
+          style={{ left: `${pct}%` }}
           role="slider"
           tabIndex={disabled ? -1 : 0}
           aria-valuenow={value}
@@ -92,7 +96,7 @@ export default function Slider({
           aria-label={label || 'Slider'}
           onKeyDown={handleKeyDown}
         />
-      </TrackWrap>
-    </SliderRoot>
+      </div>
+    </div>
   );
 }

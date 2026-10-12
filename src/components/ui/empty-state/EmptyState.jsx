@@ -1,7 +1,8 @@
 'use client';
 
 import { InboxIcon } from '@/components/icons';
-import { EmptyRoot, IllustrationWrap, EmptyTitle, EmptyDescription, EmptyActions } from './EmptyState.style';
+import { cx } from '@/lib/cx';
+import styles from './EmptyState.module.scss';
 
 /**
  * EmptyState
@@ -18,16 +19,17 @@ export default function EmptyState({
   title = 'Nothing here yet',
   description,
   actions,
+  className,
   ...props
 }) {
   return (
-    <EmptyRoot {...props}>
-      <IllustrationWrap>
+    <div className={cx(styles.root, className)} {...props}>
+      <div className={styles.illustration}>
         <Icon />
-      </IllustrationWrap>
-      <EmptyTitle>{title}</EmptyTitle>
-      {description && <EmptyDescription>{description}</EmptyDescription>}
-      {actions && <EmptyActions>{actions}</EmptyActions>}
-    </EmptyRoot>
+      </div>
+      <h3 className={styles.title}>{title}</h3>
+      {description && <p className={styles.description}>{description}</p>}
+      {actions && <div className={styles.actions}>{actions}</div>}
+    </div>
   );
 }

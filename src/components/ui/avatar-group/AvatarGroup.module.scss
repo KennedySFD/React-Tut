@@ -1,0 +1,52 @@
+@use '../../../theme/mixins' as *;
+
+.root {
+  display: flex;
+  align-items: center;
+}
+
+.slot {
+  margin-left: 0;
+  border: 2px solid var(--semantic-colors-background-canvas);
+  border-radius: var(--global-radii-full);
+  position: relative;
+  z-index: var(--slot-z, 0);
+  transition: transform var(--semantic-motion-fast);
+
+  &.offset {
+    margin-left: -0.5rem;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    z-index: 50;
+  }
+}
+
+.overflow {
+  @include typography(caption);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  border-radius: var(--global-radii-full);
+  background: var(--semantic-colors-background-subtle);
+  border: 2px solid var(--semantic-colors-background-canvas);
+  color: var(--semantic-colors-text-muted);
+  font-weight: var(--global-fontWeights-semibold);
+  font-size: var(--global-fontSizes-xs);
+  margin-left: -0.5rem;
+  position: relative;
+  z-index: 0;
+
+  &.sm {
+    min-width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  &.lg {
+    min-width: 2.5rem;
+    height: 2.5rem;
+  }
+}

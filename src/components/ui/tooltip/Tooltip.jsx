@@ -2,7 +2,8 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 import { useRevealMotion } from '@/hooks/useRevealMotion';
-import { Bubble, TooltipAnchor, TooltipWrapper } from './Tooltip.style';
+import { cx } from '@/lib/cx';
+import styles from './Tooltip.module.scss';
 
 /**
  * Tooltip — a short label shown on hover or keyboard focus.
@@ -51,8 +52,8 @@ export default function Tooltip({
   if (!content) return children;
 
   return (
-    <TooltipWrapper
-      className={className}
+    <span
+      className={cx(styles.wrapper, className)}
       onMouseEnter={() => show()}
       onMouseLeave={hide}
       /* focus appears immediately — a keyboard user has already committed */
@@ -63,12 +64,12 @@ export default function Tooltip({
     >
       {children}
       {visible && (
-        <TooltipAnchor $placement={placement}>
-          <Bubble ref={bubbleRef} id={tooltipId} role="tooltip">
+        <span className={cx(styles.anchor, styles[placement] || styles.top)}>
+          <span ref={bubbleRef} id={tooltipId} role="tooltip" className={styles.bubble}>
             {content}
-          </Bubble>
-        </TooltipAnchor>
+          </span>
+        </span>
       )}
-    </TooltipWrapper>
+    </span>
   );
 }

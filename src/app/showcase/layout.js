@@ -6,7 +6,7 @@ export const metadata = {
     default: 'Component Library',
   },
   description:
-    'A token-driven React component library built with Next.js and styled-components.',
+    'A token-driven React component library built with Next.js and CSS modules.',
 };
 
 /**

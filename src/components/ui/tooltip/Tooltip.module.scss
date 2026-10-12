@@ -1,0 +1,59 @@
+@use '../../../theme/mixins' as *;
+
+.wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+/*
+ * Placement, including the centering translate, lives on the anchor.
+ * The bubble keeps a clean transform for GSAP.
+ */
+.anchor {
+  position: absolute;
+  z-index: var(--global-zIndex-tooltip);
+  pointer-events: none;
+
+  &.top {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding-bottom: var(--components-tooltip-offset);
+  }
+
+  &.bottom {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding-top: var(--components-tooltip-offset);
+  }
+
+  &.left {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    padding-right: var(--components-tooltip-offset);
+  }
+
+  &.right {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    padding-left: var(--components-tooltip-offset);
+  }
+}
+
+.bubble {
+  @include glass-panel-strong;
+  display: block;
+  width: max-content;
+  max-width: var(--components-tooltip-maxWidth);
+  padding: var(--components-tooltip-paddingY) var(--components-tooltip-paddingX);
+  font-size: var(--components-tooltip-fontSize);
+  line-height: var(--global-lineHeights-snug);
+  text-align: center;
+  color: var(--semantic-colors-text-primary);
+  border-radius: var(--components-tooltip-radius);
+  /* The reveal tween brings this in. */
+  opacity: 0;
+}

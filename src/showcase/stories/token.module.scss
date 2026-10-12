@@ -1,0 +1,93 @@
+@use '../../theme/mixins' as *;
+
+.swatchGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: var(--global-spacing-md);
+}
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--global-spacing-sm);
+}
+
+.swatchChip {
+  height: 3rem;
+  border-radius: var(--global-radii-md);
+  border: var(--global-borderWidths-thin) solid var(--semantic-colors-border-subtle);
+}
+
+.swatchName {
+  @include typography(caption);
+  font-family: var(--global-fontFamilies-mono);
+  color: var(--semantic-colors-text-secondary);
+  word-break: break-all;
+}
+
+.scaleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--global-spacing-lg);
+}
+
+.scaleBar {
+  height: 0.75rem;
+  border-radius: var(--global-radii-sm);
+  background: var(--semantic-colors-accent-default);
+}
+
+.scaleLabel {
+  @include typography(caption);
+  font-family: var(--global-fontFamilies-mono);
+  min-width: 7rem;
+  color: var(--semantic-colors-text-secondary);
+}
+
+.curveGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--global-spacing-lg);
+}
+
+.curveBox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--global-spacing-sm);
+  padding: var(--global-spacing-md);
+  background: var(--semantic-colors-background-subtle);
+  border: var(--global-borderWidths-thin) solid var(--semantic-colors-border-subtle);
+  border-radius: var(--global-radii-md);
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+}
+
+.gridLine {
+  stroke: var(--semantic-colors-border-subtle);
+  stroke-width: 1;
+}
+
+.curve {
+  fill: none;
+  stroke: var(--semantic-colors-accent-default);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.curveName {
+  @include typography(label);
+  color: var(--semantic-colors-text-primary);
+}
+
+.curveMeta {
+  @include typography(caption);
+  font-family: var(--global-fontFamilies-mono);
+  font-size: 0.6875rem;
+  color: var(--semantic-colors-text-muted);
+  word-break: break-all;
+}

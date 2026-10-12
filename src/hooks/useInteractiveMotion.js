@@ -24,7 +24,8 @@ import { amplitude, gesture } from '@/theme/motion';
  *
  * @param {'control'|'surface'|'chip'|'subtle'|'choice'} preset - amplitude family
  * @param {boolean} disabled - skip all motion and reset
- * @returns {{ref, handlers}} spread `handlers` onto the element
+ * @returns {{ref, amp, handlers}} spread `handlers` onto the element; `amp`
+ *   is the resolved amplitude, for components driving a layer of their own
  */
 export function useInteractiveMotion({ preset = 'control', disabled = false } = {}) {
   const ref = useRef(null);
@@ -181,6 +182,7 @@ export function useInteractiveMotion({ preset = 'control', disabled = false } = 
 
   return {
     ref,
+    amp,
     handlers: {
       onPointerEnter: enter,
       onPointerLeave: leave,

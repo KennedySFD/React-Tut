@@ -72,24 +72,37 @@ export const gesture = {
  * This is the one thing that varies between components. The curve and the
  * duration stay constant, so a Tag and a Card feel like the same system
  * moving at different scales — which is what makes it read as uniform.
+ *
+ * `glow` is the strength of the optional WebGL layer, on the families large
+ * enough to carry one. 0 means that family never lights up.
  */
 export const amplitude = {
   /** Buttons, select triggers — the standard interactive control. */
-  control: { lift: -1.5, press: 0.975, sheen: 0.6, ring: 1, label: -1 },
+  control: { lift: -1.5, press: 0.975, sheen: 0.6, ring: 1, label: -1, glow: 0.55 },
   /** Cards, panels — larger surfaces lift further and press less. */
-  surface: { lift: -4, press: 0.995, sheen: 0.45, ring: 1, label: 0 },
+  surface: { lift: -4, press: 0.995, sheen: 0.45, ring: 1, label: 0, glow: 0.4 },
   /** Tags and other small chips — little lift, noticeable press. */
-  chip: { lift: -1, press: 0.94, sheen: 0, ring: 0.85, label: 0 },
+  chip: { lift: -1, press: 0.94, sheen: 0, ring: 0.85, label: 0, glow: 0 },
   /** Tabs, menu options, accordion triggers — flat, but responsive. */
-  subtle: { lift: 0, press: 0.985, sheen: 0, ring: 0.75, label: -1 },
+  subtle: { lift: 0, press: 0.985, sheen: 0, ring: 0.75, label: -1, glow: 0 },
   /** Checkbox / radio / switch — the control is small, so the press is proportional. */
-  choice: { lift: 0, press: 0.9, sheen: 0, ring: 1, label: 0 },
+  choice: { lift: 0, press: 0.9, sheen: 0, ring: 1, label: 0, glow: 0 },
   /**
    * Text fields — the keyline only. A field is somewhere you place a cursor,
    * so it must not move under the pointer or drift while you are typing.
    */
-  field: { lift: 0, press: 1, sheen: 0, ring: 0.9, label: 0 },
+  field: { lift: 0, press: 1, sheen: 0, ring: 0.9, label: 0, glow: 0 },
 };
+
+/**
+ * PER-CHARACTER TEXT MOTION.
+ *
+ * `each` is the delay between neighbouring characters, which is what turns a
+ * label lift into a wave travelling through the word. It stays well under the
+ * hover duration, so the last character is still arriving while the first is
+ * settling — any larger and the word reads as letters moving one at a time.
+ */
+export const textWave = { each: 0.015, lift: -1.5 };
 
 /** Distance overlays travel as they reveal. */
 export const travel = {
@@ -98,6 +111,14 @@ export const travel = {
   tooltip: 6,
 };
 
-export const motion = { curves, durations, cssDurations, gesture, amplitude, travel };
+export const motion = {
+  curves,
+  durations,
+  cssDurations,
+  gesture,
+  amplitude,
+  textWave,
+  travel,
+};
 
 export default motion;

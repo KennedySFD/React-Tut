@@ -1,0 +1,66 @@
+@use '../../../theme/mixins' as *;
+
+.wrap {
+  overflow-x: auto;
+  border: var(--global-borderWidths-thin) solid var(--semantic-colors-border-subtle);
+  border-radius: var(--global-radii-lg);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--global-fontSizes-sm);
+}
+
+.head {
+  background: var(--semantic-colors-background-subtle);
+}
+
+.headerCell {
+  @include typography(caption);
+  text-align: left;
+  padding: var(--global-spacing-md) var(--global-spacing-lg);
+  color: var(--semantic-colors-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--global-letterSpacings-wide);
+  white-space: nowrap;
+  border-bottom: var(--global-borderWidths-thin) solid var(--semantic-colors-border-subtle);
+  user-select: none;
+  cursor: default;
+
+  &.sortable {
+    cursor: pointer;
+
+    &:hover {
+      color: var(--semantic-colors-text-primary);
+    }
+  }
+
+  svg {
+    vertical-align: middle;
+    margin-left: 0.25rem;
+  }
+}
+
+.row {
+  border-bottom: var(--global-borderWidths-thin) solid var(--semantic-colors-border-subtle);
+  transition: background var(--semantic-motion-fast);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &.striped:nth-child(even) {
+    background: var(--semantic-colors-background-subtle);
+  }
+
+  &.hoverable:hover {
+    background: var(--semantic-colors-state-hoverSurface);
+  }
+}
+
+.cell {
+  padding: var(--global-spacing-md) var(--global-spacing-lg);
+  color: var(--semantic-colors-text-secondary);
+  vertical-align: top;
+}

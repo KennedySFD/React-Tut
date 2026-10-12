@@ -6,7 +6,7 @@
 
 | Type | Convention | Example |
 |------|-----------|---------|
-| Component files | PascalCase | `Button.jsx`, `Input.style.js` |
+| Component files | PascalCase | `Button.jsx`, `Button.module.scss` |
 | Component folders | lowercase | `button/`, `input/`, `header/` |
 | Hook files | camelCase with `use` prefix | `useCounter.js`, `useToggle.js` |
 | Theme files | camelCase | `global.js`, `semantic.js` |
@@ -20,9 +20,8 @@
 | Type | Convention | Example |
 |------|-----------|---------|
 | React components | PascalCase | `function Button()`, `function UserCard()` |
-| Styled components | PascalCase with `Styled` prefix | `StyledButton`, `StyledInput` |
+| Style classes | camelCase, matching the DOM role | `.root`, `.primary`, `.fullWidth` |
 | Hooks | camelCase with `use` prefix | `useCounter`, `useToggle` |
-| Transient props | `$` prefix | `$variant`, `$size` |
 | JS variables/functions | camelCase | `const variants`, `const handleClick` |
 | Constants | camelCase or UPPER_SNAKE_CASE | `const theme`, `const API_URL` |
 
@@ -51,8 +50,8 @@ import { Button } from '@/components/ui';
 Relative imports are only used within the same component folder:
 
 ```javascript
-// In Button.jsx — relative import to sibling file is fine
-import { StyledButton } from './Button.style';
+// In Button.jsx — relative import to a sibling file is fine
+import styles from './Button.module.scss';
 ```
 
 ### Barrel File Imports
@@ -118,42 +117,43 @@ When adding a new component, always update the category-level barrel file.
 Required at the top of any file that:
 - Uses React hooks (`useState`, `useEffect`, `useRef`, custom hooks)
 - Has event handlers (`onClick`, `onChange`)
-- Uses styled-components
 - Uses browser APIs (`window`, `document`)
 
+CSS modules do not require it. A Server Component can import a `.module.scss` file.
+
 Files that need it in this project:
-- All component `.jsx` files (they use styled-components)
-- `ThemeProvider.js` (uses styled-components context)
-- `GlobalStyle.js` (uses `createGlobalStyle`)
+- Interactive component `.jsx` files (hooks and event handlers)
+- `ThemeProvider.js` (writes `data-theme` on the document element)
 - Test pages that use hooks or events
 
 Files that do NOT need it:
-- `layout.js` (Server Component — ThemeProvider handles the client boundary)
-- `page.js` for the home page (no interactivity)
+- `layout.js` (Server Component — it imports `tokens.css` and `globals.css`, and mounts ThemeProvider)
+- `page.js` files with no interactivity
 - Theme token files (`global.js`, `semantic.js`, etc.) — plain JS objects
-- Style files (`.style.js`) — no React, just styled-components definitions
+- Stylesheets (`.module.scss`, `tokens.css`, `globals.css`) — no React
 
 ## Styling Rules
 
-1. All styling uses styled-components — no CSS files, no inline styles for components
-2. Inline styles (`style={{ }}`) are acceptable in test pages only
-3. Each component has its own `.style.js` file
-4. Variant-specific values use lookup objects, not inline ternaries — `css` blocks once a variant owns interaction states too
-5. Styling props use `$` prefix (transient props) to avoid DOM warnings
+1. Component styling uses SCSS modules and theme CSS variables
+2. Inline styles (`style={{ }}`) are for values computed at runtime (a slider position, a skeleton size). Test pages may use them more freely
+3. Each component has its own `.module.scss` file, next to the `.jsx`
+4. Variants and sizes are classes (`.primary`, `.md`), chosen in JSX with `styles[variant]` and `cx()`
+5. Do not prefix props with `$`. Class names never become DOM attributes
 6. Browser states (hover, focus, active, disabled) use CSS pseudo-classes
 7. Pseudo-elements (placeholder, before, after) use `::` double colon
-8. Before writing a new surface, check `theme/mixins.js` — `fieldBase`, `focusRing` and friends exist so a treatment is defined once
+8. Before writing a new surface, check `src/theme/_mixins.scss`. `field-base`, `focus-ring`, and the glass mixins exist so a treatment is defined once
+9. Import mixins with a relative `@use` of `theme/mixins`. `@use 'mixins'` does not resolve
 
 ## Theme Token Rules
 
-1. **No hardcoded values in a `.style.js` file.** Every colour, size, radius and duration comes from the theme
+1. **No hardcoded values in a `.module.scss` file.** Every colour, size, radius, and duration comes from a CSS variable in `tokens.css`
 2. Raw values (hex colours, rem sizes) only appear in `global.js`
 3. `semantic.js` references `global.js` — never contains raw values — and exports `{ light, dark }` of identical shape
 4. `components.js` exports `createComponents(semantic)`, referencing both layers
 5. **Components read `semantic` and `components`, never `global.colors`.** Global primitives are the same in both modes, so reaching for one breaks dark mode
 6. Geometry belongs in `components.js`; colour comes from `semantic` at the point of use
 7. Interaction states come from `semantic.colors.state.*`, so every component shares one definition of focus, hover, selected, error and disabled
-8. Components access the theme via `({ theme }) =>` — never by importing the theme object directly
+8. Stylesheets read CSS variables. JavaScript reads `useTheme()` from `@/theme/ThemeProvider`. Do not import `createTheme` into a component to paint with it
 
 ## Motion Rules
 
@@ -163,7 +163,7 @@ See MOTION.md for the full system. The rules that matter when writing a componen
 2. **GSAP owns `transform`.** If GSAP animates a property, that property must not appear in the same element's CSS `transition` list, or the two will interpolate against each other
 3. A placement transform and an animated transform cannot share an element — split them across two
 4. Every motion hook respects `prefers-reduced-motion`; preserve that in anything new
-5. **Backticks are illegal inside a styled-components template literal**, including in CSS comments — they terminate the string
+5. **Do not animate `transform` in CSS on an element GSAP already transforms.** The glass layers are driven by custom properties (`--ring-angle`, `--sheen-x`, and the rest), not by a CSS transform on the root
 
 ## Colour Mode Rules
 
@@ -176,12 +176,12 @@ See MOTION.md for the full system. The rules that matter when writing a componen
 When recreating this project from scratch:
 
 1. Run `npx create-next-app@latest` (No TypeScript, Yes ESLint, No Tailwind, Yes src/, Yes App Router)
-2. Install styled-components: `npm install styled-components`
-3. Add `compiler: { styledComponents: true }` to `next.config.mjs`
+2. Install Sass: `npm install sass`
+3. Keep `reactCompiler: true` in `next.config.mjs`. Do not add a CSS-in-JS compiler
 4. Delete `src/app/globals.css` and `src/app/page.module.css`
 5. Remove Geist font imports from `layout.js`
-6. Create `src/theme/` with token files, GlobalStyle, ThemeProvider
-7. Wrap `layout.js` children with ThemeProvider
+6. Create `src/theme/` with the token files, `_mixins.scss`, `tokens.css`, `globals.css`, and ThemeProvider
+7. Import `tokens.css` and `globals.css` from `layout.js`, and wrap `children` with ThemeProvider
 8. Create folder structure: `components/ui/`, `components/layout/`, `components/features/`, `hooks/`, `lib/`, `context/`, `services/`, `assets/`, `animations/`, `canvas/`, `middleware/`
-9. Build components following the three-file pattern (Component.jsx, Component.style.js, index.js)
+9. Build components as `Component.jsx`, `Component.module.scss`, and `index.js`
 10. Add barrel files at each level

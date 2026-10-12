@@ -1,0 +1,78 @@
+@use '../../../theme/mixins' as *;
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--global-zIndex-overlay);
+  background: var(--semantic-colors-background-scrim);
+}
+
+.panel {
+  @include glass-panel-strong;
+  position: fixed;
+  z-index: var(--global-zIndex-modal);
+  width: min(24rem, 85vw);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0;
+  border: none;
+
+  &.right {
+    right: 0;
+    top: 0;
+    bottom: 0;
+    transform: translateX(100%);
+    border-left: var(--global-borderWidths-thin) solid var(--semantic-colors-border-subtle);
+  }
+
+  &.left {
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+    border-right: var(--global-borderWidths-thin) solid var(--semantic-colors-border-subtle);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--global-spacing-lg) var(--global-spacing-xl);
+  border-bottom: var(--global-borderWidths-thin) solid var(--semantic-colors-border-subtle);
+}
+
+.title {
+  @include typography(subheading);
+  color: var(--semantic-colors-text-primary);
+  margin: 0;
+}
+
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--global-spacing-xl);
+}
+
+.close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--semantic-colors-text-muted);
+  cursor: pointer;
+  border-radius: var(--global-radii-md);
+  transition:
+    color var(--semantic-motion-fast),
+    background var(--semantic-motion-fast);
+
+  &:hover {
+    color: var(--semantic-colors-text-primary);
+    background: var(--semantic-colors-state-hoverSurface);
+  }
+}

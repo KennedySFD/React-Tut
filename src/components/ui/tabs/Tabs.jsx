@@ -2,8 +2,9 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 import gsap, { prefersReducedMotion } from '@/lib/gsap';
+import { cx } from '@/lib/cx';
 import { gesture } from '@/theme/motion';
-import { Indicator, Panel, Tab, TabList, TabsRoot } from './Tabs.style';
+import styles from './Tabs.module.scss';
 
 /** Next non-disabled tab, wrapping at either end. */
 function getNextEnabledIndex(items, from, direction) {
@@ -44,6 +45,7 @@ export default function Tabs({
   const listRef = useRef(null);
   const indicatorRef = useRef(null);
   const hasPositioned = useRef(false);
+  const tone = styles[variant] || styles.underline;
 
   const isControlled = value !== undefined;
   const [internalValue, setInternalValue] = useState(
@@ -119,15 +121,20 @@ export default function Tabs({
   };
 
   return (
-    <TabsRoot className={className}>
-      <TabList ref={listRef} role="tablist" $variant={variant} onKeyDown={handleKeyDown}>
-        <Indicator ref={indicatorRef} $variant={variant} aria-hidden="true" />
+    <div className={cx(styles.root, className)}>
+      <div
+        ref={listRef}
+        role="tablist"
+        className={cx(styles.list, tone)}
+        onKeyDown={handleKeyDown}
+      >
+        <span ref={indicatorRef} className={cx(styles.indicator, tone)} aria-hidden="true" />
 
         {items.map((item, index) => {
           const selected = item.id === activeId;
 
           return (
-            <Tab
+            <button
               key={item.id}
               ref={(node) => {
                 tabRefs.current[index] = node;
@@ -135,30 +142,31 @@ export default function Tabs({
               type="button"
               role="tab"
               id={`${baseId}-tab-${item.id}`}
+              className={cx(styles.tab, tone)}
               aria-selected={selected}
               aria-controls={`${baseId}-panel-${item.id}`}
               /* roving tabindex: only the active tab is in the tab order */
               tabIndex={selected ? 0 : -1}
               disabled={item.disabled}
-              $variant={variant}
               onClick={() => selectTab(index)}
             >
               {item.label}
-            </Tab>
+            </button>
           );
         })}
-      </TabList>
+      </div>
 
       {activeItem?.content && (
-        <Panel
+        <div
           role="tabpanel"
           id={`${baseId}-panel-${activeItem.id}`}
+          className={styles.panel}
           aria-labelledby={`${baseId}-tab-${activeItem.id}`}
           tabIndex={0}
         >
           {activeItem.content}
-        </Panel>
+        </div>
       )}
-    </TabsRoot>
+    </div>
   );
 }

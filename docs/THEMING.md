@@ -2,12 +2,12 @@
 
 ## Overview
 
-All styling uses **styled-components**, driven by a three-layer token system that mirrors a Figma variable hierarchy: **global → semantic → component**.
+Styling uses **SCSS modules** and CSS variables, driven by a three-layer token system that mirrors a Figma variable hierarchy: **global → semantic → component**. `src/theme/tokens.css` is generated from those JS tokens. Light and dark switch with `data-theme` on the document element.
 
 The guiding rule of this library:
 
 > **A component never hardcodes a value, and never reaches past its layer.**
-> Re-branding the entire library is an edit to `semantic.js`. Changing density or shape is an edit to `components.js`. Neither requires touching a single `.style.js` file.
+> Re-branding the entire library is an edit to `semantic.js`. Changing density or shape is an edit to `components.js`. Neither requires touching a component stylesheet. Regenerate `tokens.css` after either edit.
 
 ## Architecture
 
@@ -20,15 +20,17 @@ src/theme/semantic.js        Layer 2 — purpose, with light + dark modes
        ↓
 src/theme/components.js      Layer 3 — per-component geometry
        ↓
-src/theme/mixins.js          Shared CSS fragments built on the tokens
-src/theme/glass.js           Glass + dispersion layers (re-exported by mixins)
+src/theme/_mixins.scss       Shared treatments, including glass and dispersion
 src/theme/motion.js          Curves, durations, gestures, amplitudes
        ↓
-src/theme/index.js           createTheme(mode) resolves it all
+src/theme/index.js           createTheme(mode) resolves the JS object
        ↓
-src/theme/ThemeProvider.js   Provides the theme + GlobalStyle
+src/theme/tokens.css         The same values as CSS variables (generated)
+src/theme/globals.css        Reset and document defaults
        ↓
-src/app/layout.js            Mounted here, wrapping every page
+src/theme/ThemeProvider.js   Sets data-theme for the active colour mode
+       ↓
+src/app/layout.js            Imports the CSS and mounts ThemeProvider
 ```
 
 Motion and the glass material are part of the same token system but large
@@ -115,30 +117,30 @@ The split used throughout:
 
 The `field` entry is shared: Input, Textarea, Select and SearchBar all read it, which is why they are pixel-identical.
 
-## Mixins (`mixins.js`)
+## Mixins (`_mixins.scss`)
 
 Tokens make the *values* shared; mixins make the *treatment* shared.
 
 | Mixin | Used by |
 |-------|---------|
-| `focusRing` | fields — recolours the border and adds the ring |
-| `focusRingOnly` | buttons, tabs, menu options — ring only, no border change |
-| `errorFocusRing` | fields in an error state |
-| `fieldBase` | Input, Textarea, Select trigger, SearchBar |
-| `disabledState` | anything disableable |
-| `visuallyHidden` | the native inputs behind Checkbox / Radio / Switch |
-| `truncate`, `typography(role)` | general |
-| `interactiveGlass` | the dispersion keyline + sheen layers — see MOTION.md |
-| `glassPanel`, `glassPanelStrong` | frosted panes: menus, modals, tooltips, glass Cards |
-| `focusKeyline` | the chromatic line that draws in on field focus |
+| `focus-ring` | fields — recolours the border and adds the ring |
+| `focus-ring-only` | buttons, tabs, menu options — ring only, no border change |
+| `error-focus-ring` | fields in an error state |
+| `field-base($size)` | Input, Textarea, Select trigger, SearchBar |
+| `disabled-state` | anything disableable |
+| `visually-hidden` | the native inputs behind Checkbox / Radio / Switch |
+| `truncate`, `typography($role)` | general |
+| `interactive-glass` | the dispersion keyline + sheen layers — see MOTION.md |
+| `glass-panel`, `glass-panel-strong` | frosted panes: menus, modals, tooltips, glass Cards |
+| `focus-keyline` | the chromatic line that draws in on field focus |
 
-```javascript
-import { fieldBase } from '@/theme/mixins';
+```scss
+@use '../../../theme/mixins' as *;
 
-export const StyledTextarea = styled.textarea`
-  ${fieldBase};
-  padding: ${({ theme }) => theme.global.spacing.md};
-`;
+.root {
+  @include field-base(md);
+  padding: var(--global-spacing-md);
+}
 ```
 
 ## Resolving the theme (`index.js`)
@@ -156,13 +158,21 @@ export function createTheme(mode = 'light') {
 }
 ```
 
-Because the mode is resolved *before* the theme reaches components, every `.style.js` reads the same path in either mode:
+`scripts/emit-tokens.mjs` writes those resolved values to `src/theme/tokens.css`. A path such as `semantic.colors.text.primary` becomes `--semantic-colors-text-primary`. Light values are on `:root`. Dark overrides, only where the value differs, sit under `[data-theme="dark"]`.
 
-```javascript
-color: ${({ theme }) => theme.semantic.colors.text.primary};
+Stylesheets then read one variable in either mode:
+
+```scss
+color: var(--semantic-colors-text-primary);
 ```
 
-No component ever contains an `if (dark)`.
+No stylesheet contains an `if (dark)`. Regenerate after a token edit:
+
+```bash
+node --import ./scripts/register-loader.mjs scripts/emit-tokens.mjs
+```
+
+JavaScript that needs the object — token stories, shader tints — calls `useTheme()` from `@/theme/ThemeProvider`.
 
 ## Colour mode (`src/context/ThemeModeContext.js`)
 
@@ -189,14 +199,16 @@ Set the starting mode in `layout.js`:
 <ThemeProvider defaultMode="dark">{children}</ThemeProvider>
 ```
 
-## GlobalStyle
+## Document styles (`globals.css`)
 
-`createGlobalStyle`, replacing `globals.css`. Beyond the reset it:
+`src/theme/globals.css` is the reset, imported from `layout.js` next to `tokens.css`. It:
 
-- sets `color-scheme` from `theme.mode`, so native scrollbars and autofill follow the theme;
+- paints the canvas and body text from semantic variables;
 - makes form controls inherit typography;
 - provides a fallback `:focus-visible` outline;
 - honours `prefers-reduced-motion`.
+
+`color-scheme` is set in JavaScript, not in this file. `ThemeProvider` writes `document.documentElement.dataset.theme` and `style.colorScheme`. An inline script in `layout.js` does the same from `localStorage` before paint, so the first frame matches the stored mode. The storage key is `ui-theme-mode`.
 
 ## Mapping to Figma
 
@@ -210,12 +222,6 @@ Set the starting mode in `layout.js`:
 
 Because both sides share the same names and the same layering, a change in either can be translated into the other.
 
-## Required Next.js config
+## How a page receives the theme
 
-styled-components needs SSR support to avoid hydration errors, enabled in `next.config.mjs`:
-
-```javascript
-compiler: { styledComponents: true },
-```
-
-`src/lib/registry.js` collects the rules during the server render and injects them via `useServerInsertedHTML`.
+`layout.js` imports `tokens.css` and `globals.css`, then mounts `ThemeProvider`. CSS modules are ordinary stylesheets, so they do not need a style registry or a compiler flag. The only mode switch is the `data-theme` attribute on `<html>`.

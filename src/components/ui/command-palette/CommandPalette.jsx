@@ -3,15 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { SearchIcon } from '@/components/icons';
-import {
-  Backdrop,
-  PalettePanel,
-  PaletteInput,
-  ResultList,
-  GroupLabel,
-  ResultItem,
-  Shortcut,
-} from './CommandPalette.style';
+import { cx } from '@/lib/cx';
+import styles from './CommandPalette.module.scss';
 
 /**
  * CommandPalette
@@ -22,7 +15,7 @@ import {
  * @param {() => void} onClose
  * @param {Array<{id, label, icon?, group?, shortcut?, onSelect?}>} items
  */
-export default function CommandPalette({ open, onClose, items = [], ...props }) {
+export default function CommandPalette({ open, onClose, items = [], className, ...props }) {
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef(null);
@@ -84,46 +77,47 @@ export default function CommandPalette({ open, onClose, items = [], ...props }) 
   if (!open || typeof document === 'undefined') return null;
 
   return createPortal(
-    <Backdrop onClick={onClose} {...props}>
-      <PalettePanel onClick={(e) => e.stopPropagation()} onKeyDown={handleKeyDown}>
-        <PaletteInput
+    <div className={cx(styles.backdrop, className)} onClick={onClose} {...props}>
+      <div className={styles.panel} onClick={(e) => e.stopPropagation()} onKeyDown={handleKeyDown}>
+        <input
           ref={inputRef}
+          className={styles.input}
           placeholder="Type a command or search…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <ResultList>
+        <div className={styles.list}>
           {[...grouped.entries()].map(([group, groupItems]) => {
             return (
               <div key={group}>
-                <GroupLabel>{group}</GroupLabel>
+                <span className={styles.groupLabel}>{group}</span>
                 {groupItems.map((item) => {
                   const idx = flat.indexOf(item);
                   const Icon = item.icon;
                   return (
-                    <ResultItem
+                    <button
                       key={item.id}
-                      $active={idx === activeIndex}
+                      className={cx(styles.result, idx === activeIndex && styles.active)}
                       onClick={() => select(item)}
                       onMouseEnter={() => setActiveIndex(idx)}
                     >
                       {Icon ? <Icon /> : <SearchIcon />}
                       {item.label}
-                      {item.shortcut && <Shortcut>{item.shortcut}</Shortcut>}
-                    </ResultItem>
+                      {item.shortcut && <kbd className={styles.shortcut}>{item.shortcut}</kbd>}
+                    </button>
                   );
                 })}
               </div>
             );
           })}
           {flat.length === 0 && (
-            <ResultItem as="div" style={{ color: 'inherit', cursor: 'default' }}>
+            <div className={cx(styles.result, styles.empty)}>
               No results
-            </ResultItem>
+            </div>
           )}
-        </ResultList>
-      </PalettePanel>
-    </Backdrop>,
+        </div>
+      </div>
+    </div>,
     document.body,
   );
 }

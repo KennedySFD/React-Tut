@@ -3,15 +3,16 @@
 import { createContext, useCallback, useContext, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CloseIcon, InfoIcon, SuccessIcon, WarningIcon, DangerIcon } from '@/components/icons';
-import {
-  StyledToast,
-  ToastBody,
-  ToastClose,
-  ToastDescription,
-  ToastIcon,
-  ToastTitle,
-  ToastViewport,
-} from './Toast.style';
+import { cx } from '@/lib/cx';
+import styles from './Toast.module.scss';
+
+const variantClass = {
+  info: styles.info,
+  success: styles.success,
+  warning: styles.warning,
+  danger: styles.danger,
+  neutral: styles.neutral,
+};
 
 const icons = { info: InfoIcon, success: SuccessIcon, warning: WarningIcon, danger: DangerIcon };
 
@@ -41,22 +42,23 @@ function ToastItem({ toast, onDismiss }) {
   }
 
   const IconComponent = icons[toast.variant];
+  const variant = variantClass[toast.variant] || styles.neutral;
 
   return (
-    <StyledToast $variant={toast.variant || 'neutral'} $leaving={leaving} role="status">
+    <div className={cx(styles.toast, variant, leaving && styles.leaving)} role="status">
       {IconComponent && (
-        <ToastIcon $variant={toast.variant}>
+        <span className={cx(styles.icon, variant)}>
           <IconComponent size="1.125rem" />
-        </ToastIcon>
+        </span>
       )}
-      <ToastBody>
-        {toast.title && <ToastTitle>{toast.title}</ToastTitle>}
-        {toast.description && <ToastDescription>{toast.description}</ToastDescription>}
-      </ToastBody>
-      <ToastClose onClick={dismiss} aria-label="Dismiss">
+      <div className={styles.body}>
+        {toast.title && <p className={styles.title}>{toast.title}</p>}
+        {toast.description && <p className={styles.description}>{toast.description}</p>}
+      </div>
+      <button className={styles.close} onClick={dismiss} aria-label="Dismiss">
         <CloseIcon size="0.75rem" />
-      </ToastClose>
-    </StyledToast>
+      </button>
+    </div>
   );
 }
 
@@ -78,11 +80,11 @@ export function ToastProvider({ children }) {
       {children}
       {typeof document !== 'undefined' &&
         createPortal(
-          <ToastViewport>
+          <div className={styles.viewport}>
             {toasts.map((t) => (
               <ToastItem key={t.id} toast={t} onDismiss={dismiss} />
             ))}
-          </ToastViewport>,
+          </div>,
           document.body,
         )}
     </ToastContext.Provider>

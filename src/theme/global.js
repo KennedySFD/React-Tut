@@ -70,6 +70,7 @@ export const global = {
     red500: '#EF4444',
     red600: '#DC2626',
     red700: '#B91C1C',
+    red800: '#991B1B',
     red900: '#7F1D1D',
   },
 
@@ -85,6 +86,10 @@ export const global = {
     hoverDark: 'rgba(255, 255, 255, 0.06)',
     activeLight: 'rgba(9, 9, 11, 0.08)',
     activeDark: 'rgba(255, 255, 255, 0.10)',
+    // Translucent whites for accent surfaces on dark mode. Keep here so the
+    // dark accent.subtle/muted semantic tokens can alias a primitive.
+    whiteSubtle: 'rgba(255, 255, 255, 0.08)',
+    whiteMuted: 'rgba(255, 255, 255, 0.14)',
   },
 
   fontFamilies: {

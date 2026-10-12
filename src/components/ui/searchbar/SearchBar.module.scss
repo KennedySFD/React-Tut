@@ -1,0 +1,30 @@
+@use '../../../theme/mixins' as *;
+
+.clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--global-spacing-xxs);
+  margin: 0;
+  border: none;
+  border-radius: var(--global-radii-full);
+  background: transparent;
+  color: var(--semantic-colors-text-muted);
+  cursor: pointer;
+  transition:
+    background var(--semantic-motion-fast),
+    color var(--semantic-motion-fast);
+
+  &:hover {
+    background: var(--semantic-colors-state-hoverSurface);
+    color: var(--semantic-colors-text-primary);
+  }
+
+  &:active {
+    background: var(--semantic-colors-state-activeSurface);
+  }
+
+  &:focus-visible {
+    @include focus-ring-only;
+  }
+}

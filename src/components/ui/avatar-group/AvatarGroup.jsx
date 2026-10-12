@@ -1,7 +1,13 @@
 'use client';
 
 import Avatar from '@/components/ui/avatar';
-import { GroupRoot, AvatarSlot, OverflowBadge } from './AvatarGroup.style';
+import { cx } from '@/lib/cx';
+import styles from './AvatarGroup.module.scss';
+
+const sizeClass = {
+  sm: styles.sm,
+  lg: styles.lg,
+};
 
 /**
  * AvatarGroup
@@ -16,19 +22,26 @@ export default function AvatarGroup({
   avatars = [],
   max = 4,
   size = 'md',
+  className,
   ...props
 }) {
   const visible = avatars.slice(0, max);
   const overflow = avatars.length - max;
 
   return (
-    <GroupRoot {...props}>
+    <div className={cx(styles.root, className)} {...props}>
       {visible.map((av, i) => (
-        <AvatarSlot key={i} $offset={i > 0} $z={visible.length - i}>
+        <div
+          key={i}
+          className={cx(styles.slot, i > 0 && styles.offset)}
+          style={{ '--slot-z': visible.length - i }}
+        >
           <Avatar src={av.src} name={av.name} size={size} status={av.status} />
-        </AvatarSlot>
+        </div>
       ))}
-      {overflow > 0 && <OverflowBadge $size={size}>+{overflow}</OverflowBadge>}
-    </GroupRoot>
+      {overflow > 0 && (
+        <div className={cx(styles.overflow, sizeClass[size])}>+{overflow}</div>
+      )}
+    </div>
   );
 }

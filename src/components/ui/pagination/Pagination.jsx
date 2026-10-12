@@ -1,7 +1,8 @@
 'use client';
 
 import { ChevronLeftIcon, ChevronRightIcon } from '@/components/icons';
-import { PaginationRoot, PageButton, Ellipsis } from './Pagination.style';
+import { cx } from '@/lib/cx';
+import styles from './Pagination.module.scss';
 
 function range(start, end) {
   return Array.from({ length: end - start + 1 }, (_, i) => start + i);
@@ -39,42 +40,45 @@ export default function Pagination({
   totalPages = 1,
   onChange,
   siblings = 1,
+  className,
   ...props
 }) {
   const pages = getPages(page, totalPages, siblings);
 
   return (
-    <PaginationRoot aria-label="Pagination" {...props}>
-      <PageButton
+    <nav className={cx(styles.root, className)} aria-label="Pagination" {...props}>
+      <button
+        className={styles.page}
         onClick={() => onChange?.(page - 1)}
         disabled={page <= 1}
         aria-label="Previous page"
       >
         <ChevronLeftIcon size="1rem" />
-      </PageButton>
+      </button>
 
       {pages.map((p, i) =>
         p === '...' ? (
-          <Ellipsis key={`dots-${i}`}>…</Ellipsis>
+          <span key={`dots-${i}`} className={styles.ellipsis}>…</span>
         ) : (
-          <PageButton
+          <button
             key={p}
-            $active={p === page}
+            className={cx(styles.page, p === page && styles.active)}
             aria-current={p === page ? 'page' : undefined}
             onClick={() => onChange?.(p)}
           >
             {p}
-          </PageButton>
+          </button>
         ),
       )}
 
-      <PageButton
+      <button
+        className={styles.page}
         onClick={() => onChange?.(page + 1)}
         disabled={page >= totalPages}
         aria-label="Next page"
       >
         <ChevronRightIcon size="1rem" />
-      </PageButton>
-    </PaginationRoot>
+      </button>
+    </nav>
   );
 }

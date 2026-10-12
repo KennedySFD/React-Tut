@@ -2,7 +2,8 @@
 
 import { useCallback, useState } from 'react';
 import { SortIcon, SortAscIcon, SortDescIcon } from '@/components/icons';
-import { TableWrap, StyledTable, Thead, Th, Tbody, Tr, Td } from './Table.style';
+import { cx } from '@/lib/cx';
+import styles from './Table.module.scss';
 
 /**
  * Table
@@ -17,6 +18,7 @@ export default function Table({
   data = [],
   striped = false,
   hoverable = true,
+  className,
   ...props
 }) {
   const [sort, setSort] = useState({ key: null, dir: 'asc' });
@@ -44,32 +46,37 @@ export default function Table({
   };
 
   return (
-    <TableWrap {...props}>
-      <StyledTable>
-        <Thead>
+    <div className={cx(styles.wrap, className)} {...props}>
+      <table className={styles.table}>
+        <thead className={styles.head}>
           <tr>
             {columns.map((col) => (
-              <Th
+              <th
                 key={col.key}
-                $sortable={col.sortable}
+                className={cx(styles.headerCell, col.sortable && styles.sortable)}
                 onClick={col.sortable ? () => handleSort(col.key) : undefined}
               >
                 {col.label}
                 {col.sortable && <SortIndicator colKey={col.key} />}
-              </Th>
+              </th>
             ))}
           </tr>
-        </Thead>
-        <Tbody>
+        </thead>
+        <tbody>
           {sorted.map((row, i) => (
-            <Tr key={row.id ?? i} $striped={striped} $hoverable={hoverable}>
+            <tr
+              key={row.id ?? i}
+              className={cx(styles.row, striped && styles.striped, hoverable && styles.hoverable)}
+            >
               {columns.map((col) => (
-                <Td key={col.key}>{col.render ? col.render(row[col.key], row) : row[col.key]}</Td>
+                <td key={col.key} className={styles.cell}>
+                  {col.render ? col.render(row[col.key], row) : row[col.key]}
+                </td>
               ))}
-            </Tr>
+            </tr>
           ))}
-        </Tbody>
-      </StyledTable>
-    </TableWrap>
+        </tbody>
+      </table>
+    </div>
   );
 }

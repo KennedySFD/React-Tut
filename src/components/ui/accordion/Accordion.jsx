@@ -3,15 +3,8 @@
 import { useId, useState } from 'react';
 import { ChevronDownIcon } from '@/components/icons';
 import { useInteractiveMotion } from '@/hooks/useInteractiveMotion';
-import {
-  AccordionRoot,
-  Item,
-  PanelContent,
-  PanelInner,
-  PanelOuter,
-  Trigger,
-  TriggerIcon,
-} from './Accordion.style';
+import { cx } from '@/lib/cx';
+import styles from './Accordion.module.scss';
 
 /**
  * One row. Extracted into its own component because each trigger needs its
@@ -24,11 +17,12 @@ function AccordionItem({ item, open, onToggle, triggerId, panelId }) {
   });
 
   return (
-    <Item>
-      <Trigger
+    <div className={styles.item}>
+      <button
         ref={ref}
         type="button"
         id={triggerId}
+        className={styles.trigger}
         aria-expanded={open}
         aria-controls={panelId}
         disabled={item.disabled}
@@ -36,15 +30,16 @@ function AccordionItem({ item, open, onToggle, triggerId, panelId }) {
         {...handlers}
       >
         <span data-motion-label>{item.title}</span>
-        <TriggerIcon $open={open} aria-hidden="true">
+        <span className={cx(styles.icon, open && styles.open)} aria-hidden="true">
           <ChevronDownIcon />
-        </TriggerIcon>
-      </Trigger>
+        </span>
+      </button>
 
-      <PanelOuter $open={open}>
-        <PanelInner>
-          <PanelContent
+      <div className={cx(styles.panel, open && styles.open)}>
+        <div className={styles.panelInner}>
+          <div
             id={panelId}
+            className={styles.content}
             role="region"
             aria-labelledby={triggerId}
             /* inert keeps collapsed content out of the tab order and the
@@ -52,10 +47,10 @@ function AccordionItem({ item, open, onToggle, triggerId, panelId }) {
             inert={!open}
           >
             {item.content}
-          </PanelContent>
-        </PanelInner>
-      </PanelOuter>
-    </Item>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -89,7 +84,7 @@ export default function Accordion({
   };
 
   return (
-    <AccordionRoot className={className}>
+    <div className={cx(styles.root, className)}>
       {items.map((item) => (
         <AccordionItem
           key={item.id}
@@ -100,6 +95,6 @@ export default function Accordion({
           panelId={`${baseId}-panel-${item.id}`}
         />
       ))}
-    </AccordionRoot>
+    </div>
   );
 }

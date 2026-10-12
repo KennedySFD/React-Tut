@@ -2,8 +2,9 @@
 
 import { useId } from 'react';
 import Field from '@/components/ui/field';
+import { cx } from '@/lib/cx';
 import Radio from './Radio';
-import { RadioGroupRoot } from './Radio.style';
+import styles from './Radio.module.scss';
 
 /**
  * RadioGroup — renders a set of mutually exclusive options and reports the
@@ -42,11 +43,11 @@ export default function RadioGroup({
       describedById={describedById}
       className={className}
     >
-      <RadioGroupRoot
+      <div
+        className={cx(styles.group, styles[orientation])}
         role="radiogroup"
         aria-label={label}
         aria-describedby={helperText || error ? describedById : undefined}
-        $orientation={orientation}
       >
         {options.map((option) => (
           <Radio
@@ -62,7 +63,7 @@ export default function RadioGroup({
             onChange={() => onChange?.(option.value)}
           />
         ))}
-      </RadioGroupRoot>
+      </div>
     </Field>
   );
 }

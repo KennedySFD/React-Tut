@@ -7,14 +7,8 @@ import {
   SuccessIcon,
   WarningIcon,
 } from '@/components/icons';
-import {
-  AlertBody,
-  AlertIcon,
-  AlertMessage,
-  AlertTitle,
-  DismissButton,
-  StyledAlert,
-} from './Alert.style';
+import { cx } from '@/lib/cx';
+import styles from './Alert.module.scss';
 
 /** Default icon per variant — override with the `icon` prop. */
 const icons = {
@@ -37,31 +31,33 @@ export default function Alert({
   title,
   icon,
   onDismiss,
+  className,
   children,
   ...props
 }) {
   const DefaultIcon = icons[variant] ?? InfoIcon;
+  const tone = styles[variant] || styles.info;
 
   return (
-    <StyledAlert
+    <div
       role={variant === 'danger' ? 'alert' : 'status'}
-      $variant={variant}
+      className={cx(styles.root, tone, className)}
       {...props}
     >
-      <AlertIcon $variant={variant} aria-hidden="true">
+      <span className={cx(styles.icon, tone)} aria-hidden="true">
         {icon ?? <DefaultIcon />}
-      </AlertIcon>
+      </span>
 
-      <AlertBody>
-        {title && <AlertTitle $variant={variant}>{title}</AlertTitle>}
-        {children && <AlertMessage>{children}</AlertMessage>}
-      </AlertBody>
+      <div className={styles.body}>
+        {title && <strong className={cx(styles.title, tone)}>{title}</strong>}
+        {children && <div className={styles.message}>{children}</div>}
+      </div>
 
       {onDismiss && (
-        <DismissButton type="button" onClick={onDismiss} aria-label="Dismiss">
+        <button type="button" className={styles.dismiss} onClick={onDismiss} aria-label="Dismiss">
           <CloseIcon />
-        </DismissButton>
+        </button>
       )}
-    </StyledAlert>
+    </div>
   );
 }

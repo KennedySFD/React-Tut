@@ -2,16 +2,8 @@
 
 import { HomeIcon, MenuIcon } from '@/components/icons';
 import { useState } from 'react';
-import {
-  HeaderActions,
-  HeaderBrand,
-  HeaderLogo,
-  HeaderNav,
-  HeaderNavLink,
-  MobileMenuButton,
-  MobileNav,
-  StyledHeader,
-} from './Header.style';
+import { cx } from '@/lib/cx';
+import styles from './Header.module.scss';
 
 /**
  * Header — top-level site navigation.
@@ -20,55 +12,56 @@ import {
  * @param {{label: string, href: string, active?: boolean}[]} links
  * @param {React.ReactNode} actions - slot for buttons, avatar, theme toggle, etc.
  */
-export default function Header({ brand = 'Project', links = [], actions, ...props }) {
+export default function Header({ brand = 'Project', links = [], actions, className, ...props }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <StyledHeader {...props}>
-      <HeaderBrand href="/">
-        <HeaderLogo aria-hidden="true"><HomeIcon /></HeaderLogo>
+    <header className={cx(styles.header, className)} {...props}>
+      <a className={styles.brand} href="/">
+        <span className={styles.logo} aria-hidden="true"><HomeIcon /></span>
         {brand}
-      </HeaderBrand>
+      </a>
 
-      <HeaderNav>
+      <nav className={styles.nav}>
         {links.map((link) => (
-          <HeaderNavLink
+          <a
             key={link.label}
+            className={cx(styles.link, link.active && styles.active)}
             href={link.href}
-            $active={link.active}
           >
             {link.label}
-          </HeaderNavLink>
+          </a>
         ))}
-      </HeaderNav>
+      </nav>
 
-      {actions && <HeaderActions>{actions}</HeaderActions>}
+      {actions && <div className={styles.actions}>{actions}</div>}
 
       {links.length > 0 && (
-        <MobileMenuButton
+        <button
+          className={styles.menuButton}
           type="button"
           aria-label="Toggle menu"
           aria-expanded={mobileOpen}
           onClick={() => setMobileOpen((o) => !o)}
         >
           <MenuIcon />
-        </MobileMenuButton>
+        </button>
       )}
 
       {mobileOpen && (
-        <MobileNav>
+        <div className={styles.mobileNav}>
           {links.map((link) => (
-            <HeaderNavLink
+            <a
               key={link.label}
+              className={cx(styles.link, link.active && styles.active)}
               href={link.href}
-              $active={link.active}
               onClick={() => setMobileOpen(false)}
             >
               {link.label}
-            </HeaderNavLink>
+            </a>
           ))}
-        </MobileNav>
+        </div>
       )}
-    </StyledHeader>
+    </header>
   );
 }

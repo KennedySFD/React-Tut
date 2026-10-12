@@ -31,7 +31,7 @@ src/
 │   ├── layout/              Structural components (header, footer, …)
 │   └── ui/                  The component library
 │       ├── index.js         Barrel file — re-exports every UI component
-│       ├── accordion/       Accordion.jsx · Accordion.style.js · index.js
+│       ├── accordion/       Accordion.jsx · Accordion.module.scss · index.js
 │       ├── alert/
 │       ├── button/
 │       ├── card/
@@ -39,7 +39,7 @@ src/
 │       ├── field/           Shared label + help-text chrome for form controls
 │       ├── input/
 │       ├── modal/
-│       ├── radio/           Radio.jsx · RadioGroup.jsx · Radio.style.js · index.js
+│       ├── radio/           Radio.jsx · RadioGroup.jsx · Radio.module.scss · index.js
 │       ├── searchbar/       Composes input/
 │       ├── select/          Custom dropdown (listbox)
 │       ├── spinner/
@@ -59,7 +59,7 @@ src/
 │   └── useToggle.js
 ├── lib/                     Utility functions, constants, helpers
 │   ├── gsap.js              Registers the shared eases with GSAP
-│   └── registry.js          styled-components SSR registry
+│   └── cx.js                Joins CSS module class names
 ├── middleware/              Auth checks, route protection
 ├── services/                API call functions (fetch users, submit forms)
 ├── showcase/                The component browser's own code
@@ -72,19 +72,19 @@ src/
 │       ├── ButtonStories.jsx    default = stories, Hero = isolated instance
 │       └── …
 └── theme/                   Design tokens and theming system
-    ├── GlobalStyle.js       Global CSS reset (replaces globals.css)
-    ├── ThemeProvider.js     Provides the theme for the active colour mode
+    ├── _mixins.scss         Shared treatments (focus-ring, field-base, glass)
+    ├── ThemeProvider.js     Sets data-theme for the active colour mode
     ├── components.js        Layer 3 — per-component geometry tokens
-    ├── glass.js             Glass + dispersion layers (re-exported by mixins)
     ├── global.js            Layer 1 — raw primitive values
-    ├── index.js             createTheme(mode) — resolves all layers
-    ├── mixins.js            Shared CSS fragments (focusRing, fieldBase, …)
+    ├── globals.css          Reset and document defaults
+    ├── index.js             createTheme(mode) — resolves all layers for JS
     ├── motion.js            Curves, durations, gestures, amplitudes
-    └── semantic.js          Layer 2 — purpose-driven roles, light + dark
+    ├── semantic.js          Layer 2 — purpose-driven roles, light + dark
+    └── tokens.css           Generated CSS variables for both modes
 ```
 
 Every component folder follows the same three-file pattern
-(`Name.jsx`, `Name.style.js`, `index.js`), expanded above only for `accordion/`
+(`Name.jsx`, `Name.module.scss`, `index.js`), expanded above only for `accordion/`
 to avoid repetition.
 
 ## Folder Purposes
@@ -102,7 +102,7 @@ All React components, organised into categories:
 See COMPONENTS.md for the full inventory and the rules for adding to it.
 
 ### `src/theme/`
-The complete theming system: tokens at three levels (global → semantic → component), the shared style mixins, a GlobalStyle for CSS resets, and a ThemeProvider that resolves the tokens for the active colour mode. See THEMING.md for full details.
+The complete theming system: tokens at three levels (global → semantic → component), shared SCSS mixins, generated CSS variables, a document reset, and a ThemeProvider that sets `data-theme` for the active colour mode. See THEMING.md for full details.
 
 ### `src/app/showcase/` and `src/showcase/`
 The component browser, modelled on Storybook: a sidebar of every entry, and **one page per component**. Each page opens with a full-viewport hero stage holding a single live instance of the component and nothing else, for looking at it in isolation while designing; every variant, state and the props table sit below the fold.

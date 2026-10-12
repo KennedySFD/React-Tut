@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a **Next.js 16** application using the **App Router**, **React 19**, **JavaScript** (not TypeScript), and **styled-components** for styling. It was scaffolded with `create-next-app` and then customised.
+This project is a **Next.js 16** application using the **App Router**, **React 19**, **JavaScript** (not TypeScript), and **SCSS modules** for styling. It was scaffolded with `create-next-app` and then customised.
 
 ## Initial Creation
 
@@ -32,7 +32,7 @@ When prompted, the following options were selected:
 | `next` | 16.2.6 | Framework (App Router, SSR, file-based routing) |
 | `react` | 19.2.4 | UI library |
 | `react-dom` | 19.2.4 | DOM renderer for React |
-| `styled-components` | ^6.4.2 | CSS-in-JS styling library |
+| `sass` | ^1.105.1 | Compiles `.module.scss` stylesheets |
 
 ### Dev Dependencies
 
@@ -42,11 +42,13 @@ When prompted, the following options were selected:
 | `eslint` | ^9 | Linting |
 | `eslint-config-next` | 16.2.6 | Next.js ESLint rules |
 
-### Installing styled-components
+### Installing Sass
 
 ```bash
-npm install styled-components
+npm install sass
 ```
+
+Stylesheets are CSS modules (`.module.scss`). Shared mixins live in `src/theme/_mixins.scss` and are imported with a relative `@use`. Colours and spacing come from `src/theme/tokens.css`. See STYLING.md.
 
 ## Configuration Files
 
@@ -56,8 +58,13 @@ npm install styled-components
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactCompiler: true,
-  compiler: {
-    styledComponents: true,
+  turbopack: {
+    rules: {
+      '*.glsl': {
+        loaders: ['raw-loader'],
+        as: '*.js',
+      },
+    },
   },
 };
 
@@ -66,7 +73,7 @@ export default nextConfig;
 
 Key settings:
 - `reactCompiler: true` — enables the React Compiler for automatic optimisations
-- `compiler.styledComponents: true` — enables server-side rendering of styled-components (prevents hydration mismatch errors)
+- `turbopack.rules` — loads `.glsl` shader files as raw strings
 
 ### `jsconfig.json`
 
@@ -99,7 +106,7 @@ Uses the default Next.js ESLint config with `core-web-vitals` rules.
 
 The following default `create-next-app` files were deleted after setting up the custom theme system:
 
-- `src/app/globals.css` — replaced by `src/theme/GlobalStyle.js`
+- `src/app/globals.css` — replaced by `src/theme/globals.css` and `src/theme/tokens.css`
 - `src/app/page.module.css` — demo styles, no longer needed
 - Geist font imports in `layout.js` — removed in favour of theme-controlled fonts
 

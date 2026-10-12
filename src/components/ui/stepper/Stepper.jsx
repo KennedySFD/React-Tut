@@ -1,7 +1,13 @@
 'use client';
 
 import { CheckIcon } from '@/components/icons';
-import { StepperRoot, StepItem, StepIndicator, StepConnector, StepLabel } from './Stepper.style';
+import { cx } from '@/lib/cx';
+import styles from './Stepper.module.scss';
+
+const statusClass = {
+  complete: styles.complete,
+  active: styles.active,
+};
 
 /**
  * Stepper
@@ -11,21 +17,23 @@ import { StepperRoot, StepItem, StepIndicator, StepConnector, StepLabel } from '
  * @param {Array<{label: string}>} steps
  * @param {number} activeStep - 0-indexed current step
  */
-export default function Stepper({ steps = [], activeStep = 0, ...props }) {
+export default function Stepper({ steps = [], activeStep = 0, className, ...props }) {
   return (
-    <StepperRoot role="list" {...props}>
+    <div className={cx(styles.root, className)} role="list" {...props}>
       {steps.map((step, i) => {
         const status = i < activeStep ? 'complete' : i === activeStep ? 'active' : 'upcoming';
         return (
-          <StepItem key={i} role="listitem">
-            {i < steps.length - 1 && <StepConnector $complete={i < activeStep} />}
-            <StepIndicator $status={status}>
+          <div key={i} className={styles.item} role="listitem">
+            {i < steps.length - 1 && (
+              <div className={cx(styles.connector, i < activeStep && styles.complete)} />
+            )}
+            <div className={cx(styles.indicator, statusClass[status])}>
               {status === 'complete' ? <CheckIcon size="0.875rem" /> : i + 1}
-            </StepIndicator>
-            <StepLabel $status={status}>{step.label}</StepLabel>
-          </StepItem>
+            </div>
+            <span className={cx(styles.label, statusClass[status])}>{step.label}</span>
+          </div>
         );
       })}
-    </StepperRoot>
+    </div>
   );
 }

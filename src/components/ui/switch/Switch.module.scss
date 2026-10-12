@@ -1,0 +1,103 @@
+@use '../../../theme/mixins' as *;
+
+.hidden {
+  @include visually-hidden;
+}
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--components-switchControl-gap);
+  cursor: pointer;
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: var(--global-opacities-disabled);
+  }
+
+  .hidden:focus-visible + .track {
+    box-shadow: 0 0 0 var(--global-borderWidths-ring) var(--semantic-colors-state-focusRing);
+  }
+
+  &:hover .track {
+    background: var(--semantic-colors-border-strong);
+  }
+
+  &.checked:hover .track {
+    background: var(--semantic-colors-accent-hover);
+  }
+
+  &.disabled:hover .track {
+    background: var(--semantic-colors-border-default);
+  }
+
+  &.disabled.checked:hover .track {
+    background: var(--semantic-colors-accent-default);
+  }
+}
+
+.track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: var(--components-switchControl-sizes-md-width);
+  height: var(--components-switchControl-sizes-md-height);
+  padding: var(--components-switchControl-padding);
+  border-radius: var(--components-switchControl-radius);
+  background: var(--semantic-colors-border-default);
+  transition:
+    background var(--semantic-motion-base),
+    box-shadow var(--semantic-motion-fast);
+}
+
+.sm .track {
+  width: var(--components-switchControl-sizes-sm-width);
+  height: var(--components-switchControl-sizes-sm-height);
+}
+
+.checked .track {
+  background: var(--semantic-colors-accent-default);
+}
+
+.thumb {
+  width: var(--components-switchControl-sizes-md-thumb);
+  height: var(--components-switchControl-sizes-md-thumb);
+  border-radius: var(--global-radii-full);
+  background: var(--global-colors-white);
+  box-shadow: var(--global-shadows-light-sm);
+  transform: translateX(0);
+  transition: transform var(--semantic-motion-base);
+}
+
+.sm .thumb {
+  width: var(--components-switchControl-sizes-sm-thumb);
+  height: var(--components-switchControl-sizes-sm-thumb);
+}
+
+.checked .thumb {
+  background: var(--semantic-colors-accent-onAccent);
+  transform: translateX(
+    calc(
+      var(--components-switchControl-sizes-md-width) -
+        var(--components-switchControl-sizes-md-thumb) - 2 *
+        var(--components-switchControl-padding)
+    )
+  );
+}
+
+.sm.checked .thumb {
+  transform: translateX(
+    calc(
+      var(--components-switchControl-sizes-sm-width) -
+        var(--components-switchControl-sizes-sm-thumb) - 2 *
+        var(--components-switchControl-padding)
+    )
+  );
+}
+
+.label {
+  @include typography(body);
+  font-size: var(--global-fontSizes-sm);
+  color: var(--semantic-colors-text-primary);
+}

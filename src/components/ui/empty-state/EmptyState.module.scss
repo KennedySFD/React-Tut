@@ -1,0 +1,44 @@
+@use '../../../theme/mixins' as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--global-spacing-lg);
+  padding: var(--global-spacing-xxxl) var(--global-spacing-xl);
+  text-align: center;
+}
+
+.illustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: var(--global-radii-full);
+  background: var(--semantic-colors-background-subtle);
+  color: var(--semantic-colors-text-muted);
+
+  svg {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+.title {
+  @include typography(subheading);
+  color: var(--semantic-colors-text-primary);
+  margin: 0;
+}
+
+.description {
+  @include typography(body);
+  color: var(--semantic-colors-text-secondary);
+  max-width: 24rem;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: var(--global-spacing-sm);
+}

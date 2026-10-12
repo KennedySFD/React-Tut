@@ -1,0 +1,134 @@
+@use '../../../theme/mixins' as *;
+
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.trigger {
+  @include field-glass;
+  @include focus-keyline;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--components-field-gap);
+  text-align: left;
+  cursor: pointer;
+}
+
+.sm {
+  @include field-base(sm);
+  height: var(--components-field-sizes-sm-height);
+  padding: 0 var(--components-field-sizes-sm-paddingX);
+}
+
+.md {
+  @include field-base(md);
+  height: var(--components-field-sizes-md-height);
+  padding: 0 var(--components-field-sizes-md-paddingX);
+}
+
+.lg {
+  @include field-base(lg);
+  height: var(--components-field-sizes-lg-height);
+  padding: 0 var(--components-field-sizes-lg-paddingX);
+}
+
+.value {
+  @include truncate;
+  color: var(--semantic-colors-text-primary);
+
+  &.placeholder {
+    color: var(--semantic-colors-text-placeholder);
+  }
+}
+
+.chevron {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--semantic-colors-text-muted);
+  transition: transform var(--semantic-motion-fast);
+  transform: rotate(0deg);
+
+  &.open {
+    transform: rotate(180deg);
+  }
+}
+
+.sm .chevron svg {
+  width: var(--components-field-sizes-sm-iconSize);
+  height: var(--components-field-sizes-sm-iconSize);
+}
+
+.md .chevron svg {
+  width: var(--components-field-sizes-md-iconSize);
+  height: var(--components-field-sizes-md-iconSize);
+}
+
+.lg .chevron svg {
+  width: var(--components-field-sizes-lg-iconSize);
+  height: var(--components-field-sizes-lg-iconSize);
+}
+
+/* Opacity starts at 0 so the GSAP reveal does not flash the first frame. */
+.menu {
+  @include glass-panel;
+  position: absolute;
+  top: calc(100% + var(--global-spacing-xs));
+  left: 0;
+  right: 0;
+  z-index: var(--global-zIndex-dropdown);
+  max-height: var(--components-menu-maxHeight);
+  overflow-y: auto;
+  padding: var(--components-menu-padding);
+  margin: 0;
+  list-style: none;
+  border-radius: var(--components-menu-radius);
+  opacity: 0;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--global-spacing-sm);
+  padding: var(--components-menu-option-paddingY) var(--components-menu-option-paddingX);
+  font-size: var(--components-menu-option-fontSize);
+  color: var(--semantic-colors-text-primary);
+  border-radius: var(--components-menu-option-radius);
+  cursor: pointer;
+  transition:
+    background var(--semantic-motion-fast),
+    color var(--semantic-motion-fast);
+
+  &[data-active='true'] {
+    background: var(--semantic-colors-state-hoverSurface);
+  }
+
+  &:hover:not([aria-disabled='true']) {
+    background: var(--semantic-colors-state-hoverSurface);
+  }
+
+  &[aria-selected='true'] {
+    background: var(--semantic-colors-state-selectedSurface);
+    color: var(--semantic-colors-state-selectedText);
+    font-weight: var(--global-fontWeights-medium);
+  }
+
+  &[aria-disabled='true'] {
+    color: var(--semantic-colors-text-disabled);
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: var(--global-sizes-icon-md);
+    height: var(--global-sizes-icon-md);
+    flex-shrink: 0;
+  }
+}
+
+.empty {
+  padding: var(--components-menu-option-paddingY) var(--components-menu-option-paddingX);
+  font-size: var(--components-menu-option-fontSize);
+  color: var(--semantic-colors-text-muted);
+}
