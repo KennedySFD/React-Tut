@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useFrame, extend } from '@react-three/fiber';
+import { useFrame, useThree, extend } from '@react-three/fiber';
 import * as THREE from 'three';
 import CylinderImageMaterial from '@/canvas/shaders/cylinder-image';
+import { trackElement } from '@/canvas/helpers';
 
 extend({ CylinderImageMaterial });
 
@@ -19,6 +20,7 @@ export default function CylinderImagePlane({
   horizontal = false,
 }) {
   const meshRef = useRef();
+  const canvas = useThree((state) => state.gl.domElement);
   const [texture, setTexture] = useState(null);
 
   useEffect(() => {
@@ -78,14 +80,7 @@ export default function CylinderImagePlane({
     const mesh = meshRef.current;
     if (!mesh || !element) return;
 
-    const rect = element.getBoundingClientRect();
-    const width = Math.max(rect.width, 1);
-    const height = Math.max(rect.height, 1);
-
-    mesh.position.x = rect.left + width / 2 - window.innerWidth / 2;
-    mesh.position.y = -(rect.top + height / 2 - window.innerHeight / 2);
-    mesh.position.z = 0;
-    mesh.scale.set(width, height, 1);
+    trackElement(mesh, element, canvas);
 
     const mat = mesh.material;
     const u = mat?.uniforms;

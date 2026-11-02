@@ -14,20 +14,16 @@ export default function CubeOrbitCamera({
   orbitTurns = 1,
   elevation = 80,
 }) {
-  const { camera } = useThree();
+  const get = useThree((state) => state.get);
+  const height = useThree((state) => state.size.height);
 
   useEffect(() => {
-    const updateFov = () => {
-      camera.fov =
-        2 * Math.atan(window.innerHeight / 2 / radius) * (180 / Math.PI);
-      camera.updateProjectionMatrix();
-    };
-    updateFov();
-    window.addEventListener('resize', updateFov);
-    return () => window.removeEventListener('resize', updateFov);
-  }, [camera, radius]);
+    const { camera } = get();
+    camera.fov = 2 * Math.atan(height / 2 / radius) * (180 / Math.PI);
+    camera.updateProjectionMatrix();
+  }, [get, radius, height]);
 
-  useFrame(() => {
+  useFrame(({ camera }) => {
     const progress = scrollProgressRef?.current ?? 0;
     // Anticlockwise when viewed from +Y: angle increases with scroll-down.
     const angle = progress * orbitTurns * Math.PI * 2;

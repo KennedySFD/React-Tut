@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useFrame, extend } from '@react-three/fiber';
+import { useFrame, useThree, extend } from '@react-three/fiber';
 import * as THREE from 'three';
 import CloudRevealMaterial, {
   TRAIL_LENGTH,
   DROP_COUNT,
 } from '@/canvas/shaders/cloud-reveal';
+import { trackElement } from '@/canvas/helpers';
 
 extend({ CloudRevealMaterial });
 
@@ -78,6 +79,7 @@ export default function CloudRevealPlane({
   idleFadeTime = 2.5,
 }) {
   const meshRef = useRef();
+  const canvas = useThree((state) => state.gl.domElement);
   const hoverRef = useRef(0);
   const insideRef = useRef(false);
   const lastMoveRef = useRef(0);
@@ -192,14 +194,7 @@ export default function CloudRevealPlane({
     const mesh = meshRef.current;
     if (!mesh || !element) return;
 
-    const rect = element.getBoundingClientRect();
-    const width = Math.max(rect.width, 1);
-    const height = Math.max(rect.height, 1);
-
-    mesh.position.x = rect.left + width / 2 - window.innerWidth / 2;
-    mesh.position.y = -(rect.top + height / 2 - window.innerHeight / 2);
-    mesh.position.z = 0;
-    mesh.scale.set(width, height, 1);
+    const { width, height } = trackElement(mesh, element, canvas);
 
     const step = Math.min(delta, 0.1);
     timeRef.current += step;

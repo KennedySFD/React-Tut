@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { useFrame, useThree, extend } from '@react-three/fiber';
 import * as THREE from 'three';
 import CylinderScrollMaterial from '@/canvas/shaders/cylinder-scroll/CylinderScrollMaterial';
@@ -26,16 +26,7 @@ export default function ScrollPlane({
 }) {
   const meshRef = useRef();
   const gl = useThree((state) => state.gl);
-  const [size, setSize] = useState(null);
-
-  useEffect(() => {
-    const read = () =>
-      setSize({ width: window.innerWidth, height: window.innerHeight });
-
-    read();
-    window.addEventListener('resize', read);
-    return () => window.removeEventListener('resize', read);
-  }, []);
+  const size = useThree((state) => state.size);
 
   // Filtering has to be configured in here rather than where the texture is
   // built: the capture happens outside the <Canvas>, so no renderer exists yet
@@ -95,7 +86,7 @@ export default function ScrollPlane({
     }
   });
 
-  if (!size) return null;
+  if (!texture) return null;
 
   return (
     <mesh ref={meshRef}>
