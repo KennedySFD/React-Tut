@@ -31,9 +31,7 @@
   &.sortable {
     cursor: pointer;
 
-    &:hover {
-      color: var(--semantic-colors-text-primary);
-    }
+    @include hover-text;
   }
 
   svg {
@@ -54,8 +52,8 @@
     background: var(--semantic-colors-background-subtle);
   }
 
-  &.hoverable:hover {
-    background: var(--semantic-colors-state-hoverSurface);
+  &.hoverable {
+    @include hover-surface;
   }
 }
 

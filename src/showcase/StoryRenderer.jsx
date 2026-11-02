@@ -22,6 +22,7 @@ import * as header from './stories/HeaderStories';
 import * as input from './stories/InputStories';
 import * as modal from './stories/ModalStories';
 import * as motion from './stories/MotionStories';
+import * as webgl from './stories/WebGLStories';
 import * as pagination from './stories/PaginationStories';
 import * as popover from './stories/PopoverStories';
 import * as progress from './stories/ProgressStories';
@@ -57,6 +58,7 @@ import * as tooltip from './stories/TooltipStories';
 const modulesBySlug = {
   tokens,
   motion,
+  webgl,
 
   button,
   spinner,

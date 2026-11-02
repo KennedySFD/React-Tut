@@ -10,19 +10,13 @@ This project uses the **Next.js App Router** (not the Pages Router). Routes are 
 src/app/
 ├── layout.js           Root layout (wraps ALL pages)
 ├── page.js             → /
-├── showcase/
-│   ├── layout.js       Persistent sidebar + top bar for all /showcase routes
-│   ├── page.js         → /showcase          Overview
-│   └── [slug]/
-│       └── page.js     → /showcase/button   One page per component
-├── test/
-│   └── page.js         → /test
-├── test-hooks/
-│   └── page.js         → /test-hooks
-├── test-input/
-│   └── page.js         → /test-input
-└── test-toggle/
-    └── page.js         → /test-toggle
+├── shader-test/
+│   └── page.js         → /shader-test       WebGL shader lab
+└── showcase/
+    ├── layout.js       Persistent sidebar + top bar for all /showcase routes
+    ├── page.js         → /showcase          Overview
+    └── [slug]/
+        └── page.js     → /showcase/button   One page per component
 ```
 
 The folder name becomes the URL path. `page.js` is the required file that defines what renders at that route.
@@ -188,7 +182,6 @@ Nested layouts wrap only their child routes, not the entire app.
 | URL | File | Purpose | Client? |
 |-----|------|---------|---------|
 | `/` | `src/app/page.js` | Home page | No |
-| `/test` | `src/app/test/page.js` | Button variant testing | Yes |
-| `/test-hooks` | `src/app/test-hooks/page.js` | useCounter hook testing | Yes |
-| `/test-input` | `src/app/test-input/page.js` | Input component testing | Yes |
-| `/test-toggle` | `src/app/test-toggle/page.js` | useToggle hook testing | Yes |
+| `/showcase` | `src/app/showcase/page.js` | Component library overview | Yes |
+| `/showcase/[slug]` | `src/app/showcase/[slug]/page.js` | One page per component | Yes |
+| `/shader-test` | `src/app/shader-test/page.js` | WebGL shader lab | Yes |

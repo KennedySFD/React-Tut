@@ -141,7 +141,7 @@ Files that do NOT need it:
 5. Do not prefix props with `$`. Class names never become DOM attributes
 6. Browser states (hover, focus, active, disabled) use CSS pseudo-classes
 7. Pseudo-elements (placeholder, before, after) use `::` double colon
-8. Before writing a new surface, check `src/theme/_mixins.scss`. `field-base`, `focus-ring`, and the glass mixins exist so a treatment is defined once
+8. Before writing a new surface, check `src/theme/_mixins.scss`. `field-base`, `focus-ring`, and the `hover-*` mixins exist so a treatment is defined once
 9. Import mixins with a relative `@use` of `theme/mixins`. `@use 'mixins'` does not resolve
 
 ## Theme Token Rules
@@ -163,7 +163,7 @@ See MOTION.md for the full system. The rules that matter when writing a componen
 2. **GSAP owns `transform`.** If GSAP animates a property, that property must not appear in the same element's CSS `transition` list, or the two will interpolate against each other
 3. A placement transform and an animated transform cannot share an element — split them across two
 4. Every motion hook respects `prefers-reduced-motion`; preserve that in anything new
-5. **Do not animate `transform` in CSS on an element GSAP already transforms.** The glass layers are driven by custom properties (`--ring-angle`, `--sheen-x`, and the rest), not by a CSS transform on the root
+5. **Do not animate `transform` in CSS on an element GSAP already transforms.**
 
 ## Colour Mode Rules
 

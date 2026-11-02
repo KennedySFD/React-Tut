@@ -301,11 +301,11 @@ showcase `Shell` so they cannot drift:
 
 1. Create the folder: `src/components/ui/newcomponent/`
 2. `NewComponent.jsx` — the component, with `'use client'`
-3. `NewComponent.module.scss` — classes and CSS variables, `@include interactive-glass` when it should move
+3. `NewComponent.module.scss` — classes and CSS variables, plus the matching `hover-*` mixin if it is interactive
 4. `index.js` — `export { default } from './NewComponent';`
 5. Add a line to `src/components/ui/index.js`
-6. Wire up motion: `@include interactive-glass` in the style file, `useInteractiveMotion`
-   with the right amplitude preset in the component (see MOTION.md)
+6. Wire up motion: `useInteractiveMotion` with the right amplitude preset in the
+   component (see MOTION.md)
 7. Add an entry to `src/showcase/registry.js`
 8. Add `src/showcase/stories/NewComponentStories.jsx` — stories as the default
    export, plus a `Hero` and `heroCaption` for the isolation stage

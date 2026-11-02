@@ -1,7 +1,7 @@
 @use '../../../theme/mixins' as *;
 
 .root {
-  @include interactive-glass;
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -10,15 +10,9 @@
   white-space: nowrap;
   border-radius: var(--components-button-radius);
   border: var(--components-button-borderWidth) solid transparent;
-  --ring-inset: var(--components-button-borderWidth);
   cursor: pointer;
   user-select: none;
-  transition:
-    background var(--semantic-motion-fast),
-    border-color var(--semantic-motion-fast),
-    color var(--semantic-motion-fast),
-    box-shadow var(--semantic-motion-fast),
-    filter var(--semantic-motion-fast);
+  @include hover-transition;
 
   &:focus-visible {
     @include focus-ring-only;
@@ -97,10 +91,7 @@
   color: var(--semantic-colors-text-primary);
   border-color: var(--semantic-colors-border-default);
 
-  &:hover:not(:disabled) {
-    background: var(--semantic-colors-background-subtle);
-    border-color: var(--semantic-colors-state-hoverBorder);
-  }
+  @include hover-border;
 
   &:active:not(:disabled) {
     background: var(--semantic-colors-background-sunken);
@@ -127,10 +118,7 @@
   color: var(--semantic-colors-text-secondary);
   border-color: transparent;
 
-  &:hover:not(:disabled) {
-    background: var(--semantic-colors-state-hoverSurface);
-    color: var(--semantic-colors-text-primary);
-  }
+  @include hover-surface;
 
   &:active:not(:disabled) {
     background: var(--semantic-colors-state-activeSurface);
@@ -159,21 +147,6 @@
   justify-content: center;
   gap: var(--components-button-gap);
   white-space: nowrap;
-}
-
-.glowSurface {
-  position: absolute;
-  inset: calc(-1 * var(--ring-inset, 0px));
-  z-index: -1;
-  border-radius: inherit;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.glowCanvas {
-  display: block;
-  width: 100%;
-  height: 100%;
 }
 
 .labelChar {

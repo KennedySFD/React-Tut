@@ -20,7 +20,7 @@ src/theme/semantic.js        Layer 2 — purpose, with light + dark modes
        ↓
 src/theme/components.js      Layer 3 — per-component geometry
        ↓
-src/theme/_mixins.scss       Shared treatments, including glass and dispersion
+src/theme/_mixins.scss       Shared treatments, including the hover state and glass
 src/theme/motion.js          Curves, durations, gestures, amplitudes
        ↓
 src/theme/index.js           createTheme(mode) resolves the JS object
@@ -80,7 +80,7 @@ Each mode contains:
 | `colors.feedback` | info / success / warning / danger / neutral, each with the same 5 slots |
 | **`colors.state`** | **the shared interaction tokens — see below** |
 | `colors.glass` | translucent surface, inner highlight and shade for frosted panes |
-| `colors.dispersion` | the chromatic fringe used by keylines and sheens |
+| `colors.dispersion` | decorative accents for backdrops behind glass — never interactive states |
 | `shadows` | elevation set for that mode |
 | `typography`, `motion` | mode-independent, shared by both |
 
@@ -130,9 +130,8 @@ Tokens make the *values* shared; mixins make the *treatment* shared.
 | `disabled-state` | anything disableable |
 | `visually-hidden` | the native inputs behind Checkbox / Radio / Switch |
 | `truncate`, `typography($role)` | general |
-| `interactive-glass` | the dispersion keyline + sheen layers — see MOTION.md |
+| `hover-surface`, `hover-border`, `hover-text` | the shared hover state — see MOTION.md |
 | `glass-panel`, `glass-panel-strong` | frosted panes: menus, modals, tooltips, glass Cards |
-| `focus-keyline` | the chromatic line that draws in on field focus |
 
 ```scss
 @use '../../../theme/mixins' as *;

@@ -15,7 +15,6 @@
 }
 
 .trigger {
-  @include interactive-glass;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -29,11 +28,8 @@
   background: transparent;
   color: var(--semantic-colors-text-primary);
   cursor: pointer;
-  transition: background var(--semantic-motion-fast);
-
-  &:hover:not(:disabled) {
-    background: var(--semantic-colors-state-hoverSurface);
-  }
+  @include hover-transition;
+  @include hover-surface;
 
   &:focus-visible {
     @include focus-ring-only;

@@ -9,18 +9,14 @@ import { amplitude, gesture } from '@/theme/motion';
  * library. One implementation means one feel — a Tag and a Card are the same
  * gesture at different amplitudes, never two people's idea of a hover.
  *
- * On hover it runs three things together:
- *   - a lift on the Y axis
- *   - the chromatic keyline fading in while its gradient rotates once
- *   - a sheen travelling across the surface
+ * On hover the element lifts on the Y axis; the colour change itself is the
+ * shared CSS hover state from the `hover-*` mixins.
  *
  * On press it scales down on the committed `glassIn` curve, and releases on
  * the softer `glass` curve — down fast, back slow, which is what makes a
  * press feel physical rather than mechanical.
  *
- * Pair with the `interactiveGlass` mixin, which provides the layers this
- * animates. Any descendant marked `data-motion-label` gets the uniform text
- * lift.
+ * Any descendant marked `data-motion-label` gets the uniform text lift.
  *
  * @param {'control'|'surface'|'chip'|'subtle'|'choice'} preset - amplitude family
  * @param {boolean} disabled - skip all motion and reset
@@ -41,12 +37,7 @@ export function useInteractiveMotion({ preset = 'control', disabled = false } = 
     if (!el) return;
 
     gsap.killTweensOf(el);
-    gsap.set(el, {
-      y: 0,
-      scale: 1,
-      '--ring-opacity': 0,
-      '--sheen-opacity': 0,
-    });
+    gsap.set(el, { y: 0, scale: 1 });
 
     const label = getLabel();
     if (label) {
@@ -74,37 +65,9 @@ export function useInteractiveMotion({ preset = 'control', disabled = false } = 
 
     gsap.to(el, {
       y: amp.lift,
-      '--ring-opacity': amp.ring,
       duration: gesture.hover.duration,
       ease: gesture.hover.ease,
     });
-
-    // One full rotation of the dispersion gradient, then it rests
-    gsap.fromTo(
-      el,
-      { '--ring-angle': 0 },
-      {
-        '--ring-angle': 360,
-        duration: gesture.sheen.duration,
-        ease: gesture.sheen.ease,
-      },
-    );
-
-    if (amp.sheen > 0) {
-      // 100 -> 0 slides the gradient's background-position left to right.
-      // See sheenLayer: the layer stays put so the highlight cannot escape
-      // the component's bounds.
-      gsap.fromTo(
-        el,
-        { '--sheen-x': 100, '--sheen-opacity': amp.sheen },
-        {
-          '--sheen-x': 0,
-          '--sheen-opacity': 0,
-          duration: gesture.sheen.duration,
-          ease: gesture.sheen.ease,
-        },
-      );
-    }
 
     const label = getLabel();
     if (label && amp.label) {
@@ -121,8 +84,6 @@ export function useInteractiveMotion({ preset = 'control', disabled = false } = 
     gsap.to(el, {
       y: 0,
       scale: 1,
-      '--ring-opacity': 0,
-      '--sheen-opacity': 0,
       duration: gesture.release.duration,
       ease: gesture.release.ease,
     });
@@ -157,29 +118,6 @@ export function useInteractiveMotion({ preset = 'control', disabled = false } = 
     });
   }, []);
 
-  /** Keyboard focus shows the keyline; a mouse click does not. */
-  const focus = useCallback(() => {
-    const el = ref.current;
-    if (!el || disabled || !el.matches?.(':focus-visible')) return;
-
-    gsap.to(el, {
-      '--ring-opacity': amp.ring,
-      duration: gesture.hover.duration,
-      ease: gesture.hover.ease,
-    });
-  }, [amp, disabled]);
-
-  const blur = useCallback(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    gsap.to(el, {
-      '--ring-opacity': 0,
-      duration: gesture.press.duration,
-      ease: gesture.press.ease,
-    });
-  }, []);
-
   return {
     ref,
     amp,
@@ -188,8 +126,6 @@ export function useInteractiveMotion({ preset = 'control', disabled = false } = 
       onPointerLeave: leave,
       onPointerDown: press,
       onPointerUp: release,
-      onFocus: focus,
-      onBlur: blur,
     },
   };
 }

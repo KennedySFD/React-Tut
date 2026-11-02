@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useFrame, extend } from '@react-three/fiber';
+import { useFrame, useThree, extend } from '@react-three/fiber';
 import * as THREE from 'three';
 import MosaicBulgeMaterial from '@/canvas/shaders/mosaic-bulge';
+import { trackElement } from '@/canvas/helpers';
 
 extend({ MosaicBulgeMaterial });
 
@@ -24,6 +25,7 @@ export default function MosaicPlane({
   cubeDepth = 36,
 }) {
   const meshRef = useRef();
+  const canvas = useThree((state) => state.gl.domElement);
   const hoverRef = useRef(0);
   const hoverTargetRef = useRef(0);
   const mouseTargetRef = useRef(new THREE.Vector2(0.5, 0.5));
@@ -120,14 +122,7 @@ export default function MosaicPlane({
     const mesh = meshRef.current;
     if (!mesh || !element) return;
 
-    const rect = element.getBoundingClientRect();
-    const width = Math.max(rect.width, 1);
-    const height = Math.max(rect.height, 1);
-
-    mesh.position.x = rect.left + width / 2 - window.innerWidth / 2;
-    mesh.position.y = -(rect.top + height / 2 - window.innerHeight / 2);
-    mesh.position.z = 0;
-    mesh.scale.set(width, height, 1);
+    trackElement(mesh, element, canvas);
 
     hoverRef.current += (hoverTargetRef.current - hoverRef.current) * 0.12;
 

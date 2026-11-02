@@ -2,8 +2,6 @@
 
 /* The bordered surface. field-base is the same treatment Select and Textarea use. */
 .shell {
-  @include field-glass;
-  @include focus-keyline;
   display: flex;
   align-items: center;
   gap: var(--components-field-gap);

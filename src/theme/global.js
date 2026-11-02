@@ -30,7 +30,7 @@ export const global = {
     neutral950: '#09090B',
 
     // Brand ramp — swap these to rebrand the library
-    // Neutral-black primary: high-contrast, pairs with the dispersion gradient
+    // Neutral-black primary: high-contrast and minimal
     brand50: '#FAFAFA',
     brand100: '#F4F4F5',
     brand200: '#E4E4E7',

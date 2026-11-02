@@ -1,20 +1,7 @@
 @use '../../../theme/mixins' as *;
 
-/*
- * The textarea paints its own background, and replaced elements have no
- * pseudos, so the glass ring and focus keyline live on this wrapper.
- * --ring-inset is 0 because this box already is the border box.
- */
 .shell {
   width: 100%;
-  @include field-glass;
-  --ring-inset: 0px;
-  border-radius: var(--components-field-radius);
-  @include focus-keyline;
-
-  &::before {
-    z-index: 1;
-  }
 }
 
 .control {

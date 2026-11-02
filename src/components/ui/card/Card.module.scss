@@ -6,12 +6,8 @@
   gap: var(--global-spacing-md);
   border: var(--components-card-borderWidth) solid transparent;
   border-radius: var(--components-card-radius);
-  /* Let the keyline sit on the border, not inside it — see glass-vars. */
-  --ring-inset: var(--components-card-borderWidth);
   /* GSAP drives the lift, so transform stays off this transition. */
-  transition:
-    box-shadow var(--semantic-motion-base),
-    border-color var(--semantic-motion-base);
+  @include hover-transition;
 }
 
 .sm { padding: var(--components-card-paddings-sm); }
@@ -41,15 +37,11 @@
 }
 
 .interactive {
-  @include interactive-glass;
   cursor: pointer;
   text-align: left;
   width: 100%;
 
-  &:hover {
-    border-color: var(--semantic-colors-state-hoverBorder);
-    box-shadow: var(--semantic-shadows-md);
-  }
+  @include hover-border;
 
   &:focus-visible {
     @include focus-ring-only;

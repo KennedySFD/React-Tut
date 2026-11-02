@@ -65,12 +65,13 @@
   text-align: left;
   cursor: pointer;
   border-radius: var(--global-radii-md);
-  transition: background var(--semantic-motion-fast);
+  @include hover-transition;
 
-  &.active,
-  &:hover {
+  &.active {
     background: var(--semantic-colors-state-hoverSurface);
   }
+
+  @include hover-surface;
 
   &:focus-visible {
     @include focus-ring-only;

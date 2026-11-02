@@ -34,7 +34,7 @@ Import the shared mixins with a **relative** path. The Sass compiler is not give
 @use '../../../theme/mixins' as *;
 
 .root {
-  @include interactive-glass;
+  @include hover-surface;
 }
 ```
 
@@ -143,9 +143,11 @@ Tokens make the *values* shared. Mixins make the *treatment* shared. They live i
 | `visually-hidden` | Hides an element but keeps it for screen readers |
 | `truncate` | Single-line ellipsis |
 | `typography($role)` | Applies a semantic type role in one line |
-| `interactive-glass` | Dispersion keyline and sheen — see MOTION.md |
+| `hover-surface` | The shared hover tint — ghost buttons, menu items, tabs, rows |
+| `hover-border` | The shared hover border — fields, cards, secondary buttons |
+| `hover-text` | The shared hover for bare text links |
+| `hover-transition` | Transitions the properties the hover mixins change |
 | `glass-panel`, `glass-panel-strong` | Frosted panes: menus, modals, tooltips, glass cards |
-| `focus-keyline` | The chromatic line that draws in on field focus |
 
 `focus-ring` is why an Input's focus ring and a Select's focus ring are one treatment. Change `state.focusRing` in `semantic.js`, regenerate `tokens.css`, and every control updates together.
 
@@ -223,7 +225,7 @@ Used for **virtual elements** inside or around the real element. These do not ex
 
 `::before` and `::after` do not work on replaced elements such as `<input>` and `<img>`. Wrap those when a pseudo-element is required.
 
-The glass keyline and sheen are `::before` and `::after` from `interactive-glass`. GSAP drives them through `--ring-angle`, `--ring-opacity`, `--ring-inset`, `--sheen-x`, and `--sheen-opacity`. Do not put `transform` in a CSS `transition` on an element GSAP is already transforming.
+Do not put `transform` in a CSS `transition` on an element GSAP is already transforming.
 
 ## Variants vs states
 

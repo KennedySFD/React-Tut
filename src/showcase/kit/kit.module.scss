@@ -127,8 +127,8 @@
     box-shadow: var(--semantic-shadows-xs);
   }
 
-  &:hover:not(:disabled) {
-    color: var(--semantic-colors-text-primary);
+  &:not(.active) {
+    @include hover-surface;
   }
 
   &:focus-visible {
@@ -215,6 +215,12 @@
 
   &.sunken {
     background: var(--semantic-colors-background-sunken);
+  }
+
+  &.bare {
+    background: none;
+    border: none;
+    border-radius: 0;
   }
 
   &.paddingNone {

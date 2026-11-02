@@ -88,10 +88,7 @@
     background var(--semantic-motion-fast),
     color var(--semantic-motion-fast);
 
-  &:hover {
-    background: var(--semantic-colors-state-hoverSurface);
-    color: var(--semantic-colors-text-primary);
-  }
+  @include hover-surface;
 
   &:focus-visible {
     @include focus-ring-only;

@@ -34,6 +34,12 @@ export const registry = [
     category: 'Foundations',
     summary: 'Curves, gestures, amplitude families, and the glass material.',
   },
+  {
+    slug: 'webgl',
+    name: 'WebGL',
+    category: 'Foundations',
+    summary: 'A live square of every shader built in the shader lab.',
+  },
 
   {
     slug: 'button',

@@ -46,8 +46,8 @@ export default function InputStories() {
         </Grid>
         <Hint>
           <span>
-            On focus a chromatic keyline draws outward from the centre of the lower edge. Select,
-            Textarea and SearchBar all do the same thing, from the same hook.
+            Hover darkens the border and focus adds the shared focus ring. Select, Textarea and
+            SearchBar use the same <code>field-base</code> treatment.
           </span>
         </Hint>
       </Story>

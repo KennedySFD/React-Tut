@@ -1,0 +1,76 @@
+@use '../../theme/mixins' as *;
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--global-spacing-xl);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--global-spacing-md);
+  margin: 0;
+}
+
+.stage {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: var(--global-borderWidths-thin) solid var(--semantic-colors-border-subtle);
+  border-radius: var(--global-radii-lg);
+  background: var(--semantic-colors-background-sunken);
+}
+
+.media {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The planes hit-test against the window, so the canvas never needs pointer events. */
+.canvasLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+
+  & > div,
+  & canvas {
+    pointer-events: none !important;
+  }
+}
+
+.overlay {
+  position: absolute;
+  right: var(--global-spacing-md);
+  bottom: var(--global-spacing-md);
+  left: var(--global-spacing-md);
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  gap: var(--global-spacing-sm);
+}
+
+.caption {
+  display: flex;
+  flex-direction: column;
+  gap: var(--global-spacing-xxs);
+}
+
+.name {
+  @include typography(label);
+  color: var(--semantic-colors-text-primary);
+}
+
+.description {
+  @include typography(caption);
+  color: var(--semantic-colors-text-secondary);
+}
+
+.meta {
+  @include typography(caption);
+  font-family: var(--global-fontFamilies-mono);
+  color: var(--semantic-colors-text-muted);
+}

@@ -86,7 +86,6 @@
   color: var(--semantic-colors-text-muted);
   cursor: pointer;
   border-radius: var(--global-radii-sm);
-  transition: color var(--semantic-motion-fast);
-
-  &:hover { color: var(--semantic-colors-text-primary); }
+  @include hover-transition;
+  @include hover-surface;
 }

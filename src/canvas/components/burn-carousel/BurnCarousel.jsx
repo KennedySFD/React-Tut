@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useFrame, extend } from '@react-three/fiber';
+import { useFrame, useThree, extend } from '@react-three/fiber';
 import * as THREE from 'three';
 import PaperBurnMaterial from '@/canvas/shaders/paper-burn';
 import { evaluateBezier } from './bezierEase';
@@ -34,10 +34,11 @@ function loadTexture(url) {
 }
 
 /**
- * Full-viewport paper-burn carousel.
+ * Paper-burn carousel filling its canvas.
  * Listens on `document` for `[data-carousel]` / `[data-carousel-to]`.
  */
 export default function BurnCarousel({
+  slides = SLIDE_URLS,
   burnSpeed = 1,
   noiseScale = 4.5,
   noiseStrength = 0.55,
@@ -65,10 +66,7 @@ export default function BurnCarousel({
   emberRef.current = ember;
 
   const [textures, setTextures] = useState(null);
-  const [size, setSize] = useState({
-    width: typeof window !== 'undefined' ? window.innerWidth : 1,
-    height: typeof window !== 'undefined' ? window.innerHeight : 1,
-  });
+  const size = useThree((state) => state.size);
 
   const indexRef = useRef(0);
   const fromRef = useRef(0);
@@ -78,11 +76,13 @@ export default function BurnCarousel({
   const queuedRef = useRef(null);
   const elapsedRef = useRef(0);
 
+  const slidesKey = slides.join('|');
+
   useEffect(() => {
     let cancelled = false;
     const loaded = [];
 
-    Promise.all(SLIDE_URLS.map(loadTexture))
+    Promise.all(slidesKey.split('|').map(loadTexture))
       .then((texs) => {
         if (cancelled) {
           texs.forEach((t) => t.dispose());
@@ -103,16 +103,7 @@ export default function BurnCarousel({
       cancelled = true;
       loaded.forEach((t) => t.dispose());
     };
-  }, []);
-
-  useEffect(() => {
-    const onResize = () => {
-      setSize({ width: window.innerWidth, height: window.innerHeight });
-    };
-    onResize();
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
+  }, [slidesKey]);
 
   useEffect(() => {
     if (!textures) return undefined;

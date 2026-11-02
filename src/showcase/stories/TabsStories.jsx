@@ -43,7 +43,7 @@ export default function TabsStories() {
     <>
       <Story
         title="Underline"
-        description="The indicator carries the dispersion gradient, which ties the tab strip to the keylines elsewhere in the library."
+        description="The indicator uses the selected-border token, and unselected tabs take the shared hover tint."
       >
         <Tabs items={items} variant="underline" />
         <Hint>

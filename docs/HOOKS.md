@@ -10,9 +10,8 @@ Four hooks carry the library's animation system. They are documented in full in 
 
 | Hook | Purpose |
 |------|---------|
-| `useInteractiveMotion` | Hover lift, dispersion keyline, sheen, press and release |
+| `useInteractiveMotion` | Hover lift, press and release |
 | `useRevealMotion` | The shared entrance for menus, modals and tooltips |
-| `useFieldMotion` | The focus keyline on form controls |
 | `useStateMotion` | Two-state pop for check marks and radio dots |
 
 They all return a `ref` to attach, and `useInteractiveMotion` also returns a

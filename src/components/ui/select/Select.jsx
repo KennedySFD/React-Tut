@@ -2,7 +2,6 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 import Field from '@/components/ui/field';
-import { useFieldMotion } from '@/hooks/useFieldMotion';
 import { useRevealMotion } from '@/hooks/useRevealMotion';
 import { CheckIcon, ChevronDownIcon } from '@/components/icons';
 import { cx } from '@/lib/cx';
@@ -57,23 +56,13 @@ export default function Select({
   const listboxId = `${selectId}-listbox`;
 
   const [open, setOpen] = useState(false);
-  const [focused, setFocused] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
 
   const wrapperRef = useRef(null);
   const triggerRef = useRef(null);
   const listRef = useRef(null);
 
-  // Two hooks each want a ref on the same node, so the refs are merged by hand
-  const { ref: keylineRef, handlers: motionHandlers } = useFieldMotion(open || focused, {
-    disabled,
-  });
   const revealRef = useRevealMotion({ distance: 'menu', active: open });
-
-  const setTriggerRef = (node) => {
-    triggerRef.current = node;
-    keylineRef.current = node;
-  };
 
   const setListRef = (node) => {
     listRef.current = node;
@@ -185,8 +174,7 @@ export default function Select({
       <div className={styles.wrapper} ref={wrapperRef}>
         <button
           type="button"
-          ref={setTriggerRef}
-          {...motionHandlers}
+          ref={triggerRef}
           id={selectId}
           className={cx(styles.trigger, styles[size])}
           role="combobox"
@@ -203,8 +191,6 @@ export default function Select({
           data-focused={open}
           onClick={() => (open ? closeMenu() : openMenu())}
           onKeyDown={handleKeyDown}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
           {...props}
         >
           <span className={cx(styles.value, !selectedOption && styles.placeholder)}>

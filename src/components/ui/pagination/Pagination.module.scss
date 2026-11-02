@@ -24,9 +24,7 @@
     background var(--semantic-motion-fast),
     color var(--semantic-motion-fast);
 
-  &:hover:not(:disabled) {
-    background: var(--semantic-colors-state-hoverSurface);
-  }
+  @include hover-surface;
 
   &.active {
     background: var(--semantic-colors-accent-default);
