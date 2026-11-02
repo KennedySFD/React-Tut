@@ -78,9 +78,9 @@ export default function MotionStories() {
       </Story>
 
       <Story
-        title="Glass & dispersion"
+        title="Glass"
         surface="glass"
-        description="Frosted panes blur and saturate whatever sits behind them, so they need a busy backdrop to read as glass at all. The chromatic keyline is the dispersion of light through an edge — hover the second card to see it rotate."
+        description="Frosted panes blur and saturate whatever sits behind them, so they need a busy backdrop to read as glass at all."
       >
         <Grid $min="14rem">
           <Card
@@ -91,8 +91,8 @@ export default function MotionStories() {
           <Card
             variant="glass"
             interactive
-            title="Dispersion"
-            description="Hover for the keyline and sheen."
+            title="Interactive"
+            description="Hover darkens the border, like every outlined element."
           />
           <Card
             variant="glass"

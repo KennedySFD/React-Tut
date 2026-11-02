@@ -9,15 +9,12 @@ src/
 │   ├── favicon.ico
 │   ├── layout.js            Root layout — mounts the ThemeProvider
 │   ├── page.js              Home page (/)
-│   ├── showcase/            The component library browser (Storybook-style)
-│   │   ├── layout.js        Persistent sidebar + top bar
-│   │   ├── page.js          → /showcase          Overview
-│   │   └── [slug]/
-│   │       └── page.js      → /showcase/button   One page per component
-│   ├── test/                Scratch route — buttons
-│   ├── test-hooks/          Scratch route — useCounter
-│   ├── test-input/          Scratch route — Input
-│   └── test-toggle/         Scratch route — useToggle
+│   ├── shader-test/         → /shader-test       WebGL shader lab
+│   └── showcase/            The component library browser (Storybook-style)
+│       ├── layout.js        Persistent sidebar + top bar
+│       ├── page.js          → /showcase          Overview
+│       └── [slug]/
+│           └── page.js      → /showcase/button   One page per component
 ├── assets/                  SVGs, images, and models imported in code
 ├── canvas/                  React Three Fiber / WebGL / Three.js
 │   ├── components/          Individual 3D objects (models, lights, cameras)
@@ -52,7 +49,6 @@ src/
 │   └── ThemeModeContext.js  Light/dark mode state, persisted to localStorage
 ├── hooks/                   Custom React hooks
 │   ├── useCounter.js
-│   ├── useFieldMotion.js    Focus keyline on form controls
 │   ├── useInteractiveMotion.js  Hover / press for every interactive component
 │   ├── useRevealMotion.js   Shared entrance for menus, modals, tooltips
 │   ├── useStateMotion.js    Two-state pop for check marks and radio dots
@@ -72,7 +68,7 @@ src/
 │       ├── ButtonStories.jsx    default = stories, Hero = isolated instance
 │       └── …
 └── theme/                   Design tokens and theming system
-    ├── _mixins.scss         Shared treatments (focus-ring, field-base, glass)
+    ├── _mixins.scss         Shared treatments (focus-ring, field-base, hover, glass)
     ├── ThemeProvider.js     Sets data-theme for the active colour mode
     ├── components.js        Layer 3 — per-component geometry tokens
     ├── global.js            Layer 1 — raw primitive values

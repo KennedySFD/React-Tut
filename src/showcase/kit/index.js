@@ -136,7 +136,7 @@ export function Hero({ name, controls, component: Subject, surface = 'default', 
  *
  * @param {string} title
  * @param {string} description
- * @param {'default'|'sunken'|'glass'} surface - the canvas backdrop
+ * @param {'default'|'sunken'|'glass'|'none'} surface - the canvas backdrop; `none` drops the background and border
  * @param {'default'|'none'} padding
  * @param {boolean} clip - clip overflow (for backdrops that must not bleed)
  */
@@ -165,6 +165,7 @@ export function Story({
           styles.canvas,
           glass && styles.glassCanvas,
           surface === 'sunken' && styles.sunken,
+          surface === 'none' && styles.bare,
           padding === 'none' && styles.paddingNone,
           (clip || glass) && styles.clip,
         )}

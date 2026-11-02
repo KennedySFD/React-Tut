@@ -30,10 +30,7 @@
   text-decoration: none;
   transition: color var(--semantic-motion-fast);
 
-  &:hover {
-    color: var(--semantic-colors-text-primary);
-    text-decoration: underline;
-  }
+  @include hover-text;
 
   &:focus-visible {
     outline: none;

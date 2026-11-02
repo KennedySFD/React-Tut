@@ -131,10 +131,7 @@
     background: var(--semantic-colors-state-selectedSurface);
   }
 
-  &:hover {
-    background: var(--semantic-colors-state-hoverSurface);
-    color: var(--semantic-colors-text-primary);
-  }
+  @include hover-surface;
 
   &.active:hover {
     background: var(--semantic-colors-state-selectedSurface);

@@ -50,17 +50,11 @@
     bottom: calc(-1 * var(--global-borderWidths-thin));
     height: var(--components-tabs-indicatorWidth);
     border-radius: var(--global-radii-full);
-    background: linear-gradient(
-      90deg,
-      var(--semantic-colors-dispersion-cyan) 0%,
-      var(--semantic-colors-state-selectedBorder) 50%,
-      var(--semantic-colors-dispersion-rose) 100%
-    );
+    background: var(--semantic-colors-state-selectedBorder);
   }
 }
 
 .tab {
-  @include interactive-glass;
   position: relative;
   z-index: 1;
   display: inline-flex;
@@ -75,10 +69,10 @@
   color: var(--semantic-colors-text-secondary);
   cursor: pointer;
   border-radius: var(--components-tabs-tab-radius);
-  transition: color var(--semantic-motion-fast);
+  @include hover-transition;
 
-  &:hover:not(:disabled):not([aria-selected='true']) {
-    color: var(--semantic-colors-text-primary);
+  &:not([aria-selected='true']) {
+    @include hover-surface;
   }
 
   &[aria-selected='true'] {

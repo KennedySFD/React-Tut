@@ -35,8 +35,8 @@
     box-shadow: var(--semantic-shadows-sm);
   }
 
-  &:hover:not(:disabled) {
-    color: var(--semantic-colors-text-primary);
+  &:not(.active) {
+    @include hover-surface;
   }
 
   &:focus-visible {

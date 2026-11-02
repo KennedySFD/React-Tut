@@ -71,8 +71,5 @@
     color var(--semantic-motion-fast),
     background var(--semantic-motion-fast);
 
-  &:hover {
-    color: var(--semantic-colors-text-primary);
-    background: var(--semantic-colors-state-hoverSurface);
-  }
+  @include hover-surface;
 }

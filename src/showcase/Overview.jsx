@@ -33,7 +33,13 @@ export default function Overview() {
 
       <StoryList>
         {groups.map((group) => (
-          <Story key={group.category} title={group.category} padding="none" id={group.category}>
+          <Story
+            key={group.category}
+            title={group.category}
+            surface="none"
+            padding="none"
+            id={group.category}
+          >
             <Grid $min="15rem" $gap="md">
               {group.entries.map((entry) => (
                 <Card

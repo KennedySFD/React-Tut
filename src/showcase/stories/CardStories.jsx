@@ -73,8 +73,8 @@ export default function CardStories() {
           <Card
             variant="glass"
             interactive
-            title="Dispersion"
-            description="Hover for the chromatic keyline and sheen."
+            title="Interactive"
+            description="Hover darkens the border, like every outlined element."
           />
         </Grid>
       </Story>

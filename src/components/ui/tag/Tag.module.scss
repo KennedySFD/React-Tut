@@ -1,15 +1,12 @@
 @use '../../../theme/mixins' as *;
 
 .root {
-  @include interactive-glass;
   display: inline-flex;
   align-items: center;
   font-weight: var(--components-tag-fontWeight);
   line-height: 1;
   white-space: nowrap;
   border-radius: var(--components-tag-radius);
-  /* Let the keyline sit on the border, not inside it — see glass-vars. */
-  --ring-inset: var(--components-tag-borderWidth);
   border: var(--components-tag-borderWidth) solid transparent;
 }
 

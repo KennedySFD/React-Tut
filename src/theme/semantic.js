@@ -212,9 +212,9 @@ const light = {
     },
 
     /**
-     * DISPERSION — the chromatic fringe of light split through a glass edge.
-     * Used as a keyline gradient, never as a fill. Vivid enough to read as
-     * a deliberate prismatic accent, not a washed-out tint.
+     * DISPERSION — decorative accents for the backdrops behind glass
+     * surfaces. Never used for hover or other interactive states; those come
+     * from `state`.
      */
     dispersion: {
       cyan: 'rgba(34, 211, 238, 0.88)',

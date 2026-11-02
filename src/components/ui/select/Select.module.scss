@@ -6,8 +6,6 @@
 }
 
 .trigger {
-  @include field-glass;
-  @include focus-keyline;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -105,9 +103,7 @@
     background: var(--semantic-colors-state-hoverSurface);
   }
 
-  &:hover:not([aria-disabled='true']) {
-    background: var(--semantic-colors-state-hoverSurface);
-  }
+  @include hover-surface;
 
   &[aria-selected='true'] {
     background: var(--semantic-colors-state-selectedSurface);

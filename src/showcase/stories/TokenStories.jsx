@@ -64,7 +64,7 @@ export default function TokenStories() {
 
       <Story
         title="Dispersion"
-        description="The chromatic fringe used by keylines and sheens. Kept low-saturation so it reads as refraction rather than as a rainbow."
+        description="Decorative accents for the backdrops behind glass surfaces. Never used for interactive states — hover comes from the state tokens above."
       >
         <div className={styles.swatchGrid}>
           {Object.entries(theme.semantic.colors.dispersion).map(([name, value]) => (

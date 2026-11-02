@@ -2,7 +2,6 @@
 
 import { useId, useState } from 'react';
 import Field from '@/components/ui/field';
-import { useFieldMotion } from '@/hooks/useFieldMotion';
 import { cx } from '@/lib/cx';
 import styles from './Input.module.scss';
 
@@ -42,7 +41,6 @@ export default function Input({
   const inputId = id ?? generatedId;
   const describedById = `${inputId}-description`;
   const [focused, setFocused] = useState(false);
-  const { ref: shellRef, handlers: motionHandlers } = useFieldMotion(focused, { disabled });
 
   const hasError = Boolean(error);
 
@@ -69,8 +67,6 @@ export default function Input({
       className={className}
     >
       <div
-        ref={shellRef}
-        {...motionHandlers}
         className={cx(styles.shell, styles[size])}
         data-focused={focused}
         data-invalid={hasError || undefined}

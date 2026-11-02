@@ -26,7 +26,7 @@ const points = {
   glass: [0.22, 1, 0.36, 1],
   /** Committed, quick — for a press going down. */
   glassIn: [0.55, 0, 1, 0.45],
-  /** Symmetrical — for travelling elements: sheens, indicators, thumbs. */
+  /** Symmetrical — for travelling elements: indicators, thumbs. */
   glassInOut: [0.65, 0, 0.35, 1],
 };
 
@@ -43,7 +43,6 @@ export const durations = {
   hover: 0.28,
   settle: 0.42,
   reveal: 0.34,
-  sheen: 0.72,
   travel: 0.46,
 };
 
@@ -62,7 +61,6 @@ export const gesture = {
   release: { duration: durations.settle, ease: 'glass' },
   reveal: { duration: durations.reveal, ease: 'glass' },
   dismiss: { duration: durations.press, ease: 'glassIn' },
-  sheen: { duration: durations.sheen, ease: 'glassInOut' },
   travel: { duration: durations.travel, ease: 'glassInOut' },
 };
 
@@ -72,26 +70,18 @@ export const gesture = {
  * This is the one thing that varies between components. The curve and the
  * duration stay constant, so a Tag and a Card feel like the same system
  * moving at different scales — which is what makes it read as uniform.
- *
- * `glow` is the strength of the optional WebGL layer, on the families large
- * enough to carry one. 0 means that family never lights up.
  */
 export const amplitude = {
   /** Buttons, select triggers — the standard interactive control. */
-  control: { lift: -1.5, press: 0.975, sheen: 0.6, ring: 1, label: -1, glow: 0.55 },
+  control: { lift: -1.5, press: 0.975, label: -1 },
   /** Cards, panels — larger surfaces lift further and press less. */
-  surface: { lift: -4, press: 0.995, sheen: 0.45, ring: 1, label: 0, glow: 0.4 },
+  surface: { lift: -4, press: 0.995, label: 0 },
   /** Tags and other small chips — little lift, noticeable press. */
-  chip: { lift: -1, press: 0.94, sheen: 0, ring: 0.85, label: 0, glow: 0 },
+  chip: { lift: -1, press: 0.94, label: 0 },
   /** Tabs, menu options, accordion triggers — flat, but responsive. */
-  subtle: { lift: 0, press: 0.985, sheen: 0, ring: 0.75, label: -1, glow: 0 },
+  subtle: { lift: 0, press: 0.985, label: -1 },
   /** Checkbox / radio / switch — the control is small, so the press is proportional. */
-  choice: { lift: 0, press: 0.9, sheen: 0, ring: 1, label: 0, glow: 0 },
-  /**
-   * Text fields — the keyline only. A field is somewhere you place a cursor,
-   * so it must not move under the pointer or drift while you are typing.
-   */
-  field: { lift: 0, press: 1, sheen: 0, ring: 0.9, label: 0, glow: 0 },
+  choice: { lift: 0, press: 0.9, label: 0 },
 };
 
 /**

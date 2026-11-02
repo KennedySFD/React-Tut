@@ -34,7 +34,6 @@
 }
 
 .circle {
-  @include interactive-glass;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -44,12 +43,10 @@
   margin-top: 0.0625rem;
   border: var(--components-choice-borderWidth) solid var(--semantic-colors-border-default);
   border-radius: var(--global-radii-full);
-  --ring-inset: var(--components-choice-borderWidth);
   background: var(--semantic-colors-background-raised);
   transition:
     border-color var(--semantic-motion-fast),
     box-shadow var(--semantic-motion-fast);
-
 }
 
 .sm .circle {

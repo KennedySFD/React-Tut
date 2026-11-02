@@ -43,9 +43,7 @@
   text-decoration: none;
   transition: color var(--semantic-motion-fast);
 
-  &:hover {
-    color: var(--semantic-colors-text-primary);
-  }
+  @include hover-text;
 
   &:focus-visible {
     @include focus-ring-only;
